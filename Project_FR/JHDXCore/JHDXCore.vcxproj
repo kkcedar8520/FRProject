@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{E84028A8-4516-41BF-B941-C7BF356A66D1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>JHDXCore</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../../output/Debug</OutDir>
+    <IntDir>../../output/Debug/JHDXCore</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>../../output/Release</OutDir>
+    <IntDir>../../output/Release/JHDXCore</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4005</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>../../Dx/Include/;../../include/assimp</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>../../Dx/Lib/x64;../../lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3dx11.lib</AdditionalDependencies>
+      <OutputFile>JHDXCore_d.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.h" "../../include/DX"
+copy "*.lib" "../../lib/"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../../Dx/Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "*.h" "../../include/DX"
+copy "*.lib" "../../lib/"
+</Command>
+    </PostBuildEvent>
+    <Lib>
+      <AdditionalLibraryDirectories>../../Dx/Lib/x64</AdditionalLibraryDirectories>
+      <OutputFile>JHDXCore_R.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BinaryReader.h" />
+    <ClInclude Include="BinaryWriter.h" />
+    <ClInclude Include="HArcBall.h" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="JHCamera.h" />
+    <ClInclude Include="JHDXCore.h" />
+    <ClInclude Include="JHShapeBox.h" />
+    <ClInclude Include="JHTimer.h" />
+    <ClInclude Include="JHWindow.h" />
+    <ClInclude Include="JH_BackViewCamera.h" />
+    <ClInclude Include="JH_BaseObj.h" />
+    <ClInclude Include="JH_Bone.h" />
+    <ClInclude Include="JH_DebugCamera.h" />
+    <ClInclude Include="JH_DXHelper.h" />
+    <ClInclude Include="JH_DXHelperEX.h" />
+    <ClInclude Include="JH_DxState.h" />
+    <ClInclude Include="JH_DXStd.h" />
+    <ClInclude Include="JH_DxWrite.h" />
+    <ClInclude Include="JH_Frustum.h" />
+    <ClInclude Include="JH_Input.h" />
+    <ClInclude Include="JH_Map.h" />
+    <ClInclude Include="JH_Material.h" />
+    <ClInclude Include="JH_Mesh.h" />
+    <ClInclude Include="JH_Model.h" />
+    <ClInclude Include="JH_Select.h" />
+    <ClInclude Include="JH_ShapeLine.h" />
+    <ClInclude Include="JH_ShapePlane.h" />
+    <ClInclude Include="JH_Sprite.h" />
+    <ClInclude Include="JH_Template.h" />
+    <ClInclude Include="jMath.h" />
+    <ClInclude Include="LightMgr.h" />
+    <ClInclude Include="LightObj.h" />
+    <ClInclude Include="MaxObj.h" />
+    <ClInclude Include="ModelLoader.h" />
+    <ClInclude Include="ModelView.h" />
+    <ClInclude Include="NormalMap.h" />
+    <ClInclude Include="JH_Obj.h" />
+    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="TextureMgr.h" />
+    <ClInclude Include="JH_ObjStd.h" />
+    <ClInclude Include="JH_SKinStd.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BinaryReader.cpp" />
+    <ClCompile Include="BinaryWriter.cpp" />
+    <ClCompile Include="HArcBall.cpp" />
+    <ClCompile Include="Device.cpp" />
+    <ClCompile Include="JHCamera.cpp" />
+    <ClCompile Include="JHDXCore.cpp" />
+    <ClCompile Include="JHShapeBox.cpp" />
+    <ClCompile Include="JHTimer.cpp" />
+    <ClCompile Include="JHWindow.cpp" />
+    <ClCompile Include="JH_BackViewCamera.cpp" />
+    <ClCompile Include="JH_BaseObj.cpp" />
+    <ClCompile Include="JH_Bone.cpp" />
+    <ClCompile Include="JH_DebugCamera.cpp" />
+    <ClCompile Include="JH_DXHelper.cpp" />
+    <ClCompile Include="JH_DXHelperEX.cpp" />
+    <ClCompile Include="JH_DxState.cpp" />
+    <ClCompile Include="JH_DxWrite.cpp" />
+    <ClCompile Include="JH_Frustum.cpp" />
+    <ClCompile Include="JH_Input.cpp" />
+    <ClCompile Include="JH_Map.cpp" />
+    <ClCompile Include="JH_Material.cpp" />
+    <ClCompile Include="JH_Mesh.cpp" />
+    <ClCompile Include="JH_Model.cpp" />
+    <ClCompile Include="JH_Select.cpp" />
+    <ClCompile Include="JH_ShapeLine.cpp" />
+    <ClCompile Include="JH_ShapePlane.cpp" />
+    <ClCompile Include="JH_Sprite.cpp" />
+    <ClCompile Include="jMath.cpp" />
+    <ClCompile Include="LightMgr.cpp" />
+    <ClCompile Include="LightObj.cpp" />
+    <ClCompile Include="MaxObj.cpp" />
+    <ClCompile Include="ModelLoader.cpp" />
+    <ClCompile Include="ModelView.cpp" />
+    <ClCompile Include="NormalMap.cpp" />
+    <ClCompile Include="JH_Obj.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="TextureMgr.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\Shader\LightShader.txt" />
+    <Text Include="DefalutShader.txt" />
+    <Text Include="sprite.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="JHDXCore.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

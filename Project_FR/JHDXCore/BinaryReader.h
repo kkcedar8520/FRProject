@@ -1,0 +1,17 @@
+#pragma once
+
+#include"JH_DXStd.h"
+class BinaryReader
+{
+	FILE* m_fp;
+public:
+	bool Open(const std::string Path);
+	bool Close();
+public:
+	std::string String();
+	bool Bool();
+	int Int();
+	float Float();
+	void Byte(void* Data, int size, int length);
+};
+
