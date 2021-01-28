@@ -7,7 +7,7 @@ bool Project_FR::Init()
 
 	TestObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),L"../../data/Shader/DefaultShader.txt",nullptr);
 
-	m_ModleLoader.ModelLoad("Turret_Deploy", TestObj,m_pd3dDevice.Get());
+	m_ModleLoader.ModelLoad("BoxAnim", TestObj,m_pd3dDevice.Get());
 
 
 	

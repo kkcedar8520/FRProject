@@ -17,10 +17,15 @@ bool BinaryReader::Close()
 std::string BinaryReader::String()
 {
 	int ibuf=0;
-	std::string sbuf;
+	char Temp[255];
+	char cbuf[255];
 	fread(&ibuf, sizeof(int), 1, m_fp);
-	fread((void*)sbuf.c_str(), sizeof(char), ibuf, m_fp);
+	fread((void*)cbuf, sizeof(char), ibuf, m_fp);
+
+	strncpy_s(Temp, cbuf, sizeof(char)*ibuf);
+	memset(cbuf, 0, sizeof(char) * 255);
 	
+	std::string sbuf = Temp;
 	return sbuf;
 }
 bool BinaryReader::Bool()
@@ -29,7 +34,7 @@ bool BinaryReader::Bool()
 }
 int BinaryReader::Int()
 {
-	int ibuf[6] = {};
+	int ibuf[3];
 	fread(&ibuf[0], sizeof(int), 1, m_fp);
 	return ibuf[0];
 }

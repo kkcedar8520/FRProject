@@ -24,7 +24,7 @@ bool JH_Obj::ReadFile(const std::string file)
 	BinaryReader Reader;
 
 	std::string FullPath="../../data/model/binary/"+file+".md";
-	Reader.Open(file);
+	Reader.Open(FullPath);
 
 	m_materials.resize(Reader.Int());
 
@@ -47,6 +47,32 @@ bool JH_Obj::ReadFile(const std::string file)
 
 		}
 	}
+	m_Bones.resize(Reader.Int());
+	if (m_Bones.size() > 0)
+	{
+		for (int i = 0; i < m_Bones.size(); i++)
+		{
+			JH_Bone& tBone = m_Bones[i];
+
+			tBone.SetBoneName(Reader.String());
+			tBone.SetBoneIndex(Reader.Int());
+			tBone.SetParentIndex(Reader.Int());
+			Reader.Byte(tBone.GetWorld(), sizeof(D3DXMATRIX), 1);
+		}
+	}
+
+	if (m_meshes.size() > 0)
+	{
+		for (int i = 0; i < m_Bones.size(); i++)
+		{
+			JH_Bone& tBone = m_Bones[i];
+
+			tBone.SetBoneName(Reader.String());
+			tBone.SetBoneIndex(Reader.Int());
+			tBone.SetParentIndex(Reader.Int());
+			Reader.Byte(tBone.GetWorld(), sizeof(D3DXMATRIX), 1);
+		}
+	}
 
 	return true;
 }
@@ -61,6 +87,10 @@ bool JH_Obj::Frame()
 }
 bool JH_Obj::Render()
 {
+	for (auto mesh : m_meshes)
+	{
+		mesh.Render();
+	}
 	return true;
 }
 bool JH_Obj::Release()
