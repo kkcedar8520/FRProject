@@ -41,6 +41,8 @@ public:
 
 	Texture* const	GetPtr(INT iIndex);
 	Texture* const	GetPtr(T_STR strFindName);
+
+	const TCHAR*			SplitPath(const TCHAR* FileName);
 	bool			Release();
 public:
 	TextureMgr();

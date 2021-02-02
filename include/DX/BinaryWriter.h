@@ -10,6 +10,7 @@ public:
 	bool Close();
 public:
 	bool String(const std::string Str);
+	bool String(const std::wstring Str);
 	bool Bool();
 	bool Int(int iData);
 	bool Float(float f);

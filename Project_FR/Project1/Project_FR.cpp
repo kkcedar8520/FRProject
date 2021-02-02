@@ -7,18 +7,27 @@ bool Project_FR::Init()
 
 	TestObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),L"../../data/Shader/DefaultShader.txt",nullptr);
 
-	m_ModleLoader.ModelLoad("BoxAnim", TestObj,m_pd3dDevice.Get());
+	m_ModleLoader.ModelLoad("Box", TestObj,m_pd3dDevice.Get());
+
+	m_pMainCamera->CreateViewMatrix(D3DXVECTOR3(0, 0, -50.0f), D3DXVECTOR3(0, 0, 0));
+	m_pMainCamera->UpdateBasisVector();
 
 
+	float fAspect = (float)g_rtClient.right / g_rtClient.bottom;
+	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
 	
 	return true;
 }
 bool Project_FR::Frame()
 {
+	TestObj.SetMatrix(nullptr,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
+
+
 	return true;
 }
 bool Project_FR::Render()
 {
+	TestObj.Render();
 	return true;
 }
 bool Project_FR::Release()

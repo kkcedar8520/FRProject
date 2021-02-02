@@ -9,6 +9,7 @@ public:
 	bool Close();
 public:
 	std::string String();
+	std::wstring WString();
 	bool Bool();
 	int Int();
 	float Float();

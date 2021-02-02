@@ -169,6 +169,25 @@ Texture* const TextureMgr::GetPtr(T_STR strFindName)
 	}
 	return NULL;
 }
+const TCHAR*	TextureMgr::SplitPath(const TCHAR* FileName)
+{
+
+	TCHAR szFileName[MAX_PATH];
+	TCHAR Drive[MAX_PATH];
+	TCHAR Dir[MAX_PATH];
+	TCHAR FName[MAX_PATH];
+	TCHAR Ext[MAX_PATH];
+	if (FileName)
+	{
+		_tsplitpath(FileName, Drive, Dir, FName, Ext);
+		Ext[4] = 0;
+		memset(szFileName, 0, sizeof(TCHAR) * MAX_PATH);
+
+	}
+	_stprintf_s(szFileName, _T("%s%s"), FName, Ext);
+
+	return szFileName;
+}
 
 TextureMgr::TextureMgr(void)
 {

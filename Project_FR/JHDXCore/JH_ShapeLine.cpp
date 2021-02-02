@@ -10,12 +10,12 @@ HRESULT JH_ShapeLine::CreateInputLayout()
 	};
 	UINT iElementCount = sizeof(layout) /
 		sizeof(layout[0]);
-	hr = m_dxHelper.m_pd3dDevice->CreateInputLayout(
+	hr = m_dxHelper.GetDevice()->CreateInputLayout(
 		layout,
 		iElementCount,
-		m_dxHelper.m_pVertexCode->GetBufferPointer(),
-		m_dxHelper.m_pVertexCode->GetBufferSize(),
-		&m_dxHelper.m_pVertexLayout);
+		m_dxHelper.GetVertexCode()->GetBufferPointer(),
+		m_dxHelper.GetVertexCode()->GetBufferSize(),
+		m_dxHelper.GetLayoutAdress());
 	return hr;
 }
 HRESULT JH_ShapeLine::CreateVertexData()
@@ -54,14 +54,14 @@ HRESULT JH_ShapeLine::CreateVertexBuffer()
 		sizeof(D3D11_SUBRESOURCE_DATA));
 	pInitialData.pSysMem = &m_VertexLineData.at(0);
 
-	hr = m_dxHelper.m_pd3dDevice->CreateBuffer(&pDesc,
+	hr = m_dxHelper.GetDevice()->CreateBuffer(&pDesc,
 		&pInitialData,
-		&m_dxHelper.m_pVertexBuffer);
+		m_dxHelper.GetVertexBufferAddress());
 	return hr;
 }
 bool JH_ShapeLine::PostRender()
 {
-	m_dxHelper.m_pContext->IASetPrimitiveTopology(
+	m_dxHelper.GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	m_dxHelper.PostRender();
 	return true;
@@ -72,8 +72,8 @@ bool	JH_ShapeLine::Draw(D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR4 color)
 	m_VertexLineData[0].c = color;
 	m_VertexLineData[1].p = v1;
 	m_VertexLineData[1].c = color;
-	m_dxHelper.m_pContext->UpdateSubresource(
-		m_dxHelper.m_pVertexBuffer.Get(),
+	m_dxHelper.GetDeviceContext()->UpdateSubresource(
+		m_dxHelper.GetVertexBuffer(),
 		0, NULL,
 		&m_VertexLineData.at(0), 0, 0);
 	return Render();

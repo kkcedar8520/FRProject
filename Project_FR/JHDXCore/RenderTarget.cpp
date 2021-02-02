@@ -47,6 +47,7 @@ HRESULT RenderTarget::Cretae(ID3D11Device* pd3divice, float width, float height)
 	m_vp.TopLeftY = 0;
 	m_vp.MinDepth = 0;
 	m_vp.MaxDepth = 1.0f;
+	return hr;
 }
 
 bool RenderTarget::Begin(ID3D11DeviceContext* pContext,

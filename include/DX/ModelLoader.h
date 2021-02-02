@@ -12,17 +12,17 @@
 class BinaryWriter;
 struct cMaterial
 {
-	std::string Name;
+	std::wstring Name;
 
 	D3DXVECTOR4 AmbientColor;
 	D3DXVECTOR4 DiffuseColor;
 	D3DXVECTOR4 SpecularColor;
 	D3DXVECTOR4 EmissiveColor;
 
-	std::string Diffuse;
-	std::string Specular;
-	std::string Emissive;
-	std::string Normal;
+	std::wstring Diffuse;
+	std::wstring Specular;
+	std::wstring Emissive;
+	std::wstring Normal;
 };
 struct cBone
 {

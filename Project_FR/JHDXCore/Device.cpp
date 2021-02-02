@@ -248,3 +248,17 @@ bool Device::ReleaseDevice()
 
 	return true;
 }
+
+namespace DX
+{
+
+	ID3D11DeviceContext*	GetContext()
+	{
+		return FR.GetContext().Get();
+	}
+
+	ID3D11Device*	GetDevice()
+	{
+		return FR.GetDevice().Get();
+	}
+}

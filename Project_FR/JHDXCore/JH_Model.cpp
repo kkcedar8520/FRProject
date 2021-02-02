@@ -15,8 +15,8 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	{
 		m_matProj = *matProj;
 	}
-	m_dxHelper.m_pContext->UpdateSubresource(
-		m_dxHelper.m_pConstantBuffer.Get(),
+	m_dxHelper.GetDeviceContext()->UpdateSubresource(
+		m_dxHelper.GetConstantBuffer(),
 		0, NULL, &m_cbData, 0, 0);
 
 	D3DXMatrixTranspose(&m_cbData.matWorld, &m_matWorld);
@@ -26,8 +26,8 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	m_cbData.d.x = cosf(g_fProgramTime) *0.5f + 0.5f;
 	D3D11_MAPPED_SUBRESOURCE mss;
 
-	m_dxHelper.m_pContext->UpdateSubresource(
-		m_dxHelper.m_pConstantBuffer.Get(),
+	m_dxHelper.GetDeviceContext()->UpdateSubresource(
+		m_dxHelper.GetConstantBuffer(),
 		0, NULL, &m_cbData, 0, 0);
 
 }
@@ -58,9 +58,9 @@ HRESULT JH_Model::CreateVertexBuffer()
 		sizeof(D3D11_SUBRESOURCE_DATA));
 	pInitialData.pSysMem = &m_VertexData.at(0);
 
-	hr = m_dxHelper.m_pd3dDevice->CreateBuffer(&pDesc,
+	hr = m_dxHelper.GetDevice()->CreateBuffer(&pDesc,
 		&pInitialData,
-		&m_dxHelper.m_pVertexBuffer);
+		m_dxHelper.GetVertexBufferAddress());
 	return hr;
 }
 HRESULT JH_Model::CreateIndexBuffer()
@@ -80,9 +80,9 @@ HRESULT JH_Model::CreateIndexBuffer()
 		sizeof(D3D11_SUBRESOURCE_DATA));
 	pInitialData.pSysMem = &m_IndexData.at(0);
 
-	hr = m_dxHelper.m_pd3dDevice->CreateBuffer(&pDesc,
+	hr = m_dxHelper.GetDevice()->CreateBuffer(&pDesc,
 		&pInitialData,
-		&m_dxHelper.m_pIndexBuffer);
+		m_dxHelper.GetIndexBufferAddress());
 	return hr;
 }
 HRESULT JH_Model::CreateConstantBuffer()
@@ -92,7 +92,7 @@ HRESULT JH_Model::CreateConstantBuffer()
 	m_cbData.d = D3DXVECTOR4(1, 1, 1, 1);
 	m_cbData.d.x = g_fProgramTime;
 
-	m_dxHelper.m_pConstantBuffer.Attach(DX::MakeConstantBuffer(m_dxHelper.m_pd3dDevice.Get(), nullptr, 1, sizeof(CB_DATA
+	m_dxHelper.SetConstantBuffer(DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, 1, sizeof(CB_DATA
 		)));
 
 	//MAP_UNMAP CPU 개입할수있는 버퍼
@@ -130,7 +130,7 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		0,
 		0,
 		NULL,
-		&m_dxHelper.m_pVertexCode,
+		m_dxHelper.GetVertexCodeAddress(),
 		&pErrorMsgs,
 		NULL)))
 	{
@@ -138,11 +138,11 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		return hr;
 	}
 
-	m_dxHelper.m_pd3dDevice->CreateVertexShader(
-		m_dxHelper.m_pVertexCode->GetBufferPointer(),
-		m_dxHelper.m_pVertexCode->GetBufferSize(),
+	m_dxHelper.GetDevice()->CreateVertexShader(
+		m_dxHelper.GetVertexCode()->GetBufferPointer(),
+		m_dxHelper.GetVertexCode()->GetBufferSize(),
 		NULL,
-		&m_dxHelper.m_pVS);
+		m_dxHelper.GetVertexShaderAddress());
 
 	if (FAILED(hr = D3DX11CompileFromFile(
 		pszShaderFileName,
@@ -153,17 +153,17 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		0,
 		0,
 		NULL,
-		&m_dxHelper.m_pPixelCode,
+		m_dxHelper.GetPixelCodeAddress(),
 		&pErrorMsgs, NULL)))
 	{
 		MessageBoxA(NULL, (char*)pErrorMsgs->GetBufferPointer(), "Error", MB_OK);
 		return hr;
 	}
-	m_dxHelper.m_pd3dDevice->CreatePixelShader(
-		m_dxHelper.m_pPixelCode->GetBufferPointer(),
-		m_dxHelper.m_pPixelCode->GetBufferSize(),
+		m_dxHelper.GetDevice()->CreatePixelShader(
+		m_dxHelper.GetPixelCode()->GetBufferPointer(),
+		m_dxHelper.GetPixelCode()->GetBufferSize(),
 		NULL,
-		&m_dxHelper.m_pPS);
+		m_dxHelper.GetPixelShaderAddress());
 	return hr;
 }
 HRESULT JH_Model::CreateInputLayout()
@@ -182,12 +182,12 @@ HRESULT JH_Model::CreateInputLayout()
 	};
 	UINT iElementCount = sizeof(layout) /
 		sizeof(layout[0]);
-	m_dxHelper.m_pd3dDevice->CreateInputLayout(
+	m_dxHelper.GetDevice()->CreateInputLayout(
 		layout,
 		iElementCount,
-		m_dxHelper.m_pVertexCode->GetBufferPointer(),
-		m_dxHelper.m_pVertexCode->GetBufferSize(),
-		&m_dxHelper.m_pVertexLayout);
+		m_dxHelper.GetVertexCode()->GetBufferPointer(),
+		m_dxHelper.GetVertexCode()->GetBufferSize(),
+		m_dxHelper.GetLayoutAdress());
 	return hr;
 }
 bool    JH_Model::Create(
@@ -198,8 +198,8 @@ bool    JH_Model::Create(
 	const CHAR* pszVSName,
 	const CHAR* pszPSName)
 {
-	m_dxHelper.m_pd3dDevice = pd3dDevice;
-	m_dxHelper.m_pContext = pContext;
+	m_dxHelper.SetDevice(pd3dDevice);
+	m_dxHelper.SetDeviceContext( pContext);
 	if (!Init())
 	{
 		return false;
@@ -247,11 +247,11 @@ HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName)
 	HRESULT hr = S_OK;
 	if (pszTexFileName == NULL) return S_OK;
 	hr = D3DX11CreateShaderResourceViewFromFile(
-		m_dxHelper.m_pd3dDevice.Get(),
+		m_dxHelper.GetDevice(),
 		pszTexFileName,
 		NULL,
 		NULL,
-		&m_dxHelper.m_pSRV,
+		m_dxHelper.GetShaderResourceViewAddress(),
 		NULL);
 	return hr;
 }

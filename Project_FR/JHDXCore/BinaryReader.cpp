@@ -28,6 +28,26 @@ std::string BinaryReader::String()
 	std::string sbuf = Temp;
 	return sbuf;
 }
+std::wstring BinaryReader::WString()
+{
+	int ibuf = 0;
+	TCHAR Temp[255] = {};
+	TCHAR cbuf[255] = {};
+
+	std::wstring sbuf;
+	fread(&ibuf, sizeof(TCHAR), 1, m_fp);
+	fread((void*)cbuf, sizeof(TCHAR), ibuf, m_fp);
+
+
+	_tcsncpy(Temp, cbuf, sizeof(TCHAR)*ibuf);
+	
+
+	sbuf= Temp;
+
+
+
+	return sbuf;
+}
 bool BinaryReader::Bool()
 {
 	return true;

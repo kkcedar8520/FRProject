@@ -36,7 +36,7 @@ struct SCENEINFO
 //
 //	D3DXMATRIX m_Matworld;
 //};
-class JH_Obj:public JH_Model
+class JH_Obj :public JH_Model
 {
 private:
 
@@ -46,18 +46,13 @@ private:
 	std::vector<JH_Material>m_materials;
 	std::vector<JH_Bone>m_Bones;
 public:
-	JH_Obj();
-	~JH_Obj();
-public:
-	HRESULT CreateVertexData()override;
-	HRESULT CreateIndexData()override;
-public:
 	//Data
 	std::vector<JH_Material>& GetMaterial() { return m_materials; }
 	std::vector<JH_Mesh>& GetMesh() { return m_meshes; }
 	std::vector<JH_Bone>& GetBone() { return m_Bones; }
 
 	bool ReadFile(const std::string file);
+	void BindingMesh();
 public:
 	JH_Material* MaterialFindByName(std::wstring Name);
 	JH_Material* MaterialFindByIndex(std::wstring Name);
@@ -67,10 +62,12 @@ public:
 
 	JH_Mesh* MeshFindByName(std::wstring Name);
 	JH_Mesh* MeshFindByIndex(std::wstring Name);
+
 public:
 	bool Init()override;
 	bool Frame()override;
 	bool Render()override;
 	bool Release()override;
+
 };
 

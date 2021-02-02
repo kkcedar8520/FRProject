@@ -179,6 +179,7 @@ copy "*.lib" "../../lib/"
   <ItemGroup>
     <ClInclude Include="BinaryReader.h" />
     <ClInclude Include="BinaryWriter.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="HArcBall.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="JHCamera.h" />
@@ -217,6 +218,7 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="JH_ObjStd.h" />
     <ClInclude Include="JH_SKinStd.h" />
@@ -224,6 +226,7 @@ copy "*.lib" "../../lib/"
   <ItemGroup>
     <ClCompile Include="BinaryReader.cpp" />
     <ClCompile Include="BinaryWriter.cpp" />
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="HArcBall.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="JHCamera.cpp" />
@@ -259,6 +262,7 @@ copy "*.lib" "../../lib/"
     <ClCompile Include="JH_Obj.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TextureMgr.cpp" />
   </ItemGroup>
   <ItemGroup>

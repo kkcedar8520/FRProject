@@ -176,26 +176,33 @@ bool ModelLoader::ReadMaterial()
 		aiColor3D aiColor;
 		aiString aiTexterureName;
 
+		TCHAR WTextureName[1024];
+
 		//메테리얼 이름 가져오기
+		//Material
 		SrcMaterial->Get(AI_MATKEY_NAME, aiTexterureName);
 
-		m_Materials[i].Name = aiTexterureName.C_Str();
+		int strsize = MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), -1, NULL, NULL);
+		MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), strlen(aiTexterureName.C_Str()), &WTextureName[0], strsize);
+		lstrcpynW(WTextureName, WTextureName, strsize);
+
+		m_Materials[i].Name = WTextureName;
 		
 		SrcMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor);
 
 		SrcMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexterureName);
-		m_Materials[i].Diffuse = aiTexterureName.C_Str();
 		
 		
-	
-		TCHAR WTextureName[1024];
+
 		//CHAR ->WCHAR 변경
-		int strsize= MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), -1, NULL, NULL);
+		//Diffuse
+		strsize= MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), -1, NULL, NULL);
 	
 		int icheck= MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), strlen(aiTexterureName.C_Str()), &WTextureName[0], strsize);
 		lstrcpynW(WTextureName, WTextureName, strsize);
-		
-		
+		I_Texture.Add(m_pDevice, WTextureName, L"../../data/Texture/");
+
+		m_Materials[i].Diffuse = I_Texture.SplitPath(WTextureName);
 		m_Materials[i].DiffuseColor.x = aiColor.r;
 		m_Materials[i].DiffuseColor.y = aiColor.g;
 		m_Materials[i].DiffuseColor.z = aiColor.b;
@@ -203,22 +210,25 @@ bool ModelLoader::ReadMaterial()
 
 
 
-
+		//Ambient
 		SrcMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiColor);
 
 		SrcMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aiTexterureName);
-		m_Materials[i].Diffuse = aiTexterureName.C_Str();
+		
 
 		strsize = MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), -1, NULL, NULL);
 		MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), strlen(aiTexterureName.C_Str()), &WTextureName[0], strsize);
 		lstrcpynW(WTextureName, WTextureName, strsize);
 		I_Texture.Add(m_pDevice, WTextureName, L"../../data/Texture/");
 
+		m_Materials[i].Normal = I_Texture.SplitPath(WTextureName);
 		m_Materials[i].AmbientColor.x = aiColor.r;
 		m_Materials[i].AmbientColor.y = aiColor.g;
 		m_Materials[i].AmbientColor.z = aiColor.b;
 		m_Materials[i].AmbientColor.w = 1.0;
 
+
+		//Specular
 		SrcMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aiColor);
 		SrcMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aiTexterureName);
 		
@@ -227,13 +237,15 @@ bool ModelLoader::ReadMaterial()
 		lstrcpynW(WTextureName, WTextureName, strsize);
 		I_Texture.Add(m_pDevice, WTextureName, L"../../data/Texture/");
 
-		m_Materials[i].Specular = aiTexterureName.C_Str();
 
+
+		m_Materials[i].Specular = I_Texture.SplitPath(WTextureName);
 		m_Materials[i].SpecularColor.x = aiColor.r;
 		m_Materials[i].SpecularColor.y = aiColor.g;
 		m_Materials[i].SpecularColor.z = aiColor.b;
 		m_Materials[i].SpecularColor.w = 1.0;
 
+		//EMiSSIVE
 		SrcMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, aiColor);
 		SrcMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiTexterureName);
 
@@ -241,8 +253,7 @@ bool ModelLoader::ReadMaterial()
 		MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), strlen(aiTexterureName.C_Str()), &WTextureName[0], strsize);
 
 		I_Texture.Add(m_pDevice, WTextureName, L"../../data/Texture/");
-
-		m_Materials[i].Emissive = aiTexterureName.C_Str();
+		m_Materials[i].Emissive = I_Texture.SplitPath(WTextureName);
 
 		m_Materials[i].EmissiveColor.x = aiColor.r;
 		m_Materials[i].EmissiveColor.y = aiColor.g;

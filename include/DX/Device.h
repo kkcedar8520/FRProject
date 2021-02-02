@@ -3,9 +3,10 @@
 #include"JHWindow.h"
 
 
-class Device:public JHWindow
+class Device:public JHWindow, public Singleton<Device>
 {
-public:
+	friend class Singleton<Device>;
+protected:
 	D3D11_VIEWPORT m_ViewPort;
 	ComPtr<ID3D11Device> m_pd3dDevice;
 	ComPtr<ID3D11DeviceContext> m_pImmediateContext;
@@ -14,7 +15,7 @@ public:
 	ComPtr<IDXGIFactory> m_pGIFactory;
 	ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
 	DXGI_SWAP_CHAIN_DESC m_SwapChainDesc;
-
+public:
 	ComPtr<ID3D11Device>GetDevice() {
 		return m_pd3dDevice;
 	}
@@ -41,3 +42,11 @@ public:
 	virtual ~Device(){}
 };
 
+
+namespace DX
+{
+#define FR Device::GetInstance()
+
+	ID3D11DeviceContext*	GetContext();
+	ID3D11Device*	GetDevice();
+}
