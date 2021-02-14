@@ -1,6 +1,9 @@
 #pragma once
 #include"JH_DXHelper.h"
 
+
+extern ComPtr<ID3D11Device>			g_pd3dDevice;
+extern ComPtr<ID3D11DeviceContext>  g_pd3dDeviceContext;
 namespace DX
 {
 	ID3D11Buffer* MakeConstantBuffer(ID3D11Device* m_pDevice, void* Data, int iSize, int Num, bool bDynamic=false);
@@ -13,6 +16,12 @@ namespace DX
 		UINT iNumVertex,
 		UINT iVertexSize,
 		bool bDynamic=false);
+
+
+	ComPtr<ID3D11Device> GetDevice();
+	ComPtr<ID3D11DeviceContext> GetContext();
+	
+	void SetDXGlobal(ComPtr<ID3D11Device>	pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dDeviceContext);
 }
 
 class JH_DXHelperEX
@@ -72,6 +81,7 @@ public:
 	void				 SetConstantBuffer(ID3D11Buffer* ConstantBuffer)		{  m_pConstantBuffer=ConstantBuffer; }
 	void				 SetDevice(ID3D11Device* pDevice)						{  m_pd3dDevice=pDevice; }
 	void				 SetDeviceContext(ID3D11DeviceContext* pContext)		{  m_pContext=pContext; }
+	void				 SetShaderResourceView(ID3D11ShaderResourceView* srv)	{    m_pSRV=srv; }
 public:
 	void PreRender();
 	void Render();

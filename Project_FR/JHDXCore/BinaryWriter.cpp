@@ -35,9 +35,9 @@ bool BinaryWriter::Bool()
 }
 bool BinaryWriter::Int(int iData)
 {
-	int ibuf[3];
-	ibuf[0] = iData;
-	fwrite(&ibuf[0], sizeof(int), 1, m_fp);
+	int ibuf = iData;
+
+	fwrite(&ibuf, sizeof(int), 1, m_fp);
 	return true;
 }
 bool BinaryWriter::Float(float f)

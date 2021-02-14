@@ -210,4 +210,9 @@
       <Filter>Shader</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="ObjShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>

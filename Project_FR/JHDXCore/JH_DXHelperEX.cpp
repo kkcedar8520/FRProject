@@ -2,6 +2,9 @@
 #include"JH_DXStd.h"
 #pragma warning( disable:4005 )
 
+extern ComPtr<ID3D11Device>			g_pd3dDevice=nullptr;
+extern ComPtr<ID3D11DeviceContext>  g_pd3dDeviceContext=nullptr;
+
 void JH_DXHelperEX::PreRender()
 {
 	HRESULT hr = S_OK;
@@ -220,4 +223,23 @@ namespace DX
 		return pBuffer;
 	}
 
+	ComPtr<ID3D11Device> GetDevice()
+	{
+		return g_pd3dDevice;
+	}
+
+	ComPtr<ID3D11DeviceContext> GetContext()
+	{
+		return g_pd3dDeviceContext;
+	}
+
+	void SetDXGlobal(ComPtr<ID3D11Device>	pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dDeviceContext)
+	{
+		g_pd3dDevice = pd3dDevice;
+		g_pd3dDeviceContext = pd3dDeviceContext;
+
+	}
+
+
+	
 }

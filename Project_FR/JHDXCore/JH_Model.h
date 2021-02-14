@@ -119,7 +119,6 @@ struct CB_DATA
 	D3DXMATRIX matProj;
 	D3DXMATRIX matNormal;
 	D3DXVECTOR4 d;
-	D3DXVECTOR4 Light;
 };
 
 class JH_Model

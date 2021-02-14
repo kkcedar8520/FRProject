@@ -15,10 +15,23 @@
 #include<queue>
 #include<algorithm>
 #include"JH_DXHelperEX.h"
+
+
+//Memory leack detector
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include<crtdbg.h>
+
+
 #pragma warning(disable:4005)
 #ifdef _DEBUG
 #pragma comment(lib, "JHDXCore_d")
 #pragma comment(lib,"assimp")//Modle Importer library
+//#ifndef DBG_NEW
+//	#define DBG_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__)
+//	#define new DBG_NEW
+//#endif 
+
 #else
 #pragma comment(lib,"JHDXCore_R")
 #endif
@@ -37,6 +50,10 @@ using namespace Microsoft::WRL;
 #define RadianToDegree(fRadian) (fRadian* (180.0f/X_PI ))
 #define DegreeToRadian(fDegree) (fDegree* (X_PI/ 180.0f))
 #define DXFLAG(s) if(FAILED())
+
+
+
+
 extern HWND		g_hwnd;
 extern HINSTANCE		g_hInstance;
 extern HDC		g_hScreenDC;
@@ -44,6 +61,7 @@ extern HDC		g_hOffScreenDC;
 extern float g_SecondPerFrame;
 extern RECT g_rtClient;
 extern float g_fProgramTime;
+
 
 typedef basic_string<TCHAR> T_STR;
 typedef basic_string<wchar_t> W_STG;
@@ -59,6 +77,10 @@ typedef list<DWORD>					DWORD_LIST;
 typedef list<DWORD>::iterator		DWORD_LIST_ITOR;
 typedef list< HANDLE >				HANDLE_LIST;
 typedef	list< HANDLE >::iterator	HANDLE_LIST_ITOR;
+
+
+
+
 
 template<class T> class Singleton
 {

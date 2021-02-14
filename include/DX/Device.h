@@ -3,9 +3,9 @@
 #include"JHWindow.h"
 
 
-class Device:public JHWindow, public Singleton<Device>
+class Device:public JHWindow
 {
-	friend class Singleton<Device>;
+
 protected:
 	D3D11_VIEWPORT m_ViewPort;
 	ComPtr<ID3D11Device> m_pd3dDevice;
@@ -23,9 +23,11 @@ public:
 		return m_pImmediateContext;
 	}
 
-public:
+
 	void SetViewPort();
 	bool ReleaseDevice();
+
+
 public:
 	HRESULT InitDevice();
 	HRESULT CreateGIFactory();
@@ -36,17 +38,10 @@ public:
 public:
 	virtual HRESULT DeleteDXResource();
 	virtual HRESULT	CreateDXResource();
+
 public:
 
 	Device() {}
 	virtual ~Device(){}
 };
 
-
-namespace DX
-{
-#define FR Device::GetInstance()
-
-	ID3D11DeviceContext*	GetContext();
-	ID3D11Device*	GetDevice();
-}

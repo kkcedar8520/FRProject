@@ -20,6 +20,7 @@ HRESULT Device::InitDevice()
 	{
 		return false;
 	}
+	DX::SetDXGlobal(m_pd3dDevice, m_pImmediateContext);
 	if (FAILED(hr = CreateGIFactory())) //SUCCEEDED(hr)
 	{
 		return false;
@@ -247,18 +248,4 @@ bool Device::ReleaseDevice()
 	
 
 	return true;
-}
-
-namespace DX
-{
-
-	ID3D11DeviceContext*	GetContext()
-	{
-		return FR.GetContext().Get();
-	}
-
-	ID3D11Device*	GetDevice()
-	{
-		return FR.GetDevice().Get();
-	}
 }

@@ -35,7 +35,7 @@ std::wstring BinaryReader::WString()
 	TCHAR cbuf[255] = {};
 
 	std::wstring sbuf;
-	fread(&ibuf, sizeof(TCHAR), 1, m_fp);
+	fread(&ibuf, sizeof(int), 1, m_fp);
 	fread((void*)cbuf, sizeof(TCHAR), ibuf, m_fp);
 
 

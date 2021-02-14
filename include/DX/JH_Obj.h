@@ -36,7 +36,7 @@ struct SCENEINFO
 //
 //	D3DXMATRIX m_Matworld;
 //};
-class JH_Obj :public JH_Model
+class JH_Obj 
 {
 private:
 
@@ -44,30 +44,30 @@ private:
 
 	std::vector<JH_Mesh> m_meshes;
 	std::vector<JH_Material>m_materials;
-	std::vector<JH_Bone>m_Bones;
+	std::vector<std::shared_ptr<JH_Bone>>m_Bones;
 public:
 	//Data
-	std::vector<JH_Material>& GetMaterial() { return m_materials; }
-	std::vector<JH_Mesh>& GetMesh() { return m_meshes; }
-	std::vector<JH_Bone>& GetBone() { return m_Bones; }
+	//std::vector<JH_Material>& GetMaterial() { return m_materials; }
+	//std::vector<JH_Mesh>& GetMesh() { return m_meshes; }
+	//std::vector<JH_Bone>& GetBone() { return m_Bones; }
 
 	bool ReadFile(const std::string file);
 	void BindingMesh();
 public:
-	JH_Material* MaterialFindByName(std::wstring Name);
-	JH_Material* MaterialFindByIndex(std::wstring Name);
+	JH_Material& MaterialFindByName(std::wstring Name);
+	JH_Material& MaterialFindByIndex(int  id);
 
-	JH_Bone* BoneFindByName(std::wstring Name);
-	JH_Bone* BoneFindByIndex(std::wstring Name);
+	JH_Bone& BoneFindByName(std::wstring Name);
+	JH_Bone& BoneFindByIndex(int  id);
 
-	JH_Mesh* MeshFindByName(std::wstring Name);
-	JH_Mesh* MeshFindByIndex(std::wstring Name);
+	JH_Mesh& MeshFindByName(std::wstring Name);
+	JH_Mesh& MeshFindByIndex(int  id);
 
 public:
-	bool Init()override;
-	bool Frame()override;
-	bool Render()override;
-	bool Release()override;
+	bool Init();
+	bool Frame();
+	bool Render();
+	bool Release();
 
 };
 

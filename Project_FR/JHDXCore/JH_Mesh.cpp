@@ -19,6 +19,16 @@ JH_Mesh::~JH_Mesh()
 
 }
 
+HRESULT JH_Mesh::CreateVertexData()
+{
+	m_dxHelper.m_iVertexSize = sizeof(PNCTIW_VERTEX);
+	return S_OK;
+}
+HRESULT JH_Mesh::CreateIndexData()
+{
+	return S_OK;
+}
+
 bool JH_Mesh::Init()
 {
 	return true;
@@ -27,13 +37,13 @@ bool JH_Mesh::Frame()
 {
 	return true;
 }
-bool JH_Mesh::Render(ID3D11DeviceContext* pContext)
+bool JH_Mesh::Render()
 {
 	UINT Stride = 0;
 	UINT offset = 0;
 	Stride = GetVertexSize();
-	pContext->IASetIndexBuffer(GetIndexBuffer(), DXGI_FORMAT_B8G8R8A8_UNORM, 0);
-	pContext->DrawIndexed(GetIndexData().size(), 0, 0);
+	DX::GetContext()->IASetIndexBuffer(GetIndexBuffer(), DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+	DX::GetContext()->DrawIndexed(GetIndexData().size(), 0, 0);
 	
 	return true;
 }
@@ -44,14 +54,9 @@ bool JH_Mesh::Release()
 
 void JH_Mesh::Binding(JH_Obj* Obj)
 {
-	m_iVertexSize = sizeof(PNCTIW_VERTEX);
-	m_pVB = DX::CreateVertexBuffer(Obj->m_dxHelper.GetDevice(), &m_VertexData.at(0), m_VertexData.size(), sizeof(PNCTIW_VERTEX));
-	m_pIB= DX::CreateIndexBuffer(Obj->m_dxHelper.GetDevice(), &m_IndicesData.at(0), m_IndicesData.size(), sizeof(int));
 
-	m_Material;
+	//auto tex = Obj->MaterialFindByName(m_MaterialName).Diffuse.c_str();
+//	JH_Model::Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/ObjShader.hlsl", tex);
+	
 }
 
-void Binding(JH_Obj* Obj)
-{
-
-}

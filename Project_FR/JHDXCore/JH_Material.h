@@ -28,6 +28,16 @@ public:
 	ComPtr<ID3D11Buffer> m_CB;
 	CB_MT				 m_CBMT;
 
+public:
+	inline std::wstring& GetDiffues() { return Diffuse; }
+	inline std::wstring& GetSpecular() { return Specular; }
+	inline std::wstring& GetEmissive() { return Emissive; }
+	inline std::wstring& GetNormal() { return Normal; }
+
+	inline void SetDiffues(std::wstring&& str) {  Diffuse=str; }
+	inline void SetSpecular(std::wstring&& str) {  Specular = str; }
+	inline void SetEmissive(std::wstring&& str) {  Emissive = str; }
+	inline void SetNormal(std::wstring&& str) {  Normal = str; }
 
 public:
 	bool Init();

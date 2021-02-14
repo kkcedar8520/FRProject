@@ -1,4 +1,5 @@
 #include "JH_Model.h"
+#include"TextureMgr.h"
 void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	D3DXMATRIX* matView,
 	D3DXMATRIX* matProj)
@@ -46,6 +47,7 @@ HRESULT JH_Model::CreateVertexBuffer()
 {
 	HRESULT hr = S_OK;
 	if (m_VertexData.size() <= 0) return E_FAIL;
+
 	m_dxHelper.m_iNumVertex = m_VertexData.size();
 	D3D11_BUFFER_DESC pDesc;
 	ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
@@ -92,8 +94,9 @@ HRESULT JH_Model::CreateConstantBuffer()
 	m_cbData.d = D3DXVECTOR4(1, 1, 1, 1);
 	m_cbData.d.x = g_fProgramTime;
 
-	m_dxHelper.SetConstantBuffer(DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, 1, sizeof(CB_DATA
-		)));
+	//ComPtr<ID3D11Buffer> tcp = DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, 1, sizeof(CB_DATA
+	//	));
+	//m_dxHelper.SetConstantBuffer(tcp.Get());
 
 	//MAP_UNMAP CPU 개입할수있는 버퍼
 	//D3D11_BUFFER_DESC pDesc;
@@ -245,14 +248,20 @@ bool    JH_Model::Create(
 HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName)
 {
 	HRESULT hr = S_OK;
-	if (pszTexFileName == NULL) return S_OK;
-	hr = D3DX11CreateShaderResourceViewFromFile(
-		m_dxHelper.GetDevice(),
-		pszTexFileName,
-		NULL,
-		NULL,
-		m_dxHelper.GetShaderResourceViewAddress(),
-		NULL);
+	//if (pszTexFileName == NULL) return S_OK;
+	//hr = D3DX11CreateShaderResourceViewFromFile(
+	//	m_dxHelper.GetDevice(),
+	//	pszTexFileName,
+	//	NULL,
+	//	NULL,
+	//	m_dxHelper.GetShaderResourceViewAddress(),
+	//	NULL);
+
+	//I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName,L"../../data/Texture/");
+
+	//m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(pszTexFileName)->m_pTextureRV);
+
+
 	return hr;
 }
 bool	JH_Model::UpdateBuffer()

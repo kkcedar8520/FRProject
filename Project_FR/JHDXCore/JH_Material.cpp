@@ -9,7 +9,7 @@ bool JH_Material::Init()
 	m_CBMT.EmissiveColor = EmissiveColor;
 	m_CBMT.SpecularColor = SpecularColor;
 
-	m_CB = DX::MakeConstantBuffer(DX::GetDevice(), &m_CBMT, sizeof(CB_MT), 1);
+	m_CB = DX::MakeConstantBuffer(DX::GetDevice().Get(), &m_CBMT, sizeof(CB_MT), 1);
 	
 
 

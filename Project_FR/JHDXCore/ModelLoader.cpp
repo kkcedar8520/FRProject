@@ -2,7 +2,11 @@
 
 ModelLoader::ModelLoader()
 {
-	importer = new Assimp::Importer();
+	//importer = new Assimp::Importer();
+}
+ModelLoader::~ModelLoader()
+{
+	//delete importer;
 }
 void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pDevice)
 {
@@ -56,7 +60,7 @@ void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pD
 		FilePath = "../../Data/Model/Binary/" + fileName + ".md";
 		WriteModelBinary(FilePath);
 	
-		Obj.ReadFile(fileName);
+//		Obj.ReadFile(fileName);
 	}
 }
 bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
@@ -64,7 +68,14 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 
 	cBone pBone;
 
-	pBone.BoneName = Node->mName.C_Str();
+
+	TCHAR WTextureName[1024];
+	int length = strlen(Node->mName.C_Str());
+
+	MultiByteToWideChar(CP_ACP, 0, Node->mName.C_Str(), length, &WTextureName[0], length + 1);
+	lstrcpynW(WTextureName, WTextureName, length + 1);
+
+	pBone.BoneName = WTextureName;
 	pBone.iBoneIndex =Index;
 	pBone.iBoneParentIndex = iParentIndex;
 
@@ -77,13 +88,13 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 
 
 	if (iParentIndex != 0)
-		D3DXMatrixIdentity(&MatParent);
-	else
 		pBone.m_Matworld = pBone.m_Matworld*MatParent;
+	else
+		D3DXMatrixIdentity(&MatParent);
 
 		m_Bones.push_back(std::move(pBone));
 
-		if (Node->mNumMeshes > 1)
+		if (Node->mNumMeshes >= 1)
 		{
 			ReadMeshData(Node, Index);
 		}
@@ -100,22 +111,33 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 	 cMesh aMesh;
 
 	aMesh.IBoneIndex = IBoneIndex;
-	aMesh.Name = Node->mName.C_Str();
+
+	TCHAR WTextureName[1024];
+	int length = strlen(Node->mName.C_Str());
+
+	MultiByteToWideChar(CP_ACP, 0, Node->mName.C_Str(), length, &WTextureName[0], length + 1);
+	lstrcpynW(WTextureName, WTextureName, length+1);
+
+	aMesh.Name = WTextureName;
 	
 	aiString tName;
 
 	for (int iMesh = 0; iMesh < Node->mNumMeshes; ++iMesh)
 	{
 		UINT Index = Node->mMeshes[iMesh];
-
+		
 		aiMesh* SrcMesh = m_pScene->mMeshes[Index];
-
+		
 		aiMaterial* SrcMaterial = m_pScene->mMaterials[SrcMesh->mMaterialIndex];
 
 		
 		SrcMaterial->Get(AI_MATKEY_NAME, tName);
-		aMesh.MaterialName = tName.C_Str();
-		
+
+		int length = strlen(tName.C_Str());
+
+		MultiByteToWideChar(CP_ACP, 0, tName.C_Str(), length, &WTextureName[0], length + 1);
+		lstrcpynW(WTextureName, WTextureName, length + 1);
+		aMesh.MaterialName = WTextureName;
 
 		for (int iVertex= 0; iVertex<SrcMesh->mNumVertices ; ++iVertex)
 		{
@@ -124,10 +146,14 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 			memcpy(&Vertex.p, &SrcMesh->mVertices[iVertex], sizeof(D3DXVECTOR3));
 
 			if(SrcMesh->HasNormals())
-			memcpy(&Vertex.n, &SrcMesh->mNormals[iVertex], sizeof(D3DXVECTOR2));
+			memcpy(&Vertex.n, &SrcMesh->mNormals[iVertex], sizeof(D3DXVECTOR3));
 
 			if (SrcMesh->HasTextureCoords(0))
-				memcpy(&Vertex.t, &SrcMesh->mTextureCoords[0], sizeof(D3DXVECTOR2));
+			{
+				Vertex.t.x=SrcMesh->mTextureCoords[0]->x;
+				Vertex.t.y = SrcMesh->mTextureCoords[0]->y;
+			}
+
 
 			aMesh.m_Vertices.push_back(std::move(Vertex));
 		}
@@ -145,10 +171,6 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 	}
 
 	return true;
-}
-ModelLoader::~ModelLoader()
-{
-
 }
 
 void ModelLoader::InitScene()
@@ -316,8 +338,10 @@ bool ModelLoader::WriteModelBinary(const std::string FilePath)
 
 
 			Writer->String(tMesh.MaterialName);
+			Writer->Int(tMesh.m_Vertices.size());
 			Writer->Byte(&tMesh.m_Vertices[0], sizeof(PNCTIW_VERTEX), tMesh.m_Vertices.size());
-			Writer->Byte(&tMesh.m_Indices[0], sizeof(INT), tMesh.m_Indices.size());
+			Writer->Int(tMesh.m_Indices.size());
+			Writer->Byte(&tMesh.m_Indices[0], sizeof(DWORD), tMesh.m_Indices.size());
 		
 		}
 	}

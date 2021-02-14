@@ -190,13 +190,21 @@ namespace JDX
 		//g_pRSEdit;
 		//g_pDSSEdit;
 
-		g_pDSS->Release();
-		g_pSamplerState->Release();
-		g_pAlpahBlend->Release();
-		g_pAlpahBlendDisable->Release();
-		g_pRSWireFrame->Release();
-		g_pRSSold->Release();
-		g_pDSSDisable->Release();
+		if (g_pDSS != nullptr)
+			g_pDSS->Release();
+		if (g_pSamplerState != nullptr)
+			g_pSamplerState->Release();
+		if (g_pAlpahBlend != nullptr)
+			g_pAlpahBlend->Release();
+		if (g_pAlpahBlendDisable != nullptr)
+			g_pAlpahBlendDisable->Release();
+		if (g_pRSWireFrame != nullptr)
+			g_pRSWireFrame->Release();
+		if (g_pRSSold != nullptr)
+			g_pRSSold->Release();
+		if (g_pDSSDisable != nullptr)
+			g_pDSSDisable->Release();
+
 
 		return true;
 	}

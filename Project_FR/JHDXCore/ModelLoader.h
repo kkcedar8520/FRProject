@@ -26,7 +26,7 @@ struct cMaterial
 };
 struct cBone
 {
-	std::string BoneName;
+	std::wstring BoneName;
 
 	INT iBoneIndex;
 	INT iBoneParentIndex;
@@ -36,13 +36,13 @@ struct cBone
 struct cMesh
 {
 	
-	std::string Name;
+	std::wstring Name;
 	int IBoneIndex;
 
-	std::string MaterialName;
+	std::wstring MaterialName;
 	
 	vector<PNCTIW_VERTEX> m_Vertices;
-	vector<INT>m_Indices;
+	vector<DWORD>m_Indices;
 
 	aiMesh m_mesh;
 
