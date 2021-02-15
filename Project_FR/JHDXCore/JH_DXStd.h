@@ -14,6 +14,7 @@
 #include<list>
 #include<queue>
 #include<algorithm>
+#include<utility>
 #include"JH_DXHelperEX.h"
 
 
@@ -27,8 +28,11 @@
 #ifdef _DEBUG
 #pragma comment(lib, "JHDXCore_d")
 #pragma comment(lib,"assimp")//Modle Importer library
+//#define _CRTDBG_MAP_ALLOC
+//#include <crtdbg.h>
 //#ifndef DBG_NEW
-//	#define DBG_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__)
+//	#define DBG_NEW new ( _CLIENT_BLOCK, __FILE__, __LINE__)
+//	#define malloc(s) _malloc_dbg(s,_NORMAL_BLOCK, __FILE__, __LINE__)
 //	#define new DBG_NEW
 //#endif 
 
@@ -36,6 +40,10 @@
 #pragma comment(lib,"JHDXCore_R")
 #endif
 using namespace Microsoft::WRL;
+
+
+
+
 
 
 
@@ -92,6 +100,14 @@ public:
 	}
 };
 #endif
+
+
+template<typename T>
+void VectorCleaner(std::vector<T>& v)
+{
+	
+	std::vector<T>().swap(v);
+}
 
 enum F_POSITION
 {

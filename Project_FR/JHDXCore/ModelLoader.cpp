@@ -60,7 +60,7 @@ void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pD
 		FilePath = "../../Data/Model/Binary/" + fileName + ".md";
 		WriteModelBinary(FilePath);
 	
-//		Obj.ReadFile(fileName);
+		Obj.ReadFile(fileName);
 	}
 }
 bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
@@ -155,7 +155,7 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 			}
 
 
-			aMesh.m_Vertices.push_back(std::move(Vertex));
+			aMesh.m_Vertices.emplace_back(Vertex);
 		}
 
 
@@ -167,8 +167,10 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 				aMesh.m_Indices.push_back(	aFace.mIndices[id]);
 			}
 		}
-		m_meshes.push_back(std::move(aMesh));
+		
+		m_meshes.emplace_back(aMesh);
 	}
+
 
 	return true;
 }
@@ -341,11 +343,9 @@ bool ModelLoader::WriteModelBinary(const std::string FilePath)
 			Writer->Int(tMesh.m_Vertices.size());
 			Writer->Byte(&tMesh.m_Vertices[0], sizeof(PNCTIW_VERTEX), tMesh.m_Vertices.size());
 			Writer->Int(tMesh.m_Indices.size());
-			Writer->Byte(&tMesh.m_Indices[0], sizeof(DWORD), tMesh.m_Indices.size());
-		
+			Writer->Byte(&tMesh.m_Indices.at(0), sizeof(DWORD), tMesh.m_Indices.size());
 		}
 	}
-
 
 	Writer->Close();
 	return true;

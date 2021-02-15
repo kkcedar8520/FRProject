@@ -40,8 +40,8 @@ struct VS_OUT_LINE
 };
 struct VS_IN
 {
-	float4 p : POSITION;
-	float4 n : NORMAL;
+	float3 p : POSITION;
+	float3 n : NORMAL;
 	float4 c : COLOR;
 	float2 t : TEX;
 };
@@ -71,7 +71,7 @@ VS_OUT VS(VS_IN inData)
 	float4 vWorld = mul(vLocal, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
-	vOut.p = vProj;
+	vOut.p = vLocal;
 	vOut.n = inData.n;
 	//inData.p * 10;
 	vOut.c = inData.c;
@@ -99,6 +99,9 @@ PS_OUT PS(PS_IN inData)
 {
 	PS_OUT vOut;
 	float4 txA = g_txDiffuseA.Sample(g_Sampler0, inData.t);
-	vOut.c = txA;
+	//vOut.c = txA;
+	vOut.c = float4(1,0,0,1);
 	return vOut;
+
+	
 }

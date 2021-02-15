@@ -39,12 +39,8 @@ bool JH_Mesh::Frame()
 }
 bool JH_Mesh::Render()
 {
-	UINT Stride = 0;
-	UINT offset = 0;
-	Stride = GetVertexSize();
-	DX::GetContext()->IASetIndexBuffer(GetIndexBuffer(), DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+	m_dxHelper.PreRender();
 	DX::GetContext()->DrawIndexed(GetIndexData().size(), 0, 0);
-	
 	return true;
 }
 bool JH_Mesh::Release()
@@ -55,8 +51,8 @@ bool JH_Mesh::Release()
 void JH_Mesh::Binding(JH_Obj* Obj)
 {
 
-	//auto tex = Obj->MaterialFindByName(m_MaterialName).Diffuse.c_str();
-//	JH_Model::Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/ObjShader.hlsl", tex);
+	auto tex = Obj->MaterialFindByName(m_MaterialName).Diffuse.c_str();
+  JH_Model::Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/ObjShader.hlsl", tex);
 	
 }
 

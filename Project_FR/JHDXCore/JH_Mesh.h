@@ -1,6 +1,6 @@
 
 #pragma once
-#include"JHDXCore.h"
+#include"JH_Model.h"
 #include"JH_Bone.h"
 #include"JH_Material.h"
 
@@ -38,7 +38,7 @@ private:
 	UINT					m_iVertexSize;
 
 	//std::vector<PNCTIW_VERTEX> m_PNCTIWlist;
-	CB_DATA					m_cbData;
+	CB_TF					m_cbData;
 private:
 	//BONE
 	JH_Bone m_Bone;

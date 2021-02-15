@@ -20,9 +20,9 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 		m_dxHelper.GetConstantBuffer(),
 		0, NULL, &m_cbData, 0, 0);
 
-	D3DXMatrixTranspose(&m_cbData.matWorld, &m_matWorld);
-	D3DXMatrixTranspose(&m_cbData.matView, &m_matView);
-	D3DXMatrixTranspose(&m_cbData.matProj, &m_matProj);
+	D3DXMatrixTranspose(&m_cbData.matWorld, &m_matWorld);//GPU의축과 다이렉트의 축이다름
+	D3DXMatrixTranspose(&m_cbData.matView, &m_matView);//
+	D3DXMatrixTranspose(&m_cbData.matProj, &m_matProj);//
 	
 	m_cbData.d.x = cosf(g_fProgramTime) *0.5f + 0.5f;
 	D3D11_MAPPED_SUBRESOURCE mss;
@@ -90,19 +90,21 @@ HRESULT JH_Model::CreateIndexBuffer()
 HRESULT JH_Model::CreateConstantBuffer()
 {
 	HRESULT hr=S_OK;
-	ZeroMemory(&m_cbData, sizeof(CB_DATA));
+	ZeroMemory(&m_cbData, sizeof(CB_TF));
 	m_cbData.d = D3DXVECTOR4(1, 1, 1, 1);
 	m_cbData.d.x = g_fProgramTime;
 
-	//ComPtr<ID3D11Buffer> tcp = DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, 1, sizeof(CB_DATA
-	//	));
-	//m_dxHelper.SetConstantBuffer(tcp.Get());
+	ComPtr<ID3D11Buffer> tcp; 
+	tcp.Attach(DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, 1, sizeof(CB_TF
+		)));
+
+	m_dxHelper.SetConstantBuffer(tcp.Get());
 
 	//MAP_UNMAP CPU 개입할수있는 버퍼
 	//D3D11_BUFFER_DESC pDesc;
 	//ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
 	//pDesc.Usage = D3D11_USAGE_DYNAMIC;
-	//pDesc.ByteWidth = sizeof(CB_DATA);
+	//pDesc.ByteWidth = sizeof(CB_TF);
 	//pDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	//pDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
@@ -247,6 +249,7 @@ bool    JH_Model::Create(
 }
 HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName)
 {
+	if (pszTexFileName == nullptr) { return S_FALSE; }
 	HRESULT hr = S_OK;
 	//if (pszTexFileName == NULL) return S_OK;
 	//hr = D3DX11CreateShaderResourceViewFromFile(
@@ -257,9 +260,9 @@ HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName)
 	//	m_dxHelper.GetShaderResourceViewAddress(),
 	//	NULL);
 
-	//I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName,L"../../data/Texture/");
+	I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName,L"../../data/Texture/");
 
-	//m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(pszTexFileName)->m_pTextureRV);
+	m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(pszTexFileName)->m_pTextureRV);
 
 
 	return hr;

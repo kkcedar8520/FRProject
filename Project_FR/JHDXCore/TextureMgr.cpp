@@ -128,7 +128,7 @@ INT TextureMgr::Add(ID3D11Device*	 pDevice, const TCHAR *pFileName, const TCHAR*
 			}
 		}
 	}
-	Texture *pPoint = NULL;
+	Texture *pPoint = nullptr;
 	SAFE_NEW(pPoint, Texture);
 	pPoint->SetPath(szPath);
 
@@ -153,12 +153,13 @@ bool TextureMgr::Release()
 Texture* const TextureMgr::GetPtr(INT iIndex)
 {
 	TemplateMapItor itor = TMap.find(iIndex);
-	if (itor == TMap.end()) return NULL;
+	if (itor == TMap.end()) return nullptr;
 	Texture *pPoint = (*itor).second;
 	return pPoint;
 }
 Texture* const TextureMgr::GetPtr(T_STR strFindName)
 {
+	if (strFindName.c_str() == nullptr) { return nullptr; }
 	for (TemplateMapItor itor = TMap.begin(); itor != TMap.end(); itor++)
 	{
 		Texture *pPoint = (Texture *)(*itor).second;
@@ -167,7 +168,7 @@ Texture* const TextureMgr::GetPtr(T_STR strFindName)
 			return (*itor).second;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 const TCHAR*	TextureMgr::SplitPath(const TCHAR* FileName)
 {

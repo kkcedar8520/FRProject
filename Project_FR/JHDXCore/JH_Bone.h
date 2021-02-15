@@ -1,6 +1,6 @@
 #pragma once
 
-#include"JH_Model.h"
+#include"JH_DXStd.h"
 class JH_Bone
 {
 	std::wstring m_sBoneName;
@@ -19,6 +19,6 @@ public:
 	inline void SetWorld(D3DXMATRIX mat) { m_Matworld=mat; }
 public:
 	JH_Bone();
-	~JH_Bone();
+	virtual ~JH_Bone();
 };
 

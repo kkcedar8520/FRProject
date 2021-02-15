@@ -104,7 +104,7 @@ public:
 	vector<AnimTrack> m_AnimTrackScale;
 
 
-	CB_DATA     m_cbData;
+	CB_TF     m_cbData;
 
 
 public:

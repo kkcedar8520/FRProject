@@ -12,7 +12,7 @@ void JH_DXHelperEX::PreRender()
 	UINT offset = 0;
 	
 	m_pContext->IASetVertexBuffers(
-		0, 1, &m_pVertexBuffer, &stride, &offset);
+		0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 
 	m_pContext->IASetIndexBuffer(m_pIndexBuffer.Get(),
 		DXGI_FORMAT_R32_UINT, 0);
@@ -120,7 +120,7 @@ namespace DX
 			}
 		}
 
-		return TempBuffer;
+		return std::move(TempBuffer);
 	}
 
 

@@ -21,7 +21,7 @@ struct VS_IN_LINE
 	float3 p : aaaa;
 	float4 c : bbbb;
 };
-cbuffer cb_Data : register(b0)
+cbuffer CB_TF : register(b0)
 {
 	float4x4 g_matWorld : packoffset(c0);
 	float4x4 g_matView : packoffset(c4);

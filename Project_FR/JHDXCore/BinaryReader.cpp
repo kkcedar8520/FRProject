@@ -54,9 +54,9 @@ bool BinaryReader::Bool()
 }
 int BinaryReader::Int()
 {
-	int ibuf[3];
-	fread(&ibuf[0], sizeof(int), 1, m_fp);
-	return ibuf[0];
+	int ibuf;
+	fread(&ibuf, sizeof(int), 1, m_fp);
+	return ibuf;
 }
 float BinaryReader::Float()
 {

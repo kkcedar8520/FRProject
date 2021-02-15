@@ -3,7 +3,7 @@
 
 bool BinaryWriter::Open(const std::string Path)
 {
-	m_fp = fopen(Path.c_str(), "wt");
+	m_fp = fopen(Path.c_str(), "wb");
 	return true;
 }
 bool BinaryWriter::Close()

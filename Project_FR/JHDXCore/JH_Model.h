@@ -112,7 +112,7 @@ struct PNCTIW_VERTEX
 		this->w = w;
 	}
 };
-struct CB_DATA
+struct CB_TF
 {
 	D3DXMATRIX matWorld;
 	D3DXMATRIX matView;
@@ -131,7 +131,7 @@ public:
 public:
 	std::vector<PNCTIW_VERTEX>	m_VertexData;
 	std::vector<DWORD>			m_IndexData;
-	CB_DATA						m_cbData;
+	CB_TF						m_cbData;
 	D3DXVECTOR3 m_Pos;
 public:
 	virtual void    SetMatrix(D3DXMATRIX* matWorld, D3DXMATRIX* matView, D3DXMATRIX* matProj);
