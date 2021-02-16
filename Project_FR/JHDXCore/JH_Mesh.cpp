@@ -39,8 +39,8 @@ bool JH_Mesh::Frame()
 }
 bool JH_Mesh::Render()
 {
-	m_dxHelper.PreRender();
-	DX::GetContext()->DrawIndexed(GetIndexData().size(), 0, 0);
+	m_dxHelper.Render();
+	
 	return true;
 }
 bool JH_Mesh::Release()

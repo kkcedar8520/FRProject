@@ -3,7 +3,12 @@
 
  void JHCamera::Update(D3DXVECTOR3 value)
 {
+	 D3DXMATRIX matRot;
+	
+	D3DXMatrixAffineTransformation(&matRot, 1.0f, NULL, &m_ViewArcBall.m_qNow, &m_vPos);
 
+	//m_matView =m_matView*matRot;
+	D3DXMatrixInverse(&m_matView, NULL, &matRot);
 }
 void JHCamera::MsgProc(HWND hWnd,
 	UINT msg,

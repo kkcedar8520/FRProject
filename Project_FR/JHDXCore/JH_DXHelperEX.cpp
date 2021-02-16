@@ -23,7 +23,7 @@ void JH_DXHelperEX::PreRender()
 	m_pContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
 	m_pContext->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
 	m_pContext->IASetInputLayout(m_pVertexLayout.Get());
-	m_pContext->PSSetShaderResources(0, 1, &m_pSRV);
+	m_pContext->PSSetShaderResources(0, 1, m_pSRV.GetAddressOf());
 	
 }
 void JH_DXHelperEX::Render()

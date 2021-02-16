@@ -6,8 +6,8 @@
 D3DXVECTOR3 HArcBall::ScreenToVector(
 	float nX, float nY)
 {
-	float x = -(nX - (g_rtClient.right/2)) / (g_rtClient.right / 2);
-	float y = (nY - (g_rtClient.bottom / 2)) / (g_rtClient.bottom / 2);
+	float x = (nX - (g_rtClient.right/2)) / (g_rtClient.right / 2);
+	float y = -(nY - (g_rtClient.bottom / 2)) / (g_rtClient.bottom / 2);
 	float z = 0.0f;
 
 	float mag = x * x + y*y;
@@ -23,11 +23,13 @@ D3DXVECTOR3 HArcBall::ScreenToVector(
 	}
 	return D3DXVECTOR3(x, y, z);
 }
+
+// 전에 찍은점과 현재찍은점의 사이의 각도만큼 법선벡터를 축으로하여 회전
 D3DXQUATERNION HArcBall::QuatFromBallPoints(
 	const D3DXVECTOR3& vFrom,
 	const D3DXVECTOR3& vTo)
 {
-	float fDot = D3DXVec3Dot(&vFrom, &vTo);
+	float fDot = D3DXVec3Dot(&vFrom, &vTo); //크기가둘다 1이므로 코사인각
 	D3DXVECTOR3 vAxis;
 	D3DXVec3Cross(&vAxis, &vFrom, &vTo);
 	return D3DXQUATERNION(vAxis.x, vAxis.y, vAxis.z,fDot);

@@ -8,9 +8,6 @@
     <Filter Include="소스 파일\dx">
       <UniqueIdentifier>{c9147d39-c6c9-4dc1-99c2-499e396920d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Shader">
-      <UniqueIdentifier>{a7ce0658-6aac-48fd-a9b8-001f1922f7e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shape">
       <UniqueIdentifier>{c072e26c-40b5-4b10-905c-84f26ded9312}</UniqueIdentifier>
     </Filter>
@@ -30,53 +27,56 @@
     <Filter Include="Light">
       <UniqueIdentifier>{529f18df-8493-4991-a46a-a71d7fd445fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map\Obj">
+    <Filter Include="Obj">
       <UniqueIdentifier>{df89195c-d891-42dc-8f37-d34ef4b9905c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map\Obj\text">
+    <Filter Include="Obj\text">
       <UniqueIdentifier>{f286eb92-c679-49a5-a0f9-aa659cd7742b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\헤더 파일">
+    <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\dx\Shader">
+      <UniqueIdentifier>{a7ce0658-6aac-48fd-a9b8-001f1922f7e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JHDXCore.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JHWindow.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Device.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_DXStd.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JHTimer.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="jMath.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_Input.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_Model.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_ShapePlane.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_ShapeLine.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JHShapeBox.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_Sprite.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JHCamera.h">
       <Filter>Camera</Filter>
@@ -85,16 +85,16 @@
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="JH_DxWrite.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TextureMgr.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_ObjStd.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_SKinStd.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>Map</Filter>
@@ -115,7 +115,7 @@
       <Filter>소스 파일\dx</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="HArcBall.h">
       <Filter>Camera</Filter>
@@ -130,15 +130,12 @@
       <Filter>Shape</Filter>
     </ClInclude>
     <ClInclude Include="MaxObj.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="JH_Template.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="LightObj.h">
-      <Filter>Light</Filter>
-    </ClInclude>
-    <ClInclude Include="LightMgr.h">
       <Filter>Light</Filter>
     </ClInclude>
     <ClInclude Include="NormalMap.h">
@@ -148,22 +145,22 @@
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="JH_Mesh.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="ModelLoader.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="JH_Map.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="JH_Obj.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="JH_Bone.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="JH_Material.h">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="BinaryWriter.h">
       <Filter>Utils</Filter>
@@ -176,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>소스 파일\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMgr.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,9 +236,6 @@
     <ClCompile Include="JH_DXHelper.cpp">
       <Filter>소스 파일\dx</Filter>
     </ClCompile>
-    <ClCompile Include="JH_DXHelperEX.cpp">
-      <Filter>소스 파일\dx</Filter>
-    </ClCompile>
     <ClCompile Include="JH_DxState.cpp">
       <Filter>소스 파일\dx</Filter>
     </ClCompile>
@@ -255,7 +252,7 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="MaxObj.cpp">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="LightObj.cpp">
       <Filter>Light</Filter>
@@ -270,22 +267,22 @@
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="ModelLoader.cpp">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="JH_Mesh.cpp">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="JH_Obj.cpp">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="JH_BaseObj.cpp">
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="JH_Bone.cpp">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="JH_Material.cpp">
-      <Filter>Map\Obj</Filter>
+      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="BinaryWriter.cpp">
       <Filter>Utils</Filter>
@@ -299,16 +296,19 @@
     <ClCompile Include="Shader.cpp">
       <Filter>소스 파일\dx</Filter>
     </ClCompile>
+    <ClCompile Include="JH_DXHelperEX.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefalutShader.txt">
-      <Filter>소스 파일\Shader</Filter>
+      <Filter>소스 파일\dx\Shader</Filter>
     </Text>
     <Text Include="sprite.txt">
-      <Filter>Map\Obj\text</Filter>
+      <Filter>Obj\text</Filter>
     </Text>
     <Text Include="..\..\data\Shader\LightShader.txt">
-      <Filter>소스 파일\Shader</Filter>
+      <Filter>소스 파일\dx\Shader</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

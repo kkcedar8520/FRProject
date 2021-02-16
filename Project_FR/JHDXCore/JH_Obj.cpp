@@ -104,6 +104,7 @@ void JH_Obj::BindingMesh()
 {
 	for (auto& mesh : m_meshes)
 	{
+		//mesh.m_matWorld
 		mesh.Binding(this);
 	}
 }
@@ -135,11 +136,17 @@ JH_Bone& JH_Obj::BoneFindByName(std::wstring Name)
 		}
 	}
 }
-//JH_Bone& JH_Obj::BoneFindByIndex(std::wstring Name)
-//{
-//
-//}
-//
+JH_Bone& JH_Obj::BoneFindByIndex(int id)
+{
+	for (auto Bone : m_Bones)
+	{
+		if (Bone.GetBoneIndex() == id)
+		{
+			return Bone;
+		}
+	}
+}
+
 //JH_Mesh& JH_Obj::MeshFindByName(std::wstring Name)
 //{
 //
@@ -156,21 +163,26 @@ void JH_Obj::SetTransform(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Pr
 		m_matWorld =* world;
 	}
 
-	if (world != nullptr)
+	if (View != nullptr)
 	{
-		m_matView = *world;
+		m_matView = *View;
 	}
 
-	if (world != nullptr)
+	if (Proj != nullptr)
 	{
-		m_matProj = *world;
+		m_matProj = *Proj;
 	}
 
 
-	D3DXMatrixTranspose(&m_sCBTF.matWorld,&m_matWorld);
-	D3DXMatrixTranspose(&m_sCBTF.matView, &m_matView);
-	D3DXMatrixTranspose(&m_sCBTF.matProj, &m_matProj);
+	////D3DXMatrixTranspose(&m_sCBTF.matWorld,&m_matWorld);
+	////D3DXMatrixTranspose(&m_sCBTF.matView, &m_matView);
+	////D3DXMatrixTranspose(&m_sCBTF.matProj, &m_matProj);
 	
+	for(auto& mesh: m_meshes)
+	{
+		mesh.SetMatrix(&m_matWorld, &m_matView, &m_matProj);
+		
+	}
 }
 
 void JH_Obj::UpdateTarnsformCB()

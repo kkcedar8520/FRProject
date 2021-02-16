@@ -11,9 +11,9 @@ public:
 public:
 	void Update(D3DXVECTOR4 value);
 	virtual void UpdateCameraHeight(float Height);
-	//void MsgProc(HWND hWnd,
-	//	UINT msg,
-	//	WPARAM wParam, LPARAM lParam)override;
+	void MsgProc(HWND hWnd,
+		UINT msg,
+		WPARAM wParam, LPARAM lParam)override;
 public:
 	bool Frame()override;
 

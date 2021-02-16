@@ -76,22 +76,23 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 	lstrcpynW(WTextureName, WTextureName, length + 1);
 
 	pBone.BoneName = WTextureName;
-	pBone.iBoneIndex =Index;
+	pBone.iBoneIndex = Index;
 	pBone.iBoneParentIndex = iParentIndex;
 
-	
+
 	D3DXMATRIX transform(Node->mTransformation[0]);
 
 	D3DXMatrixTranspose(&pBone.m_Matworld, &transform);
-	
-	D3DXMATRIX MatParent;
 
+	D3DXMATRIX MatParent;
+	
 
 	if (iParentIndex != 0)
-		pBone.m_Matworld = pBone.m_Matworld*MatParent;
+		MatParent = m_Bones[iParentIndex].m_Matworld;
 	else
 		D3DXMatrixIdentity(&MatParent);
 
+		pBone.m_Matworld = pBone.m_Matworld*MatParent;	
 		m_Bones.push_back(std::move(pBone));
 
 		if (Node->mNumMeshes >= 1)
@@ -150,8 +151,9 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 
 			if (SrcMesh->HasTextureCoords(0))
 			{
-				Vertex.t.x=SrcMesh->mTextureCoords[0]->x;
-				Vertex.t.y = SrcMesh->mTextureCoords[0]->y;
+				
+				Vertex.t.x= SrcMesh->mTextureCoords[0][iVertex].x;
+				Vertex.t.y= SrcMesh->mTextureCoords[0][iVertex].y;
 			}
 
 
