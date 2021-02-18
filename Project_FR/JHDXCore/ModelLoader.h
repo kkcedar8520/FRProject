@@ -1,52 +1,13 @@
 #pragma once
 
-#include "Importer.hpp"
-#include "cimport.h"
-#include "postprocess.h"
-#include "scene.h"
 #include"JH_Mesh.h"
 #include"JH_Obj.h"
 #include"BinaryWriter.h"
 #include"TextureMgr.h"
+#include"LoadType.h"
 
 class BinaryWriter;
-struct cMaterial
-{
-	std::wstring Name;
 
-	D3DXVECTOR4 AmbientColor;
-	D3DXVECTOR4 DiffuseColor;
-	D3DXVECTOR4 SpecularColor;
-	D3DXVECTOR4 EmissiveColor;
-
-	std::wstring Diffuse;
-	std::wstring Specular;
-	std::wstring Emissive;
-	std::wstring Normal;
-};
-struct cBone
-{
-	std::wstring BoneName;
-
-	INT iBoneIndex;
-	INT iBoneParentIndex;
-
-	D3DXMATRIX m_Matworld;
-};
-struct cMesh
-{
-	
-	std::wstring Name;
-	int IBoneIndex;
-
-	std::wstring MaterialName;
-	
-	vector<PNCTIW_VERTEX> m_Vertices;
-	vector<DWORD>m_Indices;
-
-	aiMesh m_mesh;
-
-};
 class ModelLoader
 
 {
@@ -55,9 +16,9 @@ private:
 	
 	const aiScene*					m_pScene;        //모델 정보
 
-	vector<cBone>					m_Bones;		//본 정보
-	vector<cMaterial>				m_Materials;	//메테리얼 정보
-	vector<cMesh>					m_meshes;        //매쉬 정보
+	vector<asBone>					m_Bones;		//본 정보
+	vector<asMaterial>				m_Materials;	//메테리얼 정보
+	vector<asMesh>					m_meshes;        //매쉬 정보
 
 
 	//vector<pair<string, Bone>>		m_Bones;        //뼈 정보
@@ -69,25 +30,32 @@ private:
 	ID3D11Device*					m_pDevice;
 	Assimp::Importer * importer;
 
-	int m_iBaseIndex;
-	int m_iVertexIndex;
+	
 
 	std::wstring WTextureName;
+
+	//Animation;
+	std::unique_ptr<asClip>			m_asClip;
+	std::vector<asClipNode>			m_vClipNode;
 public:
 	ModelLoader();
 	~ModelLoader();
 
-	void InitScene();
+	
 
 	void ModelLoad(const string& fileName,JH_Obj& Obj,ID3D11Device* pDevice);
-
-
+	//Animation Export
+	void ExportAnimClip(const std::string& fileName);
+	void ReadClipData(int AnimIndex);
+	void ReadKeyFrameData(aiNode* Node);
+	void WriteAniClip(const string& fileName);
+	
 
 
 	
 	
-	//void Import(const string& fileName);
 
+	//ExportModel
 	bool ReadBoneData(aiNode* Node,int Index,int iParentIndex);
 	bool ReadMeshData(aiNode* Node,int IBoneIndex);
 	bool ReadMaterial();

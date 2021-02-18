@@ -210,6 +210,7 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="jMath.h" />
     <ClInclude Include="LightMgr.h" />
     <ClInclude Include="LightObj.h" />
+    <ClInclude Include="LoadType.h" />
     <ClInclude Include="MaxObj.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelView.h" />
@@ -269,6 +270,7 @@ copy "*.lib" "../../lib/"
     <Text Include="..\..\data\Shader\LightShader.txt" />
     <Text Include="DefalutShader.txt" />
     <Text Include="sprite.txt" />
+    <Text Include="Anim.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

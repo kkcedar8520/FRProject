@@ -30,9 +30,13 @@ D3DXQUATERNION HArcBall::QuatFromBallPoints(
 	const D3DXVECTOR3& vTo)
 {
 	float fDot = D3DXVec3Dot(&vFrom, &vTo); //크기가둘다 1이므로 코사인각
+	float Radian = acos(fDot);
+	float Angle = Radian * (180.0f / D3DX_PI);
 	D3DXVECTOR3 vAxis;
+
 	D3DXVec3Cross(&vAxis, &vFrom, &vTo);
-	return D3DXQUATERNION(vAxis.x, vAxis.y, vAxis.z,fDot);
+	D3DXMatrixRotationAxis(&m_matRotation,&vAxis,Angle);
+	return D3DXQUATERNION(vAxis.x, vAxis.y, vAxis.z, fDot);
 
 }
 void  HArcBall::OnBegin(int nX, int nY)

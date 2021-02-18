@@ -42,6 +42,8 @@ bool BinaryWriter::Int(int iData)
 }
 bool BinaryWriter::Float(float f)
 {
+
+	fwrite(&f, sizeof(float), 1, m_fp);
 	return true;
 }
 

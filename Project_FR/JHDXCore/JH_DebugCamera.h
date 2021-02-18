@@ -8,8 +8,9 @@ public:
 	float m_fPitch;
 	bool  m_bDrag;
 	POINT m_LastPosition;
+	D3DXQUATERNION m_StackQ ;
 public:
-	void Update(D3DXVECTOR4 value);
+	void Update(D3DXVECTOR3 value)override;
 	virtual void UpdateCameraHeight(float Height);
 	void MsgProc(HWND hWnd,
 		UINT msg,

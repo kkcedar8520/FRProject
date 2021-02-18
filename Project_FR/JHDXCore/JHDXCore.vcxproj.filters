@@ -40,6 +40,9 @@
     <Filter Include="소스 파일\dx\Shader">
       <UniqueIdentifier>{a7ce0658-6aac-48fd-a9b8-001f1922f7e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Refference">
+      <UniqueIdentifier>{72ee55bc-6a41-41f7-98d7-bb41a60f929e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JHDXCore.h">
@@ -177,6 +180,9 @@
     <ClInclude Include="LightMgr.h">
       <Filter>Camera</Filter>
     </ClInclude>
+    <ClInclude Include="LoadType.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JHDXCore.cpp">
@@ -309,6 +315,9 @@
     </Text>
     <Text Include="..\..\data\Shader\LightShader.txt">
       <Filter>소스 파일\dx\Shader</Filter>
+    </Text>
+    <Text Include="Anim.txt">
+      <Filter>Refference</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

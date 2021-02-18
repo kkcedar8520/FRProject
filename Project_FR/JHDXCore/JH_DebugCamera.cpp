@@ -5,11 +5,12 @@ void  JH_DebugCamera::UpdateCameraHeight(float Height)
 {
 	m_vPos.y = Height;
 }
-void JH_DebugCamera::Update(D3DXVECTOR4 value)
+void JH_DebugCamera::Update(D3DXVECTOR3 value)
 {
+	
 	D3DXQUATERNION qRot;
 	D3DXMATRIX matRot;
-	D3DXQuaternionRotationYawPitchRoll(&qRot, value.y, value.x, value.z);
+	D3DXQuaternionRotationYawPitchRoll(&qRot, value.y, value.x, value.z);	
 	D3DXMatrixAffineTransformation(&matRot, 1.0f, NULL, &qRot, &m_vPos);
 	D3DXMatrixInverse(&m_matView, NULL, &matRot);
 
@@ -37,8 +38,9 @@ if (msg == WM_MOUSEMOVE)
 	int iMouseY = HIWORD(lParam);
 	if (m_bDrag)
 	{
-		m_fYaw += (iMouseX - m_LastPos.x)*g_SecondPerFrame * 2;
-		m_fPitch += (iMouseY - m_LastPos.y)*g_SecondPerFrame * 2;
+		
+		m_fYaw += RadianToDegree((iMouseX - m_LastPos.x)*g_SecondPerFrame * 0.2);
+		m_fPitch += RadianToDegree((iMouseY - m_LastPos.y)*g_SecondPerFrame * 0.2);
 		m_LastPos.x = iMouseX;
 		m_LastPos.y = iMouseY;
 	}
@@ -76,27 +78,30 @@ bool JH_DebugCamera::Frame()
 		m_vPos += m_vSide * g_SecondPerFrame * 50;
 	}
 
-	//if (G_Input.KeyCheck('A'))
-	//{
-	//	m_vPos -= m_vSide * g_SecondPerFrame * 50;
-	//}
-	//if (G_Input.KeyCheck(VK_UP))
-	//{
-	//	m_fYaw += g_SecondPerFrame * 5;
-	//}
-	//if (G_Input.KeyCheck('A'))
-	//{
-	//	m_vPos -= m_vSide * g_SecondPerFrame * 50;
-	//}
-	//if (G_Input.KeyCheck('A'))
-	//{
-	//	m_vPos -= m_vSide * g_SecondPerFrame * 50;
-	//}
-	Update(D3DXVECTOR4(m_fPitch, m_fYaw, m_fRoll, 0));
+	if (G_Input.KeyCheck('A'))
+	{
+		m_vPos -= m_vSide * g_SecondPerFrame * 50;
+	}
+	if (G_Input.KeyCheck(VK_RIGHT))
+	{
+		m_fYaw += g_SecondPerFrame * 2;
+	}
+	if (G_Input.KeyCheck(VK_LEFT))
+	{
+		m_fYaw -= g_SecondPerFrame *2;
+	}
+	if (G_Input.KeyCheck(VK_UP))
+	{
+		m_fPitch -= g_SecondPerFrame * 2;
+	}
+	if (G_Input.KeyCheck(VK_DOWN))
+	{
+		m_fPitch += g_SecondPerFrame * 2;
+	}
+	Update(D3DXVECTOR3(m_fPitch, m_fYaw, m_fRoll));
 
 
 	UpdateBasisVector();
-	
 	
 
 	return true;

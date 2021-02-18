@@ -23,11 +23,9 @@ private:
 	UINT				m_iTexIndex;
 	UINT				m_iBaseVertex;
 	UINT				m_iNumVertex;
-	int					m_iParentIndex;
+	int					m_iBoneIndex;
 
 	
-
-	D3DXMATRIX				m_matWorld;
 
 	//vector<PNCTIW_VERTEX>	m_VertexData;
 	//vector<int>				m_IndicesData;
@@ -55,12 +53,20 @@ public:
 	vector<DWORD>&			GetIndexData()		{return  m_IndexData; }
 
 	UINT					GetVertexSize()		{return  m_iVertexSize; }
+
+	INT						GetBoneIndex()		{ return m_iBoneIndex; }
+	std::wstring			GetName()			{ return m_szName; }
+	std::wstring			GetMaterialName()	{ return m_MaterialName; }
 public:
 	void SetName(std::wstring&& str)			{ m_szName = str; }
 	void SetParentName(std::wstring&& str)		{ m_szParentName = str; }
-	void SetParentIndex(int&& id)				{ m_iParentIndex = id; }
+	void SetBoneIndex(int&& id)				{ m_iBoneIndex = id; }
 	void SetMatrerialName(std::wstring&& str)	{ m_MaterialName = str;}
 	void SetWorld(D3DXMATRIX&& Mat)				{ m_matWorld = Mat; }
+	//Transform
+	void SetTransform(D3DXMATRIX* world=nullptr,D3DXMATRIX* view=nullptr,D3DXMATRIX* proj=nullptr);
+	//Bone
+	void SetBone(JH_Bone& bone) { m_Bone = bone; }
 public:
 	void Binding(JH_Obj* Obj);
 	bool Init()override;

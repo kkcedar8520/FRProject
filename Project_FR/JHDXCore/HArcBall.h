@@ -23,7 +23,7 @@ public:
 		const D3DXVECTOR3& vTo);
 	D3DXMATRIX* GetRotationMatrix()
 	{
-		return D3DXMatrixRotationQuaternion(&m_matRotation, &m_qNow);
+		return &m_matRotation;
 	}
 public:
 	HArcBall();

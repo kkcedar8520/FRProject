@@ -52,8 +52,7 @@ void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pD
 		m_numMaterial = m_pScene->mNumMaterials;
 
 		ReadMaterial();
-		m_iBaseIndex = 0;
-		m_iVertexIndex = 0;
+
 
 		ReadBoneData(m_pScene->mRootNode, 0, 0);
 		
@@ -66,7 +65,7 @@ void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pD
 bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 {
 
-	cBone pBone;
+	asBone pBone;
 
 
 	TCHAR WTextureName[1024];
@@ -78,15 +77,17 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 	pBone.BoneName = WTextureName;
 	pBone.iBoneIndex = Index;
 	pBone.iBoneParentIndex = iParentIndex;
-
-
+	
+	
 	D3DXMATRIX transform(Node->mTransformation[0]);
 
+	//좌표계변환 열우선을 행우선으로 
 	D3DXMatrixTranspose(&pBone.m_Matworld, &transform);
 
 	D3DXMATRIX MatParent;
 	
 
+	//좌표계통일을위해 부모 좌표계를 곱함
 	if (iParentIndex != 0)
 		MatParent = m_Bones[iParentIndex].m_Matworld;
 	else
@@ -102,14 +103,15 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 		
 		for (int i = 0; i <Node->mNumChildren; i++)
 		{
-			ReadBoneData(Node->mChildren[i],iParentIndex+1 , Index);
+			ReadBoneData(Node->mChildren[i], m_Bones.size(), Index);
 		}
 
 		return true;
 }
 bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 {
-	 cMesh aMesh;
+	if(Node->mNumMeshes<1){return false;}
+	 asMesh aMesh;
 
 	aMesh.IBoneIndex = IBoneIndex;
 
@@ -128,7 +130,8 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 		UINT Index = Node->mMeshes[iMesh];
 		
 		aiMesh* SrcMesh = m_pScene->mMeshes[Index];
-		
+
+
 		aiMaterial* SrcMaterial = m_pScene->mMaterials[SrcMesh->mMaterialIndex];
 
 		
@@ -140,6 +143,7 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 		lstrcpynW(WTextureName, WTextureName, length + 1);
 		aMesh.MaterialName = WTextureName;
 
+		UINT StartVertex = aMesh.m_Vertices.size();
 		for (int iVertex= 0; iVertex<SrcMesh->mNumVertices ; ++iVertex)
 		{
 			PNCTIW_VERTEX Vertex;
@@ -166,7 +170,8 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 			aiFace& aFace = SrcMesh->mFaces[f];
 			for ( int id = 0;  id < aFace.mNumIndices; ++id)
 			{
-				aMesh.m_Indices.push_back(	aFace.mIndices[id]);
+				aMesh.m_Indices.emplace_back(	aFace.mIndices[id]);
+				aMesh.m_Indices.back() += StartVertex;
 			}
 		}
 		
@@ -177,18 +182,7 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 	return true;
 }
 
-void ModelLoader::InitScene()
-{
-	for (UINT i = 0; i < m_meshes.size(); ++i) {
 
-		const aiMesh* pMesh = m_pScene->mMeshes[i];
-
-		
-
-		//m_numVertices += m_meshes[i].m_VertexData.size();
-
-	}
-}
 
 bool ModelLoader::ReadMaterial()
 {
@@ -290,6 +284,152 @@ bool ModelLoader::ReadMaterial()
 	return true;
 }
 
+void ModelLoader::ExportAnimClip(const std::string& fileName)
+{
+	std::string Path="../data/Model/Animation/"+fileName+".clip";
+
+	ReadClipData(0);
+
+}
+void ModelLoader::ReadClipData(int AnimIndex)
+{
+	aiAnimation* aiAnim = m_pScene->mAnimations[AnimIndex];
+	m_asClip = make_unique<asClip>();
+
+	m_asClip->Name = aiAnim->mName.C_Str();
+
+	m_asClip->FrameRate = aiAnim->mTicksPerSecond;
+	//Float 슬라이싱 때문에 +1
+	m_asClip->FrameCount = aiAnim->mDuration+1;
+	//본의 키프레임을 가져오는것 본별로 애니메이션 키프레임 가지고옴 모든 본이 가지고있진않다
+	for ( int ibone = 0; ibone < aiAnim->mNumChannels; ibone++)
+	{
+		asClipNode ClipNode;
+		aiNodeAnim *Node = aiAnim->mChannels[ibone];
+
+		ClipNode.Name=Node->mNodeName.C_Str();
+		
+		UINT Key = max(Node->mNumPositionKeys, max(Node->mNumScalingKeys, Node->mNumRotationKeys));
+
+		asFrameData FrameData;
+		for (int k = 0; k < Key; k++)
+		{
+			
+			bool bVaild = false;
+
+			float t=ClipNode.KeyFrame.size();
+			//오차범위보다 작을시 같은 프레임
+			if (fabsf(Node->mPositionKeys[k].mTime - t) <= D3DX_16F_EPSILON)
+			{
+				FrameData.Frame=Node->mPositionKeys[k].mTime;
+				memcpy(&FrameData.vPosition, &Node->mPositionKeys[k].mValue, sizeof(D3DXVECTOR3));
+				
+				bVaild = true;
+			}
+
+			if (fabsf(Node->mRotationKeys[k].mTime - t) <= D3DX_16F_EPSILON)
+			{
+				FrameData.Frame = Node->mRotationKeys[k].mTime;
+				memcpy(&FrameData.qRotation, &Node->mRotationKeys[k].mValue, sizeof(D3DXQUATERNION));
+
+				bVaild = true;
+			}
+
+			if (fabsf(Node->mScalingKeys[k].mTime - t) <= D3DX_16F_EPSILON)
+			{
+				FrameData.Frame = Node->mScalingKeys[k].mTime;
+				memcpy(&FrameData.vScale, &Node->mScalingKeys[k].mValue, sizeof(D3DXVECTOR3));
+
+				bVaild = true;
+			}
+
+			if (bVaild)
+				ClipNode.KeyFrame.emplace_back(FrameData);
+		}
+
+		//애니메이션이없는 빈부분을 마지막부분으로 빈개수만큼 채워넣음
+		if (ClipNode.KeyFrame.size()<m_asClip->FrameCount)
+		{
+			UINT KeyOffset = m_asClip->FrameCount - ClipNode.KeyFrame.size();
+			
+			FrameData = ClipNode.KeyFrame.back();
+			for (int i = 0; i < KeyOffset; i++)
+			{
+				ClipNode.KeyFrame.emplace_back(FrameData);
+			}
+		}
+		m_asClip->Duration = max(m_asClip->Duration, ClipNode.KeyFrame.back().Frame);
+
+		m_vClipNode.emplace_back(ClipNode);
+	}
+	ReadKeyFrameData(m_pScene->mRootNode);
+}
+void ModelLoader::ReadKeyFrameData(aiNode* Node)
+{
+	asKeyFrame KeyFrame;
+	KeyFrame.BoneName = Node->mName.C_Str();
+
+	asFrameData FrameData;
+	for (int k = 0; k < m_asClip->FrameCount;++k)
+	{
+		asClipNode* ClipNode = nullptr;
+		for (int i = 0; i <m_vClipNode.size(); i++)
+		{
+			
+			if (m_vClipNode[i].Name == Node->mName.C_Str())
+			{
+				ClipNode = &m_vClipNode[i];
+				break;
+			}
+		}
+		if (ClipNode == nullptr)
+		{
+			D3DXMATRIX matTransform= Node->mTransformation[0];
+			D3DXMatrixTranspose(&matTransform,&matTransform);
+			D3DXMatrixDecompose(&FrameData.vScale, &FrameData.qRotation, &FrameData.vPosition, &matTransform);
+		}
+		else
+		{
+			FrameData = ClipNode->KeyFrame[k];
+		}
+		KeyFrame.Transform.emplace_back(FrameData);
+	}
+	m_asClip->vKeyFrame.emplace_back(KeyFrame);
+
+	for  (int iChild = 0; iChild < Node->mNumChildren;++iChild)
+	{
+		ReadKeyFrameData(Node->mChildren[iChild]);
+	}
+}
+void ModelLoader::WriteAniClip(const string& fileName)
+{
+	unique_ptr<BinaryWriter> Writer = make_unique<BinaryWriter>();
+
+	Writer->Open(fileName);
+
+	if (m_asClip->vKeyFrame.size() > 0)
+	{
+		Writer->String(m_asClip->Name);
+		Writer->Float(m_asClip->FrameCount);
+
+		Writer->Float(m_asClip->FrameRate);
+		Writer->Float(m_asClip->Duration);
+		
+		for (int  k = 0; k < m_asClip->vKeyFrame.size(); k++)
+		{
+			Writer->String(m_asClip->vKeyFrame[k].BoneName);
+			asKeyFrame &KeyFrame=m_asClip->vKeyFrame[k];
+			for (int t = 0; KeyFrame.Transform.size();++t)
+			{
+				Writer->Float(KeyFrame.Transform[t].Frame);
+				Writer->Byte(KeyFrame.Transform[t].vPosition, sizeof(D3DXVECTOR3),1);
+				Writer->Byte(KeyFrame.Transform[t].qRotation, sizeof(D3DXQUATERNION), 1);
+				Writer->Byte(KeyFrame.Transform[t].vScale, sizeof(D3DXVECTOR3), 1);
+			}
+		}
+	}
+	Writer->Close();
+}
 bool ModelLoader::WriteModelBinary(const std::string FilePath)
 {
 	unique_ptr<BinaryWriter> Writer = make_unique<BinaryWriter>();
@@ -320,7 +460,7 @@ bool ModelLoader::WriteModelBinary(const std::string FilePath)
 		Writer->Int(m_Bones.size());
 		for (int i = 0; i < m_Bones.size(); i++)
 		{
-			cBone& tBone=m_Bones[i];
+			asBone& tBone=m_Bones[i];
 			Writer->String(tBone.BoneName);
 			
 			Writer->Int(tBone.iBoneIndex);
@@ -335,7 +475,7 @@ bool ModelLoader::WriteModelBinary(const std::string FilePath)
 		Writer->Int(m_meshes.size());
 		for (int i = 0; i < m_meshes.size(); i++)
 		{
-			cMesh& tMesh = m_meshes[i];
+			asMesh& tMesh = m_meshes[i];
 
 			Writer->String(tMesh.Name);
 			Writer->Int(tMesh.IBoneIndex);
@@ -352,3 +492,4 @@ bool ModelLoader::WriteModelBinary(const std::string FilePath)
 	Writer->Close();
 	return true;
 }
+

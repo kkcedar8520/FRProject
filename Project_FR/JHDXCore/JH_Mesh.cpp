@@ -8,7 +8,7 @@ JH_Mesh::JH_Mesh()
 	m_iTexIndex = 0;
 	m_iBaseVertex = 0;
 	m_iNumVertex = 0;
-	m_iParentIndex = -1;
+	m_iBoneIndex = -1;
 
 
 	D3DXMatrixIdentity(&m_matWorld);
@@ -19,6 +19,22 @@ JH_Mesh::~JH_Mesh()
 
 }
 
+//void JH_Mesh::SetTransform(D3DXMATRIX* world, D3DXMATRIX* view, D3DXMATRIX* proj)
+//{
+//	if (world!=nullptr)
+//	{
+//		m_matWorld *= *world;
+//	}
+//	if (world != nullptr)
+//	{
+//		m_matWorld = *world;
+//	}
+//	if (world != nullptr)
+//	{
+//		m_matWorld = *world;
+//	}
+//
+//}
 HRESULT JH_Mesh::CreateVertexData()
 {
 	m_dxHelper.m_iVertexSize = sizeof(PNCTIW_VERTEX);
@@ -53,6 +69,8 @@ void JH_Mesh::Binding(JH_Obj* Obj)
 
 	auto tex = Obj->MaterialFindByName(m_MaterialName).Diffuse.c_str();
   JH_Model::Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/ObjShader.hlsl", tex);
+
+	m_matWorld = m_Bone.GetWorld();
 	
 }
 

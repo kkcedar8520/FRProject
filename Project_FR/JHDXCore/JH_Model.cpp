@@ -261,7 +261,7 @@ HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName)
 	//	NULL);
 
 	I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName,L"../../data/Texture/");
-
+	if(I_Texture.GetPtr(pszTexFileName)!=nullptr)
 	m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(pszTexFileName)->m_pTextureRV);
 
 

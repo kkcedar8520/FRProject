@@ -5,13 +5,13 @@
 bool Project_FR::Init()
 {
 
- 	m_ModleLoader.ModelLoad("Box", TestObj,m_pd3dDevice.Get());
+ 	m_ModleLoader.ModelLoad("pov_pilot_medium_bloodhound_LOD0", TestObj,m_pd3dDevice.Get());
 	
 	//test.Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/DefaultShader.txt",L"cncr25S.bmp");
 	TestObj.Init();
 	
 
-	m_pMainCamera->CreateViewMatrix(D3DXVECTOR3(0, 0, -100.0f), D3DXVECTOR3(0, 0, 0));
+	m_pMainCamera->CreateViewMatrix(D3DXVECTOR3(0, 0, -50.0f), D3DXVECTOR3(0, 0, 0));
 	m_pMainCamera->UpdateBasisVector();
 
 
@@ -22,6 +22,9 @@ bool Project_FR::Init()
 }
 bool Project_FR::Frame()
 {
+
+
+
 
 	TestObj.SetTransform(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	TestObj.Frame();

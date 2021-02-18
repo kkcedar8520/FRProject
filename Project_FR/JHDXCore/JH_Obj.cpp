@@ -13,7 +13,7 @@ bool JH_Obj::ReadFile(const std::string file)
 
 	if (m_materials.size() > 0)
 	{
-		for (int i = 0; i < m_materials.size(); i++)
+		for (int i = 0; i < m_materials.size(); ++i)
 		{
 			JH_Material& tMat=m_materials[i];
 
@@ -33,7 +33,7 @@ bool JH_Obj::ReadFile(const std::string file)
 	m_Bones.resize(Reader.Int());
 	if (m_Bones.size() > 0)
 	{
-		for (int i = 0; i < m_Bones.size(); i++)
+		for (int i = 0; i < m_Bones.size(); ++i)
 		{
 			JH_Bone& tBone = m_Bones[i];
 
@@ -47,12 +47,12 @@ bool JH_Obj::ReadFile(const std::string file)
 	m_meshes.resize(Reader.Int());
 	if (m_meshes.size() > 0)
 	{
-		for (int i = 0; i < m_meshes.size(); i++)
+		for (int i = 0; i < m_meshes.size(); ++i)
 		{
 			JH_Mesh& tMesh = m_meshes[i];
 
 			tMesh.SetName(Reader.WString());
-			tMesh.SetParentIndex(Reader.Int());
+			tMesh.SetBoneIndex(Reader.Int());
 
 			tMesh.SetMatrerialName(Reader.WString());
 			tMesh.GetVertexData().resize(Reader.Int());
@@ -104,7 +104,8 @@ void JH_Obj::BindingMesh()
 {
 	for (auto& mesh : m_meshes)
 	{
-		//mesh.m_matWorld
+		JH_Bone& Bone=BoneFindByIndex(mesh.GetBoneIndex());
+		mesh.SetBone(Bone);
 		mesh.Binding(this);
 	}
 }
@@ -128,7 +129,7 @@ JH_Material& JH_Obj::MaterialFindByIndex(int  id)
 
 JH_Bone& JH_Obj::BoneFindByName(std::wstring Name)
 {
-	for (auto Bone : m_Bones)
+	for (auto& Bone : m_Bones)
 	{
 		if (Bone.GetBoneName() == Name)
 		{
@@ -138,7 +139,7 @@ JH_Bone& JH_Obj::BoneFindByName(std::wstring Name)
 }
 JH_Bone& JH_Obj::BoneFindByIndex(int id)
 {
-	for (auto Bone : m_Bones)
+	for (auto& Bone : m_Bones)
 	{
 		if (Bone.GetBoneIndex() == id)
 		{
@@ -178,9 +179,12 @@ void JH_Obj::SetTransform(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Pr
 	////D3DXMatrixTranspose(&m_sCBTF.matView, &m_matView);
 	////D3DXMatrixTranspose(&m_sCBTF.matProj, &m_matProj);
 	
+	//메쉬들의 트랜스폼 세팅
 	for(auto& mesh: m_meshes)
 	{
-		mesh.SetMatrix(&m_matWorld, &m_matView, &m_matProj);
+		D3DXMATRIX matfinal;
+		matfinal=mesh.m_matWorld*m_matWorld;
+		mesh.SetMatrix(&matfinal, &m_matView, &m_matProj);
 		
 	}
 }

@@ -183,9 +183,13 @@ const TCHAR*	TextureMgr::SplitPath(const TCHAR* FileName)
 		_tsplitpath(FileName, Drive, Dir, FName, Ext);
 		Ext[4] = 0;
 		memset(szFileName, 0, sizeof(TCHAR) * MAX_PATH);
-
+		if (_tcsicmp(Ext, _T(".tga")) == 0)
+		{
+			_tcscpy(Ext, _T(".dds"));
+		}
 	}
 	_stprintf_s(szFileName, _T("%s%s"), FName, Ext);
+	
 
 	return szFileName;
 }
