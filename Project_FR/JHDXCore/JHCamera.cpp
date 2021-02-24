@@ -86,15 +86,15 @@ bool	 JHCamera::UpdateBasisVector()
 	return true;
 }
 
-F_POSITION JHCamera::CheckOBBInPlane(BOUNDINGBOX& box)
+P_POSITION JHCamera::CheckOBBInPlane(JH_Box& box)
 {
 	D3DXVECTOR3 vDir;
 	
 	float fDistance=0.0f;
 	float fCenterDistance=0.0f;
-	F_POSITION Pos = FRONT;
+	P_POSITION Pos = P_FRONT;
 
-
+	//OBB 의 중심에서 꼭지점까지의거리와 평면에서 OBB 중심까지 거리의 값보다 
 	for ( int iPlane = 0; iPlane < 6; iPlane++)
 	{
 		
@@ -122,6 +122,7 @@ F_POSITION JHCamera::CheckOBBInPlane(BOUNDINGBOX& box)
 			m_Frustum.m_Plane[iPlane].fC *
 			vDir.z);
 
+		//이 값이 양수면 평면 앞에 존재 음수이면 평면뒤에 존재 
 			fCenterDistance =
 				m_Frustum.m_Plane[iPlane].fA *
 				box.vCenter.x +
@@ -132,11 +133,11 @@ F_POSITION JHCamera::CheckOBBInPlane(BOUNDINGBOX& box)
 				m_Frustum.m_Plane[iPlane].fD;
 		if (fCenterDistance<=fDistance)
 		{
-			Pos = SPANNING;
+			Pos = P_SPANNING;
 		}
 		if (fCenterDistance<-fDistance)
 		{
-			Pos = BACK;
+			Pos = P_BACK;
 			return  Pos;
 		}
 	}

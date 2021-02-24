@@ -21,11 +21,11 @@
       <FileName>JHDXCore.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="JHShapeBox" Collapsed="true">
+  <Class Name="JH_ShapeBox" Collapsed="true">
     <Position X="5.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAEAAI=</HashCode>
-      <FileName>JHShapeBox.h</FileName>
+      <FileName>JH_ShapeBox.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="JHTimer" Collapsed="true">

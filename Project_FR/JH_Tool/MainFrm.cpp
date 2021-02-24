@@ -149,6 +149,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndProperties);
 
+	//m_wndPropMap.EnableDocking(CBRS_ALIGN_ANY);
+	//DockPane(&m_wndPropMap);
+
 	// 보관된 값에 따라 비주얼 관리자 및 스타일을 설정합니다.
 	OnApplicationLook(theApp.m_nAppLook);
 
@@ -197,6 +200,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 		CBRS_LEFT | CBRS_FLOAT_MULTI;
 
+	//m_TabbedPane.CreateEx(NULL, L"Tab", this, CRect(0, 0, 100, 100),
+	//	TRUE, -1, dwStyle);
+
+
 	m_wndMapCtrl.CreateEx(NULL, L"Map", this, CRect(0, 0, 100, 100),
 		TRUE, 1000, dwStyle);
 	m_wndMapCtrl.EnableDocking(CBRS_ALIGN_ANY);
@@ -209,6 +216,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockPane(&m_wndObjCtrl);
 
 
+	//m_TabbedPane.AddTab(&m_wndMapCtrl);
+	//m_TabbedPane.AddTab(&m_wndObjCtrl);
 
 
 	return 0;
@@ -246,6 +255,14 @@ BOOL CMainFrame::CreateDockingWindows()
 		TRACE0("속성 창을 만들지 못했습니다.\n");
 		return FALSE; // 만들지 못했습니다.
 	}
+
+	
+	//if (!m_wndPropMap.Create(L"Map State", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+	//{
+	//	TRACE0("속성 창을 만들지 못했습니다.\n");
+	//	return FALSE; // 만들지 못했습니다.
+	//}
+
 
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 	return TRUE;

@@ -206,6 +206,7 @@ bool Device::ResizeDevice(UINT width, UINT height)
 	}
 	m_pImmediateContext->OMSetRenderTargets(0, NULL, NULL);
 	m_pRenderTargetView->Release();
+	m_pRenderTargetView.Detach();
 
 	if (FAILED(hr=m_pSwapChain->ResizeBuffers(
 		m_SwapChainDesc.BufferCount,

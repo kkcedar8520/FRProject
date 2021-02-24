@@ -12,7 +12,7 @@ public:
 	virtual ~JH_LoadObject();
 
 public:
-	vector<wstring> m_ObjList;
+	std::vector<std::wstring> m_ObjList;
 	void LoadResource(CString ext);
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME

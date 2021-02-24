@@ -24,6 +24,7 @@
     <Keyword>MFCProj</Keyword>
     <RootNamespace>JHTool</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>JH_Tool</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -94,14 +95,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_NON_CONFORMING_WCSTOK;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);../../include/dx;../../fmod/inc;../../dx/include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>..\\..\\lib;..\\..\\Dx\\Lib\\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..//..//lib;..//..//Dx//Lib//x64;..//..//fmod//lib//x64;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -193,8 +196,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="calendarbar.h" />
+    <ClInclude Include="CPropMapWnd.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="JH_BaseObj.h" />
     <ClInclude Include="JH_CreateMap.h" />
     <ClInclude Include="JH_LoadObject.h" />
     <ClInclude Include="JH_MapForm.h" />
@@ -209,13 +212,13 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Sample.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ToolCore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="calendarbar.cpp" />
-    <ClCompile Include="JH_BaseObj.cpp" />
+    <ClCompile Include="CPropMapWnd.cpp" />
     <ClCompile Include="JH_CreateMap.cpp" />
     <ClCompile Include="JH_LoadObject.cpp" />
     <ClCompile Include="JH_MapForm.cpp" />
@@ -234,7 +237,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PropertiesWnd.cpp" />
-    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="ToolCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="JHTool.rc" />
@@ -264,7 +267,23 @@
     <None Include="res\JHTool.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\data\Shader\LightShader.txt" />
+    <FxCompile Include="..\..\Data\shader\JHMapShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Data\shader\ObjShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="SkyObj.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\shader\SkinShader.txt" />
+    <Text Include="ComputeShader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,23 +18,28 @@ private:
 
 	SCENEINFO m_Scene;
 
-	std::vector<JH_Mesh> m_meshes;
-	std::vector<JH_Material>m_materials;
-	std::vector<JH_Bone>m_Bones;
+	std::vector<JH_Mesh>			m_meshes;
+	std::vector<JH_Material>		m_materials;
+	std::vector<JH_Bone>			m_Bones;
+		
+	CB_TF							m_sCBTF;
+	ComPtr<ID3D11Buffer>			m_CBTF;
 
-	CB_TF m_sCBTF;
-	ComPtr<ID3D11Buffer> m_CBTF;
-
-	D3DXMATRIX m_matWorld;
-	D3DXMATRIX m_matView;
-	D3DXMATRIX m_matProj;
-	D3DXMATRIX m_matNormal;
+	D3DXMATRIX						m_matWorld;
+	D3DXMATRIX						m_matView;
+	D3DXMATRIX						m_matProj;
+	D3DXMATRIX						m_matNormal;
+	
+	//Colider
+	JH_Box							m_ColiderBox;
 public:
 
 	//Data
 	std::vector<JH_Material>& GetMaterial() { return m_materials; }
 	std::vector<JH_Mesh>& GetMesh() { return m_meshes; }
 	std::vector<JH_Bone>& GetBone() { return m_Bones; }
+	//
+	D3DXMATRIX& GetTransform() { return m_matWorld; }
 
 	bool ReadFile(const std::string file);
 	void BindingMesh();

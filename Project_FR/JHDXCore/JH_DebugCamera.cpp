@@ -60,6 +60,7 @@ if (msg == WM_MOUSEWHEEL)
 }
 
 }
+
 bool JH_DebugCamera::Frame()
 {
 

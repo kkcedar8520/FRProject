@@ -44,7 +44,7 @@ void JH_Select::Update()
 
 
 }
-bool JH_Select::AABBtoRay(BOUNDINGBOX* pBox,H_RAY* pRay)
+bool JH_Select::AABBtoRay(BOUNDINGBOX* pBox,JH_RAY* pRay)
 {
 
 	if (pRay == nullptr) pRay = &m_Ray;
@@ -78,6 +78,66 @@ bool JH_Select::AABBtoRay(BOUNDINGBOX* pBox,H_RAY* pRay)
 	}
 	return false;
 
+}
+bool JH_Select::OBBToRay(JH_Box* pBox)
+{
+	float t_min = -999999.0f;
+	float t_max = 999999.0f;
+	float  f[3], fa[3], s[3], sa[3];
+
+	D3DXVECTOR3 vR = m_Ray.vOrigin - pBox->vCenter;
+
+	for (int v = 0; v < 3; v++)
+	{
+		f[v] = D3DXVec3Dot(&pBox->vAxis[v], &m_Ray.vDirection);
+		s[v] = D3DXVec3Dot(&pBox->vAxis[v], &vR);
+		fa[v] = fabs(f[v]);
+		sa[v] = fabs(s[v]);
+
+		if (sa[v] > pBox->fExtent[v] && s[v] * f[v] >= 0.0f)
+			return false;
+
+		float t1 = (-s[v] - pBox->fExtent[v]) / f[v];
+		float t2 = (-s[v] + pBox->fExtent[v]) / f[v];
+		if (t1 > t2)
+		{
+			std::swap(t1, t2);
+		}
+		t_min = max(t_min, t1);
+		t_max = min(t_max, t2);
+		if (t_min > t_max)
+			return false;
+	}
+
+	float  fCross[3], fRhs;
+	D3DXVECTOR3 vDxR;
+	D3DXVec3Cross(&vDxR, &m_Ray.vDirection, &vR);
+	// D X pBox->vAxis[0]  분리축
+	fCross[0] = fabs(D3DXVec3Dot(&vDxR, &pBox->vAxis[0]));
+	float fAxis2 = pBox->fExtent[1] * fa[2];
+	float fAxis1 = pBox->fExtent[2] * fa[1];
+	fRhs = fAxis2 + fAxis1;
+	if (fCross[0] > fRhs)
+	{
+		return false;
+	}
+	// D x pBox->vAxis[1]  분리축
+	fCross[1] = fabs(D3DXVec3Dot(&vDxR, &pBox->vAxis[1]));
+	fRhs = pBox->fExtent[0] * fa[2] + pBox->fExtent[2] * fa[0];
+	if (fCross[1] > fRhs)
+	{
+		return false;
+	}
+	// D x pBox->vAxis[2]  분리축
+	fCross[2] = fabs(D3DXVec3Dot(&vDxR, &pBox->vAxis[2]));
+	fRhs = pBox->fExtent[0] * fa[1] + pBox->fExtent[1] * fa[0];
+	if (fCross[2] > fRhs)
+	{
+		return false;
+	}
+
+	m_vIntersection = m_Ray.vOrigin + m_Ray.vDirection* t_min;
+	return true;
 }
 bool JH_Select::GetIntersection(
 	D3DXVECTOR3 vStart,

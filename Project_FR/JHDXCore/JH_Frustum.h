@@ -5,7 +5,7 @@
 class JH_Frustum
 {
 public:
-	FT_PLANE	m_Plane[6];
+	JH_PLANE	m_Plane[6];
 	D3DXVECTOR3 m_vFrustum[8];
 public:
 	void SetMatrix(D3DXMATRIX* matWorld, D3DXMATRIX* matView, D3DXMATRIX* matProj);

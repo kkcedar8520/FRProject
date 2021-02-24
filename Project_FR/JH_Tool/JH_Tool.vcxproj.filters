@@ -5,25 +5,28 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="DIg">
+      <UniqueIdentifier>{653a0618-76d4-4e61-b69c-dd5311c2af3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{9171d7bc-09a0-4040-b848-83785489d894}</UniqueIdentifier>
+    </Filter>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="리소스 파일">
+    <Filter Include="DIg\Map">
+      <UniqueIdentifier>{881701ef-a020-420a-acbc-007322f45a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DIg\Map\Obj">
+      <UniqueIdentifier>{1728f14b-8932-40d7-96db-6fb187e8a422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="DIg">
-      <UniqueIdentifier>{653a0618-76d4-4e61-b69c-dd5311c2af3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Map">
-      <UniqueIdentifier>{881701ef-a020-420a-acbc-007322f45a5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Obj">
-      <UniqueIdentifier>{1728f14b-8932-40d7-96db-6fb187e8a422}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{9171d7bc-09a0-4040-b848-83785489d894}</UniqueIdentifier>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{f3500b57-183b-42ec-8fd1-3e60e726fd7a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,9 +57,6 @@
     <ClInclude Include="PropertiesWnd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="calendarbar.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -64,10 +64,10 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_MapPane.h">
-      <Filter>Map</Filter>
+      <Filter>DIg\Map</Filter>
     </ClInclude>
     <ClInclude Include="JH_MapForm.h">
-      <Filter>Map</Filter>
+      <Filter>DIg\Map</Filter>
     </ClInclude>
     <ClInclude Include="JH_LoadObject.h">
       <Filter>DIg</Filter>
@@ -76,15 +76,18 @@
       <Filter>DIg</Filter>
     </ClInclude>
     <ClInclude Include="JH_ObjPane.h">
-      <Filter>Obj</Filter>
+      <Filter>DIg\Map\Obj</Filter>
     </ClInclude>
-    <ClInclude Include="JH_ObjForm.h">
-      <Filter>Obj</Filter>
-    </ClInclude>
-    <ClInclude Include="JH_BaseObj.h">
+    <ClInclude Include="CPropMapWnd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Sample.h">
+    <ClInclude Include="calendarbar.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ObjForm.h">
+      <Filter>DIg\Map\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolCore.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,10 +117,10 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="JH_MapForm.cpp">
-      <Filter>Map</Filter>
+      <Filter>DIg\Map</Filter>
     </ClCompile>
     <ClCompile Include="JH_MapPane.cpp">
-      <Filter>Map</Filter>
+      <Filter>DIg\Map</Filter>
     </ClCompile>
     <ClCompile Include="JH_LoadObject.cpp">
       <Filter>DIg</Filter>
@@ -126,87 +129,101 @@
       <Filter>DIg</Filter>
     </ClCompile>
     <ClCompile Include="JH_ObjPane.cpp">
-      <Filter>Obj</Filter>
+      <Filter>DIg\Map\Obj</Filter>
     </ClCompile>
-    <ClCompile Include="JH_ObjForm.cpp">
-      <Filter>Obj</Filter>
-    </ClCompile>
-    <ClCompile Include="JH_BaseObj.cpp">
+    <ClCompile Include="CPropMapWnd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Sample.cpp">
+    <ClCompile Include="JH_ObjForm.cpp">
+      <Filter>DIg\Map\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolCore.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="JHTool.rc">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\output_wnd.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\output_wnd_hc.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\properties_wnd.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\properties_wnd_hc.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\properties.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\properties_hc.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\nav_large.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\nav_large_hc.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\pages.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\pages_hc.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\pages_small.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\pages_small_hc.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\info.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\userimages.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\JH_ToolDoc.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\JH_Tool.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\Toolbar.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
     <Image Include="res\Toolbar256.bmp">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\JHTool.rc2">
-      <Filter>리소스 파일</Filter>
+      <Filter>Shader\리소스 파일</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\data\Shader\LightShader.txt">
+    <FxCompile Include="SkyObj.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Data\shader\ObjShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Data\shader\JHMapShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ComputeShader.hlsl">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\SkinShader.txt">
       <Filter>Shader</Filter>
     </Text>
   </ItemGroup>

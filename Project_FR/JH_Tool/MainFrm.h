@@ -3,12 +3,14 @@
 //
 
 #pragma once
+//#include"CPropMapWnd.h"
 #include "OutputWnd.h"
 #include "PropertiesWnd.h"
 #include "CalendarBar.h"
 #include"JH_MapPane.h"
 #include"JH_ObjPane.h"
 #include "Resource.h"
+
 
 class COutlookBar : public CMFCOutlookBar
 {
@@ -27,6 +29,7 @@ protected: // serialization에서만 만들어집니다.
 public:
 	JH_MapPane		m_wndMapCtrl; 
 	JH_ObjPane		m_wndObjCtrl;
+	CTabbedPane		m_TabbedPane;
 
 // 작업입니다.
 public:
@@ -51,11 +54,13 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CMFCToolBarImages m_UserImages;
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
+
 	COutlookBar       m_wndNavigationBar;
 	CMFCShellTreeCtrl m_wndTree;
 	CCalendarBar      m_wndCalendar;
 	CMFCCaptionBar    m_wndCaptionBar;
-
+	//사용자정의
+//	CPropMapWnd		m_wndPropMap;
 // 생성된 메시지 맵 함수
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

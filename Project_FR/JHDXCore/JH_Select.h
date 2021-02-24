@@ -5,7 +5,7 @@
 class JH_Select
 {
 public:
-	H_RAY	m_Ray;
+	JH_RAY	m_Ray;
 	D3DXVECTOR3 m_vIntersection;
 
 public:
@@ -24,7 +24,8 @@ public:
 		D3DXMATRIX* pView,
 		D3DXMATRIX* pProj);
 	void Update();
-	bool AABBtoRay(BOUNDINGBOX* pBox, H_RAY* Ray=nullptr);
+	bool AABBtoRay(BOUNDINGBOX* pBox, JH_RAY* Ray=nullptr);
+	bool OBBToRay(JH_Box* pBox);
 	bool GetIntersection(
 		D3DXVECTOR3 vStart,
 		D3DXVECTOR3 vEnd,

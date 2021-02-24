@@ -18,7 +18,7 @@ public:
 	virtual bool Render();
 	virtual bool Release();
 	virtual bool Frame();
-	virtual LRESULT JWndProc(HWND, UINT, WPARAM, LPARAM);
+	virtual LRESULT WndProc(HWND, UINT, WPARAM, LPARAM);
 public:
 	virtual bool ResizeDevice(UINT width, UINT height);
 public:

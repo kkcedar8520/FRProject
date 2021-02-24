@@ -27,7 +27,7 @@ public:
 	virtual bool Render();
 	virtual bool Frame();
 	virtual bool Release();
-	virtual LRESULT  JWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT  WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	HRESULT DeleteDXResource();
 	HRESULT	CreateDXResource();
 	void DrawDebug();

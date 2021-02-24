@@ -38,7 +38,7 @@ public:
 	float m_fMaxRadius;
 	float m_fMinRadius;
 public:
-	F_POSITION CheckOBBInPlane(BOUNDINGBOX& box);
+	P_POSITION CheckOBBInPlane(JH_Box& box);
 public:
 	virtual bool	UpdateBasisVector();
 	virtual bool	SetViewProj();

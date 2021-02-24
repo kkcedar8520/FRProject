@@ -140,15 +140,15 @@ BOOL CJHToolApp::InitInstance()
 	CJHToolView* pView = (CJHToolView*)pFrame->GetActiveView();
 	CRect rt;
 	pView->GetClientRect(rt);
-	g_hwnd = m_Sample.m_hwnd = pView->m_hWnd;
-	m_Sample.m_rtClient.left = 0;
-	m_Sample.m_rtClient.right = rt.Width();
-	m_Sample.m_rtClient.top = 0;
-	m_Sample.m_rtClient.bottom = rt.Height();
-	m_Sample.m_hinstance = AfxGetInstanceHandle();
-	g_rtClient = m_Sample.m_rtClient;
+	g_hwnd = m_Core.m_hwnd = pView->m_hWnd;
+	g_rtClient.left = 0;
+	g_rtClient.right = rt.Width();
+	g_rtClient.top = 0;
+	g_rtClient.bottom = rt.Height();
+	m_Core.m_hinstance = AfxGetInstanceHandle();
 
-	m_Sample.CoreInit();
+
+	m_Core.CoreInit();
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
@@ -160,7 +160,7 @@ int CJHToolApp::ExitInstance()
 	//TODO: 추가한 추가 리소스를 처리합니다.
 	AfxOleTerm(FALSE);
 
-	m_Sample.CoreRelease();
+	m_Core.CoreRelease();
 	return CWinAppEx::ExitInstance();
 }
 
@@ -189,6 +189,10 @@ public:
 	afx_msg void OnBnClickedOk2();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedOk5();
+	afx_msg void OnSplattTextur2BnClickedOk();
+	afx_msg void OnSplattTexture3BnClickedOk();
+	afx_msg void OnSplattTexture4BnClickedOk();
+	afx_msg void OnSplattTextur4BnClickedOk();
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -201,6 +205,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+
 
 
 
@@ -242,10 +247,13 @@ BOOL CJHToolApp::OnIdle(LONG lCount)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
-	m_Sample.CoreFrame();
-	m_Sample.CoreRender();
-	return CWinAppEx::OnIdle(lCount);
+	m_Core.CoreFrame();
+	m_Core.CoreRender();
+	return true;
 }
+
+
+
 
 
 

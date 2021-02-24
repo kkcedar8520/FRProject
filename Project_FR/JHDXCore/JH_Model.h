@@ -7,6 +7,7 @@
 
 
 #pragma warning( disable:4005 )
+
 struct P_VERTEX
 {
 	D3DXVECTOR3 p;
@@ -132,7 +133,10 @@ public:
 	std::vector<PNCTIW_VERTEX>	m_VertexData;
 	std::vector<DWORD>			m_IndexData;
 	CB_TF						m_cbData;
+	//Light ContanBuffer;
+	ComPtr<ID3D11Buffer>		m_pLightConstBuffer;
 	D3DXVECTOR3 m_Pos;
+
 public:
 	virtual void    SetMatrix(D3DXMATRIX* matWorld, D3DXMATRIX* matView, D3DXMATRIX* matProj);
 	bool    Create(ID3D11Device*,
@@ -152,6 +156,7 @@ public:
 	virtual HRESULT CreateInputLayout();
 	virtual HRESULT	LoadTexture(const TCHAR* pszTexFileName);
 	virtual bool	UpdateBuffer();
+	virtual void	SetLightBuffer(ID3D11Buffer* buffer);
 	
 public:
 	virtual bool Init();

@@ -5,7 +5,7 @@
 
 
 
-LRESULT  JHDXCore::JWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT  JHDXCore::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pMainCamera == nullptr) return -1;
 	m_pMainCamera->MsgProc(hWnd, msg, wParam, lParam);
@@ -80,7 +80,7 @@ bool JHDXCore::CoreInit()
 	m_pBackViewCamera = std::make_shared<JH_BackViewCamera>();
 
 
-
+	m_DebugCamera->Init();
 	m_pMainCamera = m_DebugCamera;
 
 

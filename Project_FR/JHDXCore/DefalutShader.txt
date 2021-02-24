@@ -86,7 +86,7 @@ struct PS_OUT
 PS_OUT PS(PS_IN inData)
 {
 	PS_OUT vOut;
-	float4 vFinal = g_txDiffuseA.Sample(g_Sample0, inData.t);	
+	float4 vFinal = g_txDiffuseA.ToolCore(g_Sample0, inData.t);	
 	vOut.c = vFinal * inData.c;
 	return vOut;
 }
@@ -97,12 +97,12 @@ float4 PSLine(PS_IN_LINE inData) : SV_TARGET
 PS_OUT PSBlend(PS_IN inData)
 {
 	PS_OUT vOut;
-	float4 SRC = g_txDiffuseA.Sample(g_Sample0, inData.t);
+	float4 SRC = g_txDiffuseA.ToolCore(g_Sample0, inData.t);
 	if (SRC.a < 0.5f)
 	{
 		discard;
 	}
-	//float4 DESK = g_txDiffuseB.Sample(g_Sample0, inData.t);
+	//float4 DESK = g_txDiffuseB.ToolCore(g_Sample0, inData.t);
 	//vOut.c = SRC * SRC.a + DESK * (1.0f- SRC.a);
 	vOut.c = SRC;
 	//vOut.c.a = 1.0f;// (1.0f - DESK.g) *inData.time;

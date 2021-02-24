@@ -13,7 +13,7 @@ bool JHWindow::ResizeDevice(UINT width, UINT height)
 }
 LRESULT CALLBACK S_JWndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM iparam)
 {
-	int iRET = g_pWnd->JWndProc(hwnd, message, wparam, iparam);
+	int iRET = g_pWnd->WndProc(hwnd, message, wparam, iparam);
 	if (iRET >= 0)
 	{
 		return 1;
@@ -93,7 +93,7 @@ bool JHWindow::InitWindow(const TCHAR* pTitleName, RECT rtClient)
 	return true;
 
 }
-LRESULT  JHWindow::JWndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+LRESULT  JHWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	return -1;
 }

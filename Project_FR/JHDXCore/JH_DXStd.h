@@ -50,7 +50,7 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "winmm.lib")
 //#pragma comment(lib, "fmod_vc.lib")
 #define TCORE_START int WINAPI wWinMain(HINSTANCE hInstance,HINSTANCE hPreInstance,LPTSTR  lpCmdLIne,int  nCmdShow){
-#define TCORE_RUN(s,d) { Sample  gDemo;if (gDemo.InitWindow(L#s,d)){gDemo.Run();}return 1; }
+#define TCORE_RUN(s,d) { ToolCore  gDemo;if (gDemo.InitWindow(L#s,d)){gDemo.Run();}return 1; }
 #define TCORE_END }
 #define GAME_RUN(s,d)  TCORE_START; TCORE_RUN(s,d); TCORE_END;
 
@@ -109,11 +109,12 @@ void VectorCleaner(std::vector<T>& v)
 	std::vector<T>().swap(v);
 }
 
-enum F_POSITION
+enum P_POSITION
 {
-	FRONT = 0,
-	SPANNING,
-	BACK,
+	P_BACK = 0,
+	P_FRONT,
+	P_ONPLANE,
+	P_SPANNING
 };
 struct BOUNDINGBOX
 {
@@ -131,8 +132,19 @@ struct SPHERE
 	float	Radius;
 
 };
+struct JH_Box
+{
+	// aabb							//
+	D3DXVECTOR3 vMin;
+	D3DXVECTOR3 vMax;
 
-struct FT_PLANE
+	// obb							//축에 회전된 박스
+	D3DXVECTOR3 vCenter;
+	D3DXVECTOR3 vAxis[3];
+	float fExtent[3];
+	float fExtentXZ;			//y값을 고려하지 않은 상자의 대각선 길이
+};
+struct JH_PLANE
 {
 	float fA, fB, fC, fD;
 	void CreatePlane(D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR3 v2)
@@ -153,7 +165,7 @@ struct FT_PLANE
 		fD = -((fA*v0.x) + (fB * v0.y) + (fC*v0.z));
 
 	}
-	void CreatePlane(D3DXVECTOR3 v0, D3DXVECTOR3 vDir)
+	void CreatePlane(D3DXVECTOR3 v0, D3DXVECTOR3 vDir)//평면의 방정식을 통한 ax+by+cz+d=0 공식으로 d=-(ax+by+cz)이다.
 	{
 		D3DXVec3Normalize(&vDir, &vDir);
 		fA = vDir.x;
@@ -163,14 +175,15 @@ struct FT_PLANE
 		fD = -(fA*v0.x + fB * v0.y + fC * v0.z);
 	}
 };
-struct H_RAY
+
+struct JH_RAY
 {
 	D3DXVECTOR3 vOrigin;
 	D3DXVECTOR3 vDirection;
 	D3DXVECTOR3 vEnd;
 	D3DXVECTOR3 vPoint;
 	float		fExtent;
-	H_RAY()
+	JH_RAY()
 	{
 		fExtent = -1;
 		//fExtent > 0  세그먼트

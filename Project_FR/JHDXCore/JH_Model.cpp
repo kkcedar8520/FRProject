@@ -32,6 +32,11 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 		0, NULL, &m_cbData, 0, 0);
 
 }
+void JH_Model::SetLightBuffer(ID3D11Buffer* buffer)
+{
+
+	m_pLightConstBuffer.Attach(buffer);
+}
 
 
 HRESULT JH_Model::CreateVertexData()
@@ -224,6 +229,7 @@ bool    JH_Model::Create(
 	if (FAILED(CreateVertexBuffer()))
 	{
 		return false;
+
 	}
 	if (FAILED(CreateIndexBuffer()))
 	{

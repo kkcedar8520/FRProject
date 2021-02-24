@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -180,11 +180,13 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="BinaryReader.h" />
     <ClInclude Include="BinaryWriter.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Colider.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="HArcBall.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="JHCamera.h" />
     <ClInclude Include="JHDXCore.h" />
-    <ClInclude Include="JHShapeBox.h" />
+    <ClInclude Include="JH_ShapeBox.h" />
     <ClInclude Include="JHTimer.h" />
     <ClInclude Include="JHWindow.h" />
     <ClInclude Include="JH_BackViewCamera.h" />
@@ -199,15 +201,17 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="JH_Frustum.h" />
     <ClInclude Include="JH_Input.h" />
     <ClInclude Include="JH_Map.h" />
+    <ClInclude Include="JH_MapMgr.h" />
     <ClInclude Include="JH_Material.h" />
     <ClInclude Include="JH_Mesh.h" />
     <ClInclude Include="JH_Model.h" />
+    <ClInclude Include="JH_Node.h" />
     <ClInclude Include="JH_Select.h" />
     <ClInclude Include="JH_ShapeLine.h" />
     <ClInclude Include="JH_ShapePlane.h" />
     <ClInclude Include="JH_Sprite.h" />
-    <ClInclude Include="JH_Template.h" />
     <ClInclude Include="jMath.h" />
+    <ClInclude Include="JH_MapLod.h" />
     <ClInclude Include="LightMgr.h" />
     <ClInclude Include="LightObj.h" />
     <ClInclude Include="LoadType.h" />
@@ -228,15 +232,15 @@ copy "*.lib" "../../lib/"
     <ClCompile Include="BinaryReader.cpp" />
     <ClCompile Include="BinaryWriter.cpp" />
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Colider.cpp" />
     <ClCompile Include="HArcBall.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="JHCamera.cpp" />
     <ClCompile Include="JHDXCore.cpp" />
-    <ClCompile Include="JHShapeBox.cpp" />
+    <ClCompile Include="JH_ShapeBox.cpp" />
     <ClCompile Include="JHTimer.cpp" />
     <ClCompile Include="JHWindow.cpp" />
     <ClCompile Include="JH_BackViewCamera.cpp" />
-    <ClCompile Include="JH_BaseObj.cpp" />
     <ClCompile Include="JH_Bone.cpp" />
     <ClCompile Include="JH_DebugCamera.cpp" />
     <ClCompile Include="JH_DXHelper.cpp" />
@@ -246,14 +250,18 @@ copy "*.lib" "../../lib/"
     <ClCompile Include="JH_Frustum.cpp" />
     <ClCompile Include="JH_Input.cpp" />
     <ClCompile Include="JH_Map.cpp" />
+    <ClCompile Include="JH_MapMgr.cpp" />
     <ClCompile Include="JH_Material.cpp" />
     <ClCompile Include="JH_Mesh.cpp" />
     <ClCompile Include="JH_Model.cpp" />
+    <ClCompile Include="JH_Node.cpp" />
+    <ClCompile Include="JH_PogMgr.cpp" />
     <ClCompile Include="JH_Select.cpp" />
     <ClCompile Include="JH_ShapeLine.cpp" />
     <ClCompile Include="JH_ShapePlane.cpp" />
     <ClCompile Include="JH_Sprite.cpp" />
     <ClCompile Include="jMath.cpp" />
+    <ClCompile Include="JH_MapLod.cpp" />
     <ClCompile Include="LightMgr.cpp" />
     <ClCompile Include="LightObj.cpp" />
     <ClCompile Include="MaxObj.cpp" />
@@ -271,6 +279,7 @@ copy "*.lib" "../../lib/"
     <Text Include="DefalutShader.txt" />
     <Text Include="sprite.txt" />
     <Text Include="Anim.txt" />
+    <Text Include="QuadTree.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

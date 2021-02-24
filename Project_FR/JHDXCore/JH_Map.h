@@ -1,19 +1,22 @@
 #pragma once
 
+#include"TextureMgr.h"
 #include"NormalMap.h"
-#include"JH_Model.h"
 #include"LightMgr.h"
-#include"JH_DXStd.h"
+#include"JH_Model.h"
+#include"JHCamera.h"
+#include"QuadTree.h"
 
 
 	struct CB_SPT
 	{
-		D3DXVECTOR4 MapSubData;//x:splattTexture Num
+		D3DXVECTOR4 MapSubData;
 		CB_SPT()
 		{
 			MapSubData = D3DXVECTOR4(0, 0, 0, 0);
 		}
 	};
+
 	struct SplattTextureDesc
 	{
 		int TexNum;
@@ -43,8 +46,8 @@
 	public:
 		bool	m_bMapEdit;
 
-	//	std::shared_ptr<KG_SkyBox>										 m_SkyBox;
-		//std::map<int, CTexture*>										 m_vSplattTextureList;
+		//SPlattingData
+		std::map<int, Texture*>											 m_vSplattTextureList;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>	 m_vSplattSRVList;
 		//
 		CB_SPT m_CBSubData;
@@ -52,17 +55,20 @@
 	public:
 		//NormalMap
 		std::vector<D3DXVECTOR3>										 m_TangentList;
-		//NormalMap														 m_NormalMap;
+		NormalMap														 m_NormalMap;
 		D3DXMATRIX														 m_matNormal;
 
 		Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_pTangentVB;
-		//CTexture*														 m_pTexture;
+		Texture*														 m_pTexture;
 		int																 m_iTexNum;
 		T_STR															 m_pNormMapFileName;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>				 m_pNormSrv;
 
-		const TCHAR*													m_pSPTAFile;
-
+		const TCHAR*													 m_pSPTAFile;
+		
+		//QuadTree
+		JHCamera*														m_pCamera;
+		shared_ptr<HQuadTree>											m_QuadTree;
 	public:
 		D3DXVECTOR3 m_vEyePos;
 		MapDesc m_MapDesc;
@@ -87,6 +93,16 @@
 	public:
 		float GetHeight(float fX, float fZ);
 		float GetHeightMap(int iRow, int iCol);
+
+		bool CreateMap(int iWidth,
+			int iHeight,
+			int iCellCount,
+			int iCellSize,
+			const TCHAR* pTexturFileName,
+			const TCHAR* pNormalMapFileName = nullptr,
+			const TCHAR* pHeightMapFileName = nullptr,
+			const TCHAR* pLightShaderName = nullptr);
+
 		HRESULT Load(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext);
 		HRESULT LoadMap(ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context, const TCHAR* ShaderFileName = L"../../data/shader/DefaultShader.txt", const TCHAR* TexFileName = nullptr, const CHAR* VSName = "VS", const CHAR* PSName = "PS");
 		HRESULT CreateHeightMap(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext, const TCHAR* TextureFileName);
@@ -101,27 +117,34 @@
 			D3DXMATRIX* matProj)override;
 		void UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data);
 		float Lerp(float fStart, float fEnd, float fTangent);
+
+		
 		//노말맵 접선 벡터 계산
 
 	//툴 관련 함수
 		INT AddSplattTexture(const TCHAR* pFileName, int Num, float Alpha = 0.0f);
 		D3DXVECTOR3 GetCharPos(){ return m_CharPos; }
 		void		SetCharPos(D3DXVECTOR3 vPos) { m_CharPos = vPos; }
+	//
+		void SetCamera(JHCamera* Camera) { m_pCamera = Camera; }
 	public:
-		//bool RenderSet(KG_Camera* Camera);
+		bool RenderSet(JHCamera* Camera);
 	public:
 		HRESULT CreateInputLayout()override;
 		HRESULT	LoadTexture(const TCHAR* pszTexFileName)override;
 		bool	UpdateTangentBuffer();
+
+
+	public:
+
+		HRESULT		CreateVertexData()override;
+		HRESULT		CreateIndexData()override;
+		bool Render()override;
 		bool Frame()override;
 		bool Release()override;
 
 	public:
-
-		HRESULT		CreateVertexData();
-		HRESULT		CreateIndexData();
-	public:
-		//bool NoneLightRenderSet(KG_Camera* pCamera);
+		bool NoneLightRenderSet(JHCamera* pCamera);
 	public:
 		JH_Map();
 		virtual ~JH_Map();

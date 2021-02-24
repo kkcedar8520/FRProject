@@ -1,8 +1,7 @@
 #pragma once
-#include"JH_BaseObj.h"
-#include"CBY_Object.h"
-namespace JH {
-	
+#include"JH_Obj.h"
+
+
 	enum OBJ_FLAG
 	{
 		PATH=1,
@@ -16,7 +15,7 @@ namespace JH {
 		void*	m_pNode;
 		DWORD	m_dwFlag;
 
-		std::shared_ptr<CBY::CBY_Object> m_Object;
+		std::shared_ptr<JH_Obj> m_Object;
 		int				m_ID;
 		//int				m_iObjIndex;
 		int				m_iQuadIndex;
@@ -36,8 +35,8 @@ namespace JH {
 		DWORD				GetFlag() { return m_dwFlag; }
 		void				SetFlag(DWORD dwFlag) { m_dwFlag = dwFlag; }
 
-		void				SetObj(const std::shared_ptr<CBY::CBY_Object> Obj) { m_Object = Obj; }
-		std::shared_ptr<CBY::CBY_Object> GetObj() { return m_Object; }
+		void				SetObj(const std::shared_ptr<JH_Obj> Obj) { m_Object = Obj; }
+		std::shared_ptr<JH_Obj> GetObj() { return m_Object; }
 
 
 
@@ -47,4 +46,3 @@ namespace JH {
 		virtual ~JH_MapObj();
 	};
 
-}

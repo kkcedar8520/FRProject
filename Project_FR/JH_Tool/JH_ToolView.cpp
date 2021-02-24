@@ -134,12 +134,12 @@ void CJHToolView::OnSize(UINT nType, int cx, int cy)
 	CView::OnSize(nType, cx, cy);
 
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	pApp->m_Sample.ResizeDevice(cx, cy);
+	pApp->m_Core.ResizeDevice(cx, cy);
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }
 LRESULT CJHToolView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	pApp->m_Sample.JWndProc(m_hWnd, message, wParam, lParam);
+	pApp->m_Core.WndProc(m_hWnd, message, wParam, lParam);
 	return CView::WindowProc(message, wParam, lParam);
 }

@@ -69,15 +69,6 @@
     <ClInclude Include="JH_Model.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="JH_ShapePlane.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="JH_ShapeLine.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="JHShapeBox.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="JH_Sprite.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -98,9 +89,6 @@
     </ClInclude>
     <ClInclude Include="JH_SKinStd.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadTree.h">
-      <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="JH_Frustum.h">
       <Filter>Camera</Filter>
@@ -135,9 +123,6 @@
     <ClInclude Include="MaxObj.h">
       <Filter>Obj</Filter>
     </ClInclude>
-    <ClInclude Include="JH_Template.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="LightObj.h">
       <Filter>Light</Filter>
     </ClInclude>
@@ -151,9 +136,6 @@
       <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="ModelLoader.h">
-      <Filter>Obj</Filter>
-    </ClInclude>
-    <ClInclude Include="JH_Map.h">
       <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="JH_Obj.h">
@@ -177,11 +159,41 @@
     <ClInclude Include="Shader.h">
       <Filter>소스 파일\dx</Filter>
     </ClInclude>
-    <ClInclude Include="LightMgr.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
     <ClInclude Include="LoadType.h">
       <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_Map.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_MapLod.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_Node.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Colider.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_MapMgr.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ShapePlane.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ShapeLine.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ShapeBox.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMgr.h">
+      <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,15 +218,6 @@
     <ClCompile Include="JH_Model.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="JH_ShapePlane.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="JH_ShapeLine.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="JHShapeBox.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="JH_Sprite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -231,9 +234,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="JH_Map.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="QuadTree.cpp">
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="JH_Frustum.cpp">
@@ -263,9 +263,6 @@
     <ClCompile Include="LightObj.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="LightMgr.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
     <ClCompile Include="NormalMap.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -280,9 +277,6 @@
     </ClCompile>
     <ClCompile Include="JH_Obj.cpp">
       <Filter>Obj</Filter>
-    </ClCompile>
-    <ClCompile Include="JH_BaseObj.cpp">
-      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="JH_Bone.cpp">
       <Filter>Obj</Filter>
@@ -305,6 +299,36 @@
     <ClCompile Include="JH_DXHelperEX.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="JH_PogMgr.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_MapLod.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_Node.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Colider.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_MapMgr.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ShapeLine.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ShapePlane.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ShapeBox.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="LightMgr.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefalutShader.txt">
@@ -317,6 +341,9 @@
       <Filter>소스 파일\dx\Shader</Filter>
     </Text>
     <Text Include="Anim.txt">
+      <Filter>Refference</Filter>
+    </Text>
+    <Text Include="QuadTree.txt">
       <Filter>Refference</Filter>
     </Text>
   </ItemGroup>

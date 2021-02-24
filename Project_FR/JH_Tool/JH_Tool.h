@@ -8,7 +8,7 @@
 #endif
 
 #include "resource.h"       // 주 기호입니다.
-#include"Sample.h"
+#include"ToolCore.h"
 
 // CJHToolApp:
 // 이 클래스의 구현에 대해서는 JH_Tool.cpp을(를) 참조하세요.
@@ -18,7 +18,7 @@ class CJHToolApp : public CWinAppEx
 {
 public:
 	CJHToolApp() noexcept;
-	Sample m_Sample;
+	ToolCore m_Core;
 
 // 재정의입니다.
 public:
