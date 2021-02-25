@@ -43,7 +43,7 @@
 		void SetDevice(ID3D11Device* pdevcie);
 		void SetContext(ID3D11DeviceContext* pContext);
 
-		ID3D11Buffer* GetLightBuffer(int iNum);
+		ID3D11Buffer* GetLightBuffer(UINT iNum);
 	public:
 		virtual bool Init();
 		virtual bool Frame();

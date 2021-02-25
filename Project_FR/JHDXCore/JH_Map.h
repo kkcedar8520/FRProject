@@ -6,7 +6,7 @@
 #include"JH_Model.h"
 #include"JHCamera.h"
 #include"QuadTree.h"
-
+#include"JH_SkyBox.h"
 
 	struct CB_SPT
 	{
@@ -53,17 +53,9 @@
 		CB_SPT m_CBSubData;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_CBSub;
 	public:
-		//NormalMap
-		std::vector<D3DXVECTOR3>										 m_TangentList;
-		NormalMap														 m_NormalMap;
-		D3DXMATRIX														 m_matNormal;
-
-		Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_pTangentVB;
-		Texture*														 m_pTexture;
-		int																 m_iTexNum;
-		T_STR															 m_pNormMapFileName;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>				 m_pNormSrv;
-
+		//SkyBox
+		std::shared_ptr<JH_SkyBox>										 m_SkyBox;
+		
 		const TCHAR*													 m_pSPTAFile;
 		
 		//QuadTree
@@ -131,8 +123,6 @@
 		bool RenderSet(JHCamera* Camera);
 	public:
 		HRESULT CreateInputLayout()override;
-		HRESULT	LoadTexture(const TCHAR* pszTexFileName)override;
-		bool	UpdateTangentBuffer();
 
 
 	public:

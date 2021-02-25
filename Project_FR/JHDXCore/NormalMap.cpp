@@ -9,6 +9,8 @@
 		D3DXVECTOR3 vEdge1 = *v2 - *v1;
 		D3DXVECTOR3 vEdge2 = *v3 - *v1;
 
+		//접선공간의 좌표를 텍스쳐좌표로 활용하여 표현
+		// 접선공간의 벡터 Q-P1=(u-u1)T+(v-v1)B; Q(u,v) P1은 정점  이공식을 이용하여 탄젠트벡터와 바이노말벡터를 구함
 		float fEdge1U = v2u - v1u;//s1
 		float fEdge1V = v2v - v1v;//t1
 

@@ -36,13 +36,13 @@ private:
 	UINT					m_iVertexSize;
 
 	//std::vector<PNCTIW_VERTEX> m_PNCTIWlist;
-	CB_TF					m_cbData;
+	CB_TF							m_cbData;
 private:
 	//BONE
 	JH_Bone m_Bone;
 	//Material
 	JH_Material m_Material;
-
+	std::vector<PNCTIW_VERTEX>		m_VertexData;
 public:
 	//Interface
 

@@ -74,65 +74,7 @@
 		return true;
 	}
 
-	bool	JH_Map::UpdateTangentBuffer()
-	{
-		D3DXVECTOR3 vTangent, vBiNormal, vNormal;
-		int iIndex = 0;
-		int i0, i1, i2, i3, i4, i5;
 
-
-		m_TangentList.resize(m_VertexData.size());
-		for (int iIndex = 0; iIndex < m_dxHelper.m_iNumIndex; iIndex += 3)
-		{
-
-			i0 = m_IndexData[iIndex + 0];
-			i1 = m_IndexData[iIndex + 1];
-			i2 = m_IndexData[iIndex + 2];
-
-			m_NormalMap.CreateTangentSpaceVectors(&m_VertexData[i0].p, &m_VertexData[i1].p, &m_VertexData[i2].p,
-				m_VertexData[i0].t.x, m_VertexData[i0].t.y,
-				m_VertexData[i1].t.x, m_VertexData[i1].t.y,
-				m_VertexData[i2].t.x, m_VertexData[i2].t.y,
-				&vTangent);
-
-			m_TangentList[i0] += vTangent;
-
-			i0 = m_IndexData[iIndex + 1];
-			i1 = m_IndexData[iIndex + 2];
-			i2 = m_IndexData[iIndex + 0];
-
-			m_NormalMap.CreateTangentSpaceVectors(&m_VertexData[i0].p, &m_VertexData[i1].p, &m_VertexData[i2].p,
-				m_VertexData[i0].t.x, m_VertexData[i0].t.y,
-				m_VertexData[i1].t.x, m_VertexData[i1].t.y,
-				m_VertexData[i2].t.x, m_VertexData[i2].t.y,
-				&vTangent);
-
-			m_TangentList[i0] += vTangent;
-
-			i0 = m_IndexData[iIndex + 2];
-			i1 = m_IndexData[iIndex + 0];
-			i2 = m_IndexData[iIndex + 1];
-
-			m_NormalMap.CreateTangentSpaceVectors(&m_VertexData[i0].p, &m_VertexData[i1].p, &m_VertexData[i2].p,
-				m_VertexData[i0].t.x, m_VertexData[i0].t.y,
-				m_VertexData[i1].t.x, m_VertexData[i1].t.y,
-				m_VertexData[i2].t.x, m_VertexData[i2].t.y,
-				&vTangent);
-
-			m_TangentList[i0] += vTangent;
-
-		}
-		for (int i = 0; i < m_iRowNum*m_iColumNum; i++)
-		{
-			D3DXVec3Normalize(&m_TangentList[i0], &m_TangentList[i0]);
-		}
-
-
-		m_pTangentVB.Attach(DX::CreateVertexBuffer(m_dxHelper.GetDevice(), &m_TangentList.at(0), m_TangentList.size(), sizeof(D3DXVECTOR3)));
-
-
-		return true;
-	}
 	float JH_Map::GetHeight(float fX, float fZ)
 	{
 		
@@ -339,7 +281,7 @@
 
 
 
-		if (!Create(pD3D11Device, pD3D11DeviceContext, m_MapDesc.ShaderFileName, m_MapDesc.TextureFileName, "VS","PS"))
+		if (!Create(pD3D11Device, pD3D11DeviceContext, m_MapDesc.ShaderFileName, m_MapDesc.TextureFileName,m_pNormMapFileName.c_str(),"VS","PS"))
 		{
 			return  false;
 		}
@@ -350,7 +292,6 @@
 
 
 
-		UpdateTangentBuffer();
 
 
 		m_CBSub.Attach(DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, sizeof(CB_SPT), 1));
@@ -498,21 +439,7 @@
 			m_dxHelper.GetLayoutAdress());
 		return hr;
 	}
-	HRESULT	JH_Map::LoadTexture(const TCHAR* pszTexFileName)
-	{
-		HRESULT hr = S_OK;
 
-		if (pszTexFileName == NULL) return S_OK;
-		hr = D3DX11CreateShaderResourceViewFromFile(m_dxHelper.GetDevice(), pszTexFileName, NULL, NULL, m_dxHelper.GetShaderResourceViewAddress(), NULL);
-
-		if (m_pNormMapFileName!=L"")
-		{
-			m_iTexNum = I_Texture.Add(m_dxHelper.GetDevice(), m_pNormMapFileName.data());
-		}
-		m_pTexture = I_Texture.GetPtr(m_iTexNum);
-
-		return hr;
-	}
 
 	bool JH_Map::Frame()
 	{
@@ -528,13 +455,6 @@
 		m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
 		m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(3, 1, pBuffers);
 
-		UINT offset = 0;
-		UINT stride = sizeof(D3DXVECTOR3);
-		if (m_pNormMapFileName != L"")
-		{
-			m_dxHelper.GetDeviceContext()->PSSetShaderResources(1, 1, &m_pTexture->m_pTextureRV);
-			m_dxHelper.GetDeviceContext()->IASetVertexBuffers(1, 1, &m_pTangentVB, &stride, &offset);
-		}
 
 		m_QuadTree->Frame();
 
@@ -542,24 +462,24 @@
 		return true;
 	}
 
-	bool JH_Map::NoneLightRenderSet(JHCamera* pCamera)
-	{
-		SetMatrix(nullptr, &pCamera->m_matView, &pCamera->m_matProj);
-		UINT offset = 0;
-		UINT stride = sizeof(D3DXVECTOR3);
-		if (m_pNormMapFileName!=L"")
-		{
-			m_dxHelper.GetDeviceContext()->PSSetShaderResources(1, 1, &m_pTexture->m_pTextureRV);
-			m_dxHelper.GetDeviceContext()->IASetVertexBuffers(1, 1, &m_pTangentVB, &stride, &offset);
-		}
-		return true;
-	}
+	//bool JH_Map::NoneLightRenderSet(JHCamera* pCamera)
+	//{
+	//	SetMatrix(nullptr, &pCamera->m_matView, &pCamera->m_matProj);
+	//	UINT offset = 0;
+	//	UINT stride = sizeof(D3DXVECTOR3);
+	//	if (m_pNormMapFileName!=L"")
+	//	{
+	//		m_dxHelper.GetDeviceContext()->PSSetShaderResources(1, 1, &m_pTexture->m_pTextureRV);
+	//		m_dxHelper.GetDeviceContext()->IASetVertexBuffers(1, 1, &m_pTangentVB, &stride, &offset);
+	//	}
+	//	return true;
+	//}
 	bool JH_Map::Render()
 	{
 		m_dxHelper.GetDeviceContext()->PSSetShaderResources(2, 1,m_pCopySrv.GetAddressOf());
 		if (m_QuadTree != nullptr)
 		{
-			PreRender();
+			JH_Model::PreRender();
 			m_QuadTree->Render();
 		}
 		else

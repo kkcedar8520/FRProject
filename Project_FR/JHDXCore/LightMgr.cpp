@@ -12,11 +12,13 @@
 	{
 		m_pContext = pContext;
 	}
-	ID3D11Buffer* LightMgr::GetLightBuffer(int iNum)
+	ID3D11Buffer* LightMgr::GetLightBuffer(UINT iNum)
 	{
 
-		if (iNum >= m_pLightConstantBuffer.size())
+		if (iNum < m_pLightConstantBuffer.size())
 			return m_pLightConstantBuffer[iNum].Get();
+
+		return nullptr;
 	}
 	int  LightMgr::LightDataLoad(const TCHAR* pszLoad)
 	{
@@ -100,7 +102,7 @@
 		for (int i = 0; i < m_iLightNum; i++)
 		{
 			m_LightObjList[i].CreateLightObj(DX::GetDevice().Get(),DX::GetContext().Get(), m_LightInfoList[i]);
-			m_LightObjList[i].Create(DX::GetDevice().Get(), DX::GetContext().Get(), m_ShaderFileName, nullptr,"VS","PS");
+			m_LightObjList[i].Create(DX::GetDevice().Get(), DX::GetContext().Get(), m_ShaderFileName, nullptr,nullptr,"VS","PS");
 			m_cbLight.vAmbinentLightColor[i] = m_LightObjList[i].m_Info.vAmbinentLightColor;
 			m_cbLight.vDiffuseLightColor[i] = m_LightObjList[i].m_Info.vDiffuseLightColor;
 			m_cbLight.vSpecularLightColor[i] = m_LightObjList[i].m_Info.vSpecularLightColor;

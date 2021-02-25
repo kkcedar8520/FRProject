@@ -10,10 +10,10 @@ cbuffer cb0
 };
 struct VS_INPUT
 {
-	float3 p : POINT;
+	float3 p : POSITION;
 	float3 n : NORMAL;
 	float4 c : COLOR;
-	float2 t : TEXT;
+	float2 t : TEX;
 
 };
 struct VS_OUTPUT
@@ -51,6 +51,6 @@ VS_OUTPUT VS(VS_INPUT vIn)
 float4 PS_Cube(PS_INPUT vIn) : SV_Target
 {
 	float4 fColor = float4(1, 1, 1, 1);
-	fColor = g_txCubeMap.ToolCore(g_samPointClamp, vIn.r);
+	fColor = g_txCubeMap.Sample(g_samPointClamp, vIn.r);
 	return fColor;
 }

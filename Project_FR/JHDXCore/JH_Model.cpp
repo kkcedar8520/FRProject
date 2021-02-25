@@ -1,5 +1,6 @@
 #include "JH_Model.h"
 #include"TextureMgr.h"
+
 void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	D3DXMATRIX* matView,
 	D3DXMATRIX* matProj)
@@ -32,10 +33,102 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 		0, NULL, &m_cbData, 0, 0);
 
 }
-void JH_Model::SetLightBuffer(ID3D11Buffer* buffer)
+void JH_Model::SetLightConstantBuffer(ID3D11Buffer* Buffer)
 {
+	m_pLightConstBuffer.Attach(Buffer);
+}
 
-	m_pLightConstBuffer.Attach(buffer);
+void JH_Model::CreateTangentSpaceVectors(D3DXVECTOR3 *v1, D3DXVECTOR3 *v2, D3DXVECTOR3 *v3,
+	float v1u, float v1v,
+	float v2u, float v2v,
+	float v3u, float v3v,
+	D3DXVECTOR3 *vTangent)
+{
+	D3DXVECTOR3 vEdge1 = *v2 - *v1;
+	D3DXVECTOR3 vEdge2 = *v3 - *v1;
+
+	//접선공간의 좌표를 텍스쳐좌표로 활용하여 표현
+	// 접선공간의 벡터 Q-P1=(u-u1)T+(v-v1)B; Q(u,v) P1은 정점  이공식을 이용하여 탄젠트벡터와 바이노말벡터를 구함
+	float fEdge1U = v2u - v1u;//s1
+	float fEdge1V = v2v - v1v;//t1
+
+	float fEdge2U = v3u - v1u;//s2
+	float fEdge2V = v3v - v1v;//t2
+
+
+	float fDenominator = fEdge1U * fEdge2V - fEdge1V * fEdge2U;
+	float fScale = 1.0f / fDenominator;
+
+	D3DXVECTOR3 T;//t2 -t1   (vEdge1.x,y,z)
+				  //-s2  s1	(vEdge2.x,y,z)
+	T.x = fScale * (fEdge2V*vEdge1.x + (-fEdge1V * vEdge2.x));
+	T.y = fEdge2V * vEdge1.y + (-fEdge1V * vEdge2.y);
+	T.z = fEdge2V * vEdge1.z + (-fEdge1V * vEdge2.z);
+
+	D3DXVec3Normalize(&T, &T);
+	vTangent = &T;
+
+
+}
+
+bool	JH_Model::UpdateTangentBuffer()
+{
+	D3DXVECTOR3 vTangent, vBiNormal, vNormal;
+	int iIndex = 0;
+	int i0, i1, i2, i3, i4, i5;
+
+	if (m_VertexData.size() <= 0) { return false; }
+	m_TangentList.resize(m_VertexData.size());
+	for (int iIndex = 0; iIndex < m_dxHelper.m_iNumIndex; iIndex += 3)
+	{
+
+		i0 = m_IndexData[iIndex + 0];
+		i1 = m_IndexData[iIndex + 1];
+		i2 = m_IndexData[iIndex + 2];
+
+		CreateTangentSpaceVectors(&m_VertexData[i0].p, &m_VertexData[i1].p, &m_VertexData[i2].p,
+			m_VertexData[i0].t.x, m_VertexData[i0].t.y,
+			m_VertexData[i1].t.x, m_VertexData[i1].t.y,
+			m_VertexData[i2].t.x, m_VertexData[i2].t.y,
+			&vTangent);
+
+		m_TangentList[i0] += vTangent;
+
+		i0 = m_IndexData[iIndex + 1];
+		i1 = m_IndexData[iIndex + 2];
+		i2 = m_IndexData[iIndex + 0];
+
+		CreateTangentSpaceVectors(&m_VertexData[i0].p, &m_VertexData[i1].p, &m_VertexData[i2].p,
+			m_VertexData[i0].t.x, m_VertexData[i0].t.y,
+			m_VertexData[i1].t.x, m_VertexData[i1].t.y,
+			m_VertexData[i2].t.x, m_VertexData[i2].t.y,
+			&vTangent);
+
+		m_TangentList[i0] += vTangent;
+
+		i0 = m_IndexData[iIndex + 2];
+		i1 = m_IndexData[iIndex + 0];
+		i2 = m_IndexData[iIndex + 1];
+
+		CreateTangentSpaceVectors(&m_VertexData[i0].p, &m_VertexData[i1].p, &m_VertexData[i2].p,
+			m_VertexData[i0].t.x, m_VertexData[i0].t.y,
+			m_VertexData[i1].t.x, m_VertexData[i1].t.y,
+			m_VertexData[i2].t.x, m_VertexData[i2].t.y,
+			&vTangent);
+
+		m_TangentList[i0] += vTangent;
+
+	}
+	for (int i = 0; i < m_TangentList.size(); i++)
+	{
+		D3DXVec3Normalize(&m_TangentList[i0], &m_TangentList[i0]);
+	}
+
+
+	m_pTangentVB.Attach(DX::CreateVertexBuffer(m_dxHelper.GetDevice(), &m_TangentList.at(0), m_TangentList.size(), sizeof(D3DXVECTOR3)));
+
+
+	return true;
 }
 
 
@@ -105,6 +198,7 @@ HRESULT JH_Model::CreateConstantBuffer()
 
 	m_dxHelper.SetConstantBuffer(tcp.Get());
 
+	
 	//MAP_UNMAP CPU 개입할수있는 버퍼
 	//D3D11_BUFFER_DESC pDesc;
 	//ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
@@ -205,6 +299,7 @@ bool    JH_Model::Create(
 	ID3D11DeviceContext* pContext,
 	const TCHAR* pszShaderFileName,
 	const TCHAR* pszTexFileName,
+	const TCHAR* pszNormalTexName,
 	const CHAR* pszVSName,
 	const CHAR* pszPSName)
 {
@@ -247,29 +342,32 @@ bool    JH_Model::Create(
 	{
 		return false;
 	}
-	if (FAILED(LoadTexture(pszTexFileName)))
+
+	if (FAILED(LoadTexture(pszTexFileName,pszNormalTexName)))
+	{
+		return false;
+	}
+	if (!UpdateTangentBuffer())
 	{
 		return false;
 	}
 	return true;
 }
-HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName)
+HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNormalTexName)
 {
 	if (pszTexFileName == nullptr) { return S_FALSE; }
 	HRESULT hr = S_OK;
-	//if (pszTexFileName == NULL) return S_OK;
-	//hr = D3DX11CreateShaderResourceViewFromFile(
-	//	m_dxHelper.GetDevice(),
-	//	pszTexFileName,
-	//	NULL,
-	//	NULL,
-	//	m_dxHelper.GetShaderResourceViewAddress(),
-	//	NULL);
 
-	I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName,L"../../data/Texture/");
-	if(I_Texture.GetPtr(pszTexFileName)!=nullptr)
-	m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(pszTexFileName)->m_pTextureRV);
 
+	int iTex=I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName);
+	if(I_Texture.GetPtr(iTex)!=nullptr)
+	m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(iTex)->m_pTextureRV);
+
+	if (pszNormalTexName == nullptr) return S_OK;
+
+	iTex=I_Texture.Add(m_dxHelper.GetDevice(), pszNormalTexName);
+	if (I_Texture.GetPtr(iTex) != nullptr)
+		m_pNormSrv=I_Texture.GetPtr(iTex)->m_pTextureRV;
 
 	return hr;
 }
@@ -287,6 +385,19 @@ bool	JH_Model::Frame()
 }
 bool	JH_Model::PreRender()
 {
+
+	UINT offset = 0;
+	UINT stride = sizeof(D3DXVECTOR3);
+	if (m_pNormSrv != nullptr)
+	{
+		m_dxHelper.GetDeviceContext()->PSSetShaderResources(1, 1, &m_pNormSrv);
+		m_dxHelper.GetDeviceContext()->IASetVertexBuffers(1, 1, m_pTangentVB.GetAddressOf(), &stride, &offset);
+	}
+	if (m_pLightConstBuffer != nullptr)
+	{
+		m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(1, 1, m_pLightConstBuffer.GetAddressOf());
+		m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(1, 1, m_pLightConstBuffer.GetAddressOf());
+	}
 	m_dxHelper.PreRender();
 	return true;
 }

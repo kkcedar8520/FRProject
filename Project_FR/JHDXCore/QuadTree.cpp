@@ -83,7 +83,7 @@
 
 		m_BoxLine->Create(m_pMap->m_dxHelper.GetDevice(),
 			m_pMap->m_dxHelper.GetDeviceContext(),
-			L"../../data/shader/LineShader.txt", nullptr, "VS", "PS");
+			L"../../data/shader/LineShader.txt", nullptr,nullptr,"VS", "PS");
 	}
 	void HQuadTree::CreateBB(JH_Node* pNode)
 	{
@@ -873,7 +873,7 @@
 		FindDrawNode(m_pRootNode);
 
 
-//		m_pMap->m_SkyBox->Frame();
+
 
 		return true;
 	}

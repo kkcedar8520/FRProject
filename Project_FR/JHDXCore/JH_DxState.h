@@ -5,7 +5,7 @@
 
 #include"JH_DXStd.h"
 #include <cassert>
-namespace JDX
+namespace DX
 {
 	class JH_DxState
 	{
@@ -14,6 +14,10 @@ namespace JDX
 
 		static ID3D11BlendState*		g_pAlpahBlend;
 		static ID3D11BlendState*		g_pAlpahBlendDisable;
+
+		static ID3D11SamplerState*		g_pSamplShadow;
+		static ID3D11SamplerState*		g_pSSClampPoint;
+		static ID3D11SamplerState*		g_pSSClampLinear;
 
 		static ID3D11RasterizerState*	g_pRSWireFrame;
 		static ID3D11RasterizerState*	g_pRSSold;

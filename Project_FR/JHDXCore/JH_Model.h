@@ -3,7 +3,7 @@
 
 
 #include"JH_DXStd.h"
-
+#include"TextureMgr.h"
 
 
 #pragma warning( disable:4005 )
@@ -137,12 +137,26 @@ public:
 	ComPtr<ID3D11Buffer>		m_pLightConstBuffer;
 	D3DXVECTOR3 m_Pos;
 
+	//Normal
+	std::vector<D3DXVECTOR3>										 m_TangentList;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_pTangentVB;
+	ID3D11ShaderResourceView*										 m_pNormSrv;
+	int																 m_iTexNum;
+	T_STR															 m_pNormMapFileName;
+public:
+	void CreateTangentSpaceVectors(D3DXVECTOR3 *v1, D3DXVECTOR3 *v2, D3DXVECTOR3 *v3,
+		float v1u, float v1v,
+		float v2u, float v2v,
+		float v3u, float v3v,
+		D3DXVECTOR3 *vTangent);
+	void SetLightConstantBuffer(ID3D11Buffer* Buffer);
 public:
 	virtual void    SetMatrix(D3DXMATRIX* matWorld, D3DXMATRIX* matView, D3DXMATRIX* matProj);
 	bool    Create(ID3D11Device*,
 		ID3D11DeviceContext*,
 		const TCHAR* pszShaderFileName,
 		const TCHAR* pszTexFileName,
+		const TCHAR* pszNormalTexName=nullptr,
 		const CHAR* pszVSName = "VS",
 		const CHAR* pszPSName = "PS");
 	virtual HRESULT CreateVertexData();
@@ -154,10 +168,9 @@ public:
 		const CHAR* pszVSName = "VS",
 		const CHAR* pszPSName = "PS");
 	virtual HRESULT CreateInputLayout();
-	virtual HRESULT	LoadTexture(const TCHAR* pszTexFileName);
+	virtual HRESULT	LoadTexture(const TCHAR* pszTexFileName,const TCHAR* pszNormalTexName=nullptr);
 	virtual bool	UpdateBuffer();
-	virtual void	SetLightBuffer(ID3D11Buffer* buffer);
-	
+	virtual bool	UpdateTangentBuffer();
 public:
 	virtual bool Init();
 	virtual bool Frame();

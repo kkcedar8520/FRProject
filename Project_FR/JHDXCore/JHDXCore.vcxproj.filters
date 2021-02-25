@@ -195,6 +195,9 @@
     <ClInclude Include="LightMgr.h">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="JH_SkyBox.h">
+      <Filter>Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JHDXCore.cpp">
@@ -328,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="LightMgr.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_SkyBox.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

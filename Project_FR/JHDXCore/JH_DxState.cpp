@@ -1,11 +1,15 @@
 #include "JH_DxState.h"
 
-namespace JDX
+namespace DX
 {
 	ID3D11SamplerState*		JH_DxState::g_pSamplerState = nullptr;
 
 	ID3D11BlendState*		JH_DxState::g_pAlpahBlend = nullptr;
 	ID3D11BlendState*		JH_DxState::g_pAlpahBlendDisable = nullptr;
+
+	ID3D11SamplerState*		 JH_DxState::g_pSamplShadow = nullptr;
+	ID3D11SamplerState*		 JH_DxState::g_pSSClampPoint = nullptr;
+	ID3D11SamplerState*		JH_DxState::g_pSSClampLinear = nullptr;
 
 	ID3D11RasterizerState*	JH_DxState::g_pRSWireFrame = nullptr;
 	ID3D11RasterizerState*	JH_DxState::g_pRSSold = nullptr;
@@ -54,6 +58,42 @@ namespace JDX
 			D3D11_BLEND_ZERO;
 		bs.RenderTarget[0].BlendOpAlpha =
 			D3D11_BLEND_OP_ADD;
+
+		D3D11_SAMPLER_DESC SamDescShad =
+		{
+			D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT,// D3D11_FILTER Filter;
+			D3D11_TEXTURE_ADDRESS_BORDER, //D3D11_TEXTURE_ADDRESS_MODE AddressU;
+			D3D11_TEXTURE_ADDRESS_BORDER, //D3D11_TEXTURE_ADDRESS_MODE AddressV;
+			D3D11_TEXTURE_ADDRESS_BORDER, //D3D11_TEXTURE_ADDRESS_MODE AddressW;
+			0,//FLOAT MipLODBias;
+			0,//UINT MaxAnisotropy;
+			D3D11_COMPARISON_LESS , //D3D11_COMPARISON_FUNC ComparisonFunc;
+			0.0,0.0,0.0,0.0,//FLOAT BorderColor[ 4 ];
+			0,//FLOAT MinLOD;
+			0//FLOAT MaxLOD;   
+		};
+		if (FAILED(hr = pd3dDevice->CreateSamplerState(&SamDescShad, &g_pSamplShadow)))
+		{
+			return hr;
+		}
+
+		SamDescShad.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamDescShad.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamDescShad.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamDescShad.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		if (FAILED(hr = pd3dDevice->CreateSamplerState(&SamDescShad, &g_pSSClampLinear)))
+		{
+			return hr;
+		}
+
+		SamDescShad.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamDescShad.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamDescShad.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamDescShad.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		if (FAILED(hr = pd3dDevice->CreateSamplerState(&SamDescShad, &g_pSSClampPoint)))
+		{
+			return hr;
+		}
 
 		bs.RenderTarget[0].RenderTargetWriteMask =
 			D3D11_COLOR_WRITE_ENABLE_ALL;

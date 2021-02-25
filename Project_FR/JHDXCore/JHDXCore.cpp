@@ -64,7 +64,7 @@ bool JHDXCore::CoreInit()
 	{
 		return false;
 	}
-	JDX::JH_DxState::SetState(m_pd3dDevice.Get());
+	DX::JH_DxState::SetState(m_pd3dDevice.Get());
 	
 
 	m_Timer.Init();
@@ -104,14 +104,14 @@ bool JHDXCore::PreRender()
 	m_pImmediateContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	JDX::ApplyBS(GetContext().Get(), JDX::JH_DxState::g_pAlpahBlend);
-	JDX::ApplySS(GetContext().Get(), JDX::JH_DxState::g_pSamplerState);
-	JDX::ApplyRS(GetContext().Get(), JDX::JH_DxState::g_pRSSold);
+	DX::ApplyBS(GetContext().Get(), DX::JH_DxState::g_pAlpahBlend);
+	DX::ApplySS(GetContext().Get(), DX::JH_DxState::g_pSamplerState);
+	DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSSold);
 	if (m_bWireFrame == true)
 	{
-		JDX::ApplyRS(GetContext().Get(), JDX::JH_DxState::g_pRSWireFrame);
+		DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSWireFrame);
 	}
-	//JDX::ApplyDSS(GetContext().Get(), JDX::JH_DxState::g_pDSS);
+	//DX::ApplyDSS(GetContext().Get(), DX::JH_DxState::g_pDSS);
 	SetViewPort();
 	return true;
 }

@@ -58,6 +58,7 @@ void Texture::SetPath(const TCHAR* pPath)
 
 INT TextureMgr::Add(ID3D11Device*	 pDevice, const TCHAR *pFileName)
 {
+	if (pFileName == nullptr)return  0;
 	TCHAR szFileName[MAX_PATH];
 	TCHAR Drive[MAX_PATH];
 	TCHAR Dir[MAX_PATH];
@@ -85,7 +86,7 @@ INT TextureMgr::Add(ID3D11Device*	 pDevice, const TCHAR *pFileName)
 			}
 		}
 	}
-	Texture *pPoint = NULL;
+	Texture *pPoint = nullptr;
 	SAFE_NEW(pPoint, Texture);
 
 	TCHAR szPath[MAX_PATH] = { 0, };

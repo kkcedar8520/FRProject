@@ -20,7 +20,7 @@
 
 
 
-		m_LightObj.Create(pDevice, pContext, L"../../data/Shader/LightShader.txt", L"../../data/Resource/powerbattles_title.gif","VS","PS");
+		m_LightObj.Create(pDevice, pContext, L"../../data/Shader/LightShader.txt", L"../../data/Resource/powerbattles_title.gif", nullptr, "VS", "PS");
 
 
 		m_Info = light;

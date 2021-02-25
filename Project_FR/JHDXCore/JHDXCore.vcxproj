@@ -209,6 +209,7 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="JH_Select.h" />
     <ClInclude Include="JH_ShapeLine.h" />
     <ClInclude Include="JH_ShapePlane.h" />
+    <ClInclude Include="JH_SkyBox.h" />
     <ClInclude Include="JH_Sprite.h" />
     <ClInclude Include="jMath.h" />
     <ClInclude Include="JH_MapLod.h" />
@@ -259,6 +260,7 @@ copy "*.lib" "../../lib/"
     <ClCompile Include="JH_Select.cpp" />
     <ClCompile Include="JH_ShapeLine.cpp" />
     <ClCompile Include="JH_ShapePlane.cpp" />
+    <ClCompile Include="JH_SkyBox.cpp" />
     <ClCompile Include="JH_Sprite.cpp" />
     <ClCompile Include="jMath.cpp" />
     <ClCompile Include="JH_MapLod.cpp" />
