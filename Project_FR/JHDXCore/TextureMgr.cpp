@@ -39,6 +39,7 @@ bool Texture::Release()
 {
 	SAFE_RELEASE(m_pTextureRV);
 	SAFE_RELEASE(m_pSamplerState);
+	
 	return true;
 }
 Texture::Texture(void)
@@ -95,6 +96,8 @@ INT TextureMgr::Add(ID3D11Device*	 pDevice, const TCHAR *pFileName)
 
 	if (FAILED(pPoint->Load(pDevice, szFileName)))
 	{
+		pPoint->Release();
+		SAFE_DEL(pPoint);
 		return 0;
 	}
 	TMap.insert(make_pair(++m_iCurIndex, pPoint));
@@ -135,6 +138,8 @@ INT TextureMgr::Add(ID3D11Device*	 pDevice, const TCHAR *pFileName, const TCHAR*
 
 	if (FAILED(pPoint->Load(pDevice, szFileName)))
 	{
+		pPoint->Release();
+		SAFE_DEL(pPoint);
 		return 0;
 	}
 	TMap.insert(make_pair(++m_iCurIndex, pPoint));

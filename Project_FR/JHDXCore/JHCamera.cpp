@@ -100,26 +100,26 @@ P_POSITION JHCamera::CheckOBBInPlane(JH_Box& box)
 		
 		vDir = box.vAxis[0] * box.fExtent[0];
 		fDistance = fabs(m_Frustum.m_Plane[iPlane].fA *
-			vDir.x +
-			m_Frustum.m_Plane[iPlane].fB *
-			vDir.y +
-			m_Frustum.m_Plane[iPlane].fC *
+			vDir.x )+
+			fabs(m_Frustum.m_Plane[iPlane].fB *
+			vDir.y )+
+			fabs(m_Frustum.m_Plane[iPlane].fC *
 			vDir.z);
 
 		vDir = box.vAxis[1] * box.fExtent[1];
 		fDistance += fabs(m_Frustum.m_Plane[iPlane].fA *
-			vDir.x +
-			m_Frustum.m_Plane[iPlane].fB *
-			vDir.y +
-			m_Frustum.m_Plane[iPlane].fC *
+			vDir.x) +
+			fabs(m_Frustum.m_Plane[iPlane].fB *
+			vDir.y) +
+			fabs(m_Frustum.m_Plane[iPlane].fC *
 			vDir.z);
 
 		vDir = box.vAxis[2] * box.fExtent[2];
 		fDistance += fabs(m_Frustum.m_Plane[iPlane].fA *
-			vDir.x +
-			m_Frustum.m_Plane[iPlane].fB *
-			vDir.y +
-			m_Frustum.m_Plane[iPlane].fC *
+			vDir.x )+
+			fabs(m_Frustum.m_Plane[iPlane].fB *
+			vDir.y) +
+			fabs(m_Frustum.m_Plane[iPlane].fC *
 			vDir.z);
 
 		//이 값이 양수면 평면 앞에 존재 음수이면 평면뒤에 존재 
@@ -129,8 +129,7 @@ P_POSITION JHCamera::CheckOBBInPlane(JH_Box& box)
 				m_Frustum.m_Plane[iPlane].fB *
 				box.vCenter.y +
 				m_Frustum.m_Plane[iPlane].fC *
-				box.vCenter.z +
-				m_Frustum.m_Plane[iPlane].fD;
+				box.vCenter.z +m_Frustum.m_Plane[iPlane].fD;
 		if (fCenterDistance<=fDistance)
 		{
 			Pos = P_SPANNING;

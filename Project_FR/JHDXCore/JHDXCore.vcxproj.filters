@@ -299,9 +299,6 @@
     <ClCompile Include="Shader.cpp">
       <Filter>소스 파일\dx</Filter>
     </ClCompile>
-    <ClCompile Include="JH_DXHelperEX.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
     <ClCompile Include="JH_PogMgr.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -334,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="JH_SkyBox.cpp">
       <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_DXHelperEX.cpp">
+      <Filter>소스 파일\dx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

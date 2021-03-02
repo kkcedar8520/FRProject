@@ -35,7 +35,7 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 }
 void JH_Model::SetLightConstantBuffer(ID3D11Buffer* Buffer)
 {
-	m_pLightConstBuffer.Attach(Buffer);
+	m_pLightConstBuffer=Buffer;
 }
 
 void JH_Model::CreateTangentSpaceVectors(D3DXVECTOR3 *v1, D3DXVECTOR3 *v2, D3DXVECTOR3 *v3,

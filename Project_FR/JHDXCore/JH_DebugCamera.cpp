@@ -20,7 +20,7 @@ void JH_DebugCamera::MsgProc(HWND hWnd,
 	WPARAM wParam, LPARAM lParam)
 {
 
-	if (msg == WM_LBUTTONDOWN)
+	/*if (msg == WM_LBUTTONDOWN)
 {
 	int iMouseX = LOWORD(lParam);
 	int iMouseY = HIWORD(lParam);
@@ -57,7 +57,7 @@ if (msg == WM_MOUSEWHEEL)
 	{
 		m_vPos -= m_vLookup * g_SecondPerFrame * 1500;
 	}
-}
+}*/
 
 }
 
@@ -83,11 +83,11 @@ bool JH_DebugCamera::Frame()
 	{
 		m_vPos -= m_vSide * g_SecondPerFrame * 50;
 	}
-	if (G_Input.KeyCheck(VK_RIGHT))
+	if (G_Input.KeyCheck(VK_LEFT))
 	{
 		m_fYaw += g_SecondPerFrame * 2;
 	}
-	if (G_Input.KeyCheck(VK_LEFT))
+	if (G_Input.KeyCheck(VK_RIGHT))
 	{
 		m_fYaw -= g_SecondPerFrame *2;
 	}

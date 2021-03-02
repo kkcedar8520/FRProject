@@ -140,6 +140,9 @@
     <ClCompile Include="ToolCore.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ToolFunction.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="JHTool.rc">
@@ -224,6 +227,9 @@
       <Filter>Shader</Filter>
     </Text>
     <Text Include="..\..\data\shader\SkinShader.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\Data\shader\LightShader.txt">
       <Filter>Shader</Filter>
     </Text>
   </ItemGroup>

@@ -130,7 +130,7 @@ public:
 	D3DXMATRIX	m_matView;
 	D3DXMATRIX  m_matProj;
 public:
-	std::vector<PNCTIW_VERTEX>	m_VertexData;
+	std::vector<PNCT_VERTEX>	m_VertexData;
 	std::vector<DWORD>			m_IndexData;
 	CB_TF						m_cbData;
 	//Light ContanBuffer;
@@ -140,7 +140,7 @@ public:
 	//Normal
 	std::vector<D3DXVECTOR3>										 m_TangentList;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_pTangentVB;
-	ID3D11ShaderResourceView*										 m_pNormSrv;
+	ID3D11ShaderResourceView*										 m_pNormSrv=nullptr;
 	int																 m_iTexNum;
 	T_STR															 m_pNormMapFileName;
 public:

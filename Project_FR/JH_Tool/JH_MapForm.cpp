@@ -126,30 +126,7 @@ void JH_MapForm::OnBnClickedOk()
 	
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	//if (m_HeightMapFile.IsEmpty())
-	//{		pApp->m_Core.CreateMap(
-	//		m_iWidth,
-	//		m_iHeight,
-	//		m_iCellCount,
-	//		m_iCellSize,
-	//		m_TextrueName,
-	//		m_NormalMapFile,
-	//		nullptr,
-	//		L""
-	//		);
-	//}
-	//else
-	//{
-	//	pApp->m_Core.CreateMap(
-	//		m_iWidth,
-	//		m_iHeight,
-	//		m_iCellCount,
-	//		m_iCellSize,
-	//		m_TextrueName,
-	//		m_NormalMapFile,
-	//		m_HeightMapFile,
-	//		L"../../data/LightSrc/LightInfo.txt");
-	//}
+
 
 
 
@@ -267,7 +244,7 @@ void JH_MapForm::OnEnChangeEdit7()
 	UpdateData(TRUE);
 
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	//pApp->m_Core.m_vBuf0[0].fRadius = m_fRadius;
+	pApp->m_Core.m_Sphere.Radius = m_fRadius;
 	UpdateData(TRUE);
 }
 
@@ -280,9 +257,9 @@ void JH_MapForm::OnBnClickedOk4()
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 
-	//if(pApp->m_Core.m_Map)
-	//pApp->m_Core.m_Map->m_bMapEdit= !pApp->m_Core.m_Map->m_bMapEdit;
-	//pApp->m_Core.m_ToolState = HEIGHT_EDIT;
+	if(I_MapMgr.GetCurrentMap()!=nullptr)
+	pApp->m_Core.m_eState = TOOLSTATE::HEIGHT;
+	UpdateData(FALSE);
 }
 
 

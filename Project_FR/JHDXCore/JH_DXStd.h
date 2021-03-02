@@ -174,6 +174,14 @@ struct JH_PLANE
 
 		fD = -(fA*v0.x + fB * v0.y + fC * v0.z);
 	}
+	void	Normalize()
+	{
+		float fMag = sqrt(fA*fA + fB * fB + fC * fC);
+		fA = fA / fMag;
+		fB = fB / fMag;
+		fC = fC / fMag;
+		fD = fD / fMag;
+	}
 };
 
 struct JH_RAY

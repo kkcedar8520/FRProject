@@ -21,9 +21,9 @@
 		matSkyBoxView._43 = 0;
 
 	
-		DX::ApplyDSS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pDSSDisable);
+		DX::ApplyDSS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pDSSDisable.Get());
 
-		ID3D11SamplerState* ppSamplerStates[2] = { DX::JH_DxState::g_pSSClampPoint,DX::JH_DxState::g_pSSClampLinear };
+		ID3D11SamplerState* ppSamplerStates[2] = { DX::JH_DxState::g_pSSClampPoint.Get(),DX::JH_DxState::g_pSSClampLinear.Get() };
 		m_dxHelper.GetDeviceContext()->PSSetSamplers(0, 2, ppSamplerStates);
 
 		SetMatrix(&m_matWorld, &matSkyBoxView, &m_matProj);
@@ -34,9 +34,9 @@
 		m_dxHelper.GetDeviceContext()->PSSetShaderResources(3, 1, m_pCubeTexSRV.GetAddressOf());
 		m_dxHelper.GetDeviceContext()->DrawIndexed(36, 0, 0);
 
-		DX::ApplyDSS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pDSS);
-		DX::ApplyRS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pRSSold);
-		DX::ApplySS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pSamplerState);
+		DX::ApplyDSS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pDSS.Get());
+		DX::ApplyRS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pRSSold.Get());
+		DX::ApplySS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pSamplerState.Get());
 		return true;
 	}
 	//HRESULT JH_SkyBox::LoadTextures(ID3D11Device* pDevice, const TCHAR* pLoadTextureString)

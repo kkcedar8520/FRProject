@@ -120,13 +120,9 @@
 	//
 		void SetCamera(JHCamera* Camera) { m_pCamera = Camera; }
 	public:
-		bool RenderSet(JHCamera* Camera);
+		void MapUpDown(UINT Index, float Value);
 	public:
 		HRESULT CreateInputLayout()override;
-
-
-	public:
-
 		HRESULT		CreateVertexData()override;
 		HRESULT		CreateIndexData()override;
 		bool Render()override;

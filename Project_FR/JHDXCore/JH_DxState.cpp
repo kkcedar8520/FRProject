@@ -2,26 +2,26 @@
 
 namespace DX
 {
-	ID3D11SamplerState*		JH_DxState::g_pSamplerState = nullptr;
+	ComPtr<ID3D11SamplerState>			JH_DxState::g_pSamplerState = nullptr;
 
-	ID3D11BlendState*		JH_DxState::g_pAlpahBlend = nullptr;
-	ID3D11BlendState*		JH_DxState::g_pAlpahBlendDisable = nullptr;
+	ComPtr<ID3D11BlendState>			JH_DxState::g_pAlpahBlend = nullptr;
+	ComPtr<ID3D11BlendState>			JH_DxState::g_pAlpahBlendDisable = nullptr;
 
-	ID3D11SamplerState*		 JH_DxState::g_pSamplShadow = nullptr;
-	ID3D11SamplerState*		 JH_DxState::g_pSSClampPoint = nullptr;
-	ID3D11SamplerState*		JH_DxState::g_pSSClampLinear = nullptr;
+	ComPtr<ID3D11SamplerState>			JH_DxState::g_pSamplShadow = nullptr;
+	ComPtr<ID3D11SamplerState>			JH_DxState::g_pSSClampPoint = nullptr;
+	ComPtr<ID3D11SamplerState>			JH_DxState::g_pSSClampLinear = nullptr;
 
-	ID3D11RasterizerState*	JH_DxState::g_pRSWireFrame = nullptr;
-	ID3D11RasterizerState*	JH_DxState::g_pRSSold = nullptr;
+	ComPtr<ID3D11RasterizerState>		JH_DxState::g_pRSWireFrame = nullptr;
+	ComPtr<ID3D11RasterizerState>		JH_DxState::g_pRSSold = nullptr;
 
-	ID3D11DepthStencilState* JH_DxState::g_pDSS = nullptr;
-	ID3D11DepthStencilState* JH_DxState::g_pDSSDisable = nullptr;
+	ComPtr<ID3D11DepthStencilState>		JH_DxState::g_pDSS = nullptr;
+	ComPtr<ID3D11DepthStencilState>		JH_DxState::g_pDSSDisable = nullptr;
 
 
-	Microsoft::WRL::ComPtr<ID3D11SamplerState>	JH_DxState::g_pSSEdit = 0;
-	Microsoft::WRL::ComPtr<ID3D11BlendState>		JH_DxState::g_pBSEdit = 0;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState>	JH_DxState::g_pRSEdit = 0;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> JH_DxState::g_pDSSEdit = 0;
+	ComPtr<ID3D11SamplerState>		JH_DxState::g_pSSEdit = 0;
+	ComPtr<ID3D11BlendState>		JH_DxState::g_pBSEdit = 0;
+	ComPtr<ID3D11RasterizerState>	JH_DxState::g_pRSEdit = 0;
+	ComPtr<ID3D11DepthStencilState> JH_DxState::g_pDSSEdit = 0;
 	D3D11_SAMPLER_DESC JH_DxState::g_SamplerDesc;
 	D3D11_BLEND_DESC JH_DxState::g_BlendDesc = { 0, };
 	D3D11_RASTERIZER_DESC JH_DxState::g_RasterizerDesc;
@@ -230,7 +230,7 @@ namespace DX
 		//g_pRSEdit;
 		//g_pDSSEdit;
 
-		if (g_pDSS != nullptr)
+	/*	if (g_pDSS != nullptr)
 			g_pDSS->Release();
 		if (g_pSamplerState != nullptr)
 			g_pSamplerState->Release();
@@ -243,7 +243,7 @@ namespace DX
 		if (g_pRSSold != nullptr)
 			g_pRSSold->Release();
 		if (g_pDSSDisable != nullptr)
-			g_pDSSDisable->Release();
+			g_pDSSDisable->Release();*/
 
 
 		return true;

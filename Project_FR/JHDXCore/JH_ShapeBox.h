@@ -4,7 +4,7 @@
 class JH_ShapeBox:public JH_Model
 {
 public:
-	vector<PNCT_VERTEX>		m_VertexData;
+
 public:
 	HRESULT CreateVertexData();
 	HRESULT CreateIndexData();

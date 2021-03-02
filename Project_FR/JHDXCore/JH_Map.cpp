@@ -25,6 +25,11 @@
 
 		return-1;
 	}
+
+	void JH_Map::MapUpDown(UINT Index, float Value)
+	{
+		m_VertexData[Index].p.y += Value  ;
+	}
 	// Base Function
 
 	bool JH_Map::CreateMap(int iWidth,
@@ -55,7 +60,7 @@
 
 
 
-		SetMapDesc(pTexturFileName, L"../../data/Shader/JHMapShader.hlsl", m_iRowNum, m_iColumNum, iCellSize, 1.0f);
+		SetMapDesc(pTexturFileName, L"../../data/Shader/JHMapShader.hlsl", m_iColumNum, m_iRowNum, iCellSize, 1.0f);
 
 		m_pNormMapFileName = pNormalMapFileName;
 
@@ -285,10 +290,12 @@
 		{
 			return  false;
 		}
+		if (I_LIGHT_MGR.GetLightBuffer(0))
+			SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
 
-		////m_SkyBox = std::make_shared<KG_SkyBox>();
-		////m_SkyBox->CreateSkyBox(m_dxHelper.m_pd3dDevice, m_dxHelper.m_pContext, L"SkyObj.hlsl");
-		////m_SkyBox->CreateTexuture(m_dxHelper.m_pd3dDevice, m_dxHelper.m_pContext, L"../../data/sky/StarFiled2.dds");
+		m_SkyBox = std::make_shared<JH_SkyBox>();
+		m_SkyBox->CreateSkyBox(m_dxHelper.GetDevice(), m_dxHelper.GetDeviceContext(), L"SkyObj.hlsl");
+		m_SkyBox->CreateTexuture(m_dxHelper.GetDevice(), m_dxHelper.GetDeviceContext(), L"../../data/sky/StarFiled2.dds");
 
 
 
@@ -302,7 +309,7 @@
 	{
 
 		HRESULT hr = S_OK;
-		m_dxHelper.m_iVertexSize = sizeof(PNCTIW_VERTEX);
+		m_dxHelper.m_iVertexSize = sizeof(PNCT_VERTEX);
 		m_VertexData.resize(m_iVertices);
 		m_vHeightList.resize(m_iVertices);
 		float fHalfCols = m_iCellCol / 2.0f;
@@ -444,46 +451,36 @@
 	bool JH_Map::Frame()
 	{
 		SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
+		m_SkyBox->SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
+		m_SkyBox->Frame();
 
-		ID3D11Buffer*               pBuffers[3];
-		pBuffers[0] = I_LIGHT_MGR.m_pLightConstantBuffer[0].Get();
-		LightConstantBuffer mcb = I_LIGHT_MGR.m_cbLight;
-		UpdateConstantBuffer(I_LIGHT_MGR.m_pLightConstantBuffer[0].Get(), &I_LIGHT_MGR.m_cbLight);
-
-		m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(1, 1, pBuffers);
-		m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(1, 1, pBuffers);
-		m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
-		m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(3, 1, pBuffers);
+		
+		UpdateConstantBuffer(m_pLightConstBuffer.Get(), &I_LIGHT_MGR.m_cbLight);
 
 
+		//m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
+		//m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(3, 1, pBuffers);
+
+		
 		m_QuadTree->Frame();
 
 
 		return true;
 	}
 
-	//bool JH_Map::NoneLightRenderSet(JHCamera* pCamera)
-	//{
-	//	SetMatrix(nullptr, &pCamera->m_matView, &pCamera->m_matProj);
-	//	UINT offset = 0;
-	//	UINT stride = sizeof(D3DXVECTOR3);
-	//	if (m_pNormMapFileName!=L"")
-	//	{
-	//		m_dxHelper.GetDeviceContext()->PSSetShaderResources(1, 1, &m_pTexture->m_pTextureRV);
-	//		m_dxHelper.GetDeviceContext()->IASetVertexBuffers(1, 1, &m_pTangentVB, &stride, &offset);
-	//	}
-	//	return true;
-	//}
 	bool JH_Map::Render()
 	{
 		m_dxHelper.GetDeviceContext()->PSSetShaderResources(2, 1,m_pCopySrv.GetAddressOf());
 		if (m_QuadTree != nullptr)
 		{
+			m_SkyBox->Render();
 			JH_Model::PreRender();
 			m_QuadTree->Render();
+			m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
 		}
 		else
 		{
+			m_SkyBox->Render();
 			JH_Model::Render();
 		}
 		return true;

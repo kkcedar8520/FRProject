@@ -26,6 +26,7 @@ void JH_Select::Update()
 	ScreenToClient(g_hwnd, &Cursor); 
 
 	D3DXVECTOR3 v;
+	//스크린좌표를 투영좌표로 변환
 	v.x = (((2.0f* Cursor.x) / (g_rtClient.right)) - 1) / m_matProj._11;
 	v.y = -(((2.0f* Cursor.y) / (g_rtClient.bottom)) - 1) / m_matProj._22;
 	v.z = 1.0f;
@@ -38,12 +39,14 @@ void JH_Select::Update()
 
 	D3DXMatrixInverse(&matViewInverse, NULL, &matVW);
 
+	//반직선을 월드좌표로 
 	D3DXVec3TransformCoord(&m_Ray.vOrigin, &m_Ray.vOrigin,&matViewInverse);
 	D3DXVec3TransformNormal(&m_Ray.vDirection, &m_Ray.vDirection, &matViewInverse);
 	D3DXVec3Normalize(&m_Ray.vDirection, &m_Ray.vDirection);
 
 
 }
+
 bool JH_Select::AABBtoRay(BOUNDINGBOX* pBox,JH_RAY* pRay)
 {
 
@@ -87,6 +90,7 @@ bool JH_Select::OBBToRay(JH_Box* pBox)
 
 	D3DXVECTOR3 vR = m_Ray.vOrigin - pBox->vCenter;
 
+	//X,Y,Z OBB의 축에대한 검사
 	for (int v = 0; v < 3; v++)
 	{
 		f[v] = D3DXVec3Dot(&pBox->vAxis[v], &m_Ray.vDirection);
@@ -94,6 +98,8 @@ bool JH_Select::OBBToRay(JH_Box* pBox)
 		fa[v] = fabs(f[v]);
 		sa[v] = fabs(s[v]);
 
+		//OBB투영축 안에 시작점이있는지 판별하고 반직선의 방향성을 판별
+		//둘다 불충족시 반직선은 지나지않음
 		if (sa[v] > pBox->fExtent[v] && s[v] * f[v] >= 0.0f)
 			return false;
 
@@ -121,8 +127,9 @@ bool JH_Select::OBBToRay(JH_Box* pBox)
 	{
 		return false;
 	}
-	// D x pBox->vAxis[1]  분리축
+	// D x pBox->vAxis[1]  분리축 R=O-C 투영축 투영
 	fCross[1] = fabs(D3DXVec3Dot(&vDxR, &pBox->vAxis[1]));
+	//OBB 투영
 	fRhs = pBox->fExtent[0] * fa[2] + pBox->fExtent[2] * fa[0];
 	if (fCross[1] > fRhs)
 	{
@@ -238,6 +245,33 @@ bool JH_Select::InterSectionTriAngle(D3DXVECTOR3 v0,
 	
 	
 
+}
+bool JH_Select::PickCheck(D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR3 v2)
+{
+	float t, u, v;
+
+	D3DXVECTOR3 vT = m_Ray.vOrigin - v0;
+	D3DXVECTOR3 vE0 = v1 - v0;
+	D3DXVECTOR3 vE1 = v2 - v0;
+
+	D3DXVECTOR3 vP, vQ;
+	D3DXVec3Cross(&vP, &m_Ray.vDirection, &vE1);
+	D3DXVec3Cross(&vQ, &vT, &vE0);
+
+	float dot = D3DXVec3Dot(&vP, &vE0);
+
+	t = D3DXVec3Dot(&vQ, &vE1) / dot;
+	u = D3DXVec3Dot(&vP, &vT) / dot;
+	v = D3DXVec3Dot(&vQ, &m_Ray.vDirection) / dot;
+
+	if (u<0 || u>1.0f || v<0 || v>1.0f || (u + v) > 1.0f)
+	{
+		return false;
+	}
+
+
+	m_vIntersection = m_Ray.vOrigin + m_Ray.vDirection*t;
+	return true;
 }
 
 JH_Select::JH_Select()

@@ -1,22 +1,23 @@
 #pragma once
 #include"JHDXCore.h"
 #include"JH_MapMgr.h"
+#include"JH_Input.h"
+enum class TOOLSTATE
+{
+	BASE=0,
+	HEIGHT=1,
+};
 class ToolCore:public JHDXCore
 {
 public:
 	JH_Map*		 m_Map;
 	JH_ShapeLine m_DebugLine;
 public:
-
+	// Flag
+	TOOLSTATE	m_eState= TOOLSTATE::BASE;
+	SPHERE		m_Sphere;
 public:
-	bool CreateMap(int iWidth,
-		int iHeight,
-		int iCellCount,
-		int iCellSize,
-		const TCHAR* pTexturFileName,
-		const TCHAR* pNormalMapFileName = nullptr,
-		const TCHAR* pHeightMapFileName = nullptr,
-		const TCHAR* pLightShaderName = nullptr);
+	bool MapUpDown();
 public:
 	virtual bool Init()override;
 	virtual bool Frame()override;

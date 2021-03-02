@@ -10,30 +10,33 @@ namespace DX
 	class JH_DxState
 	{
 	public:
-		static ID3D11SamplerState*		g_pSamplerState;
+		static ComPtr <ID3D11SamplerState>		g_pSamplerState;
 
-		static ID3D11BlendState*		g_pAlpahBlend;
-		static ID3D11BlendState*		g_pAlpahBlendDisable;
+		static ComPtr <ID3D11BlendState>		g_pAlpahBlend;
+		static ComPtr <ID3D11BlendState>		g_pAlpahBlendDisable;
 
-		static ID3D11SamplerState*		g_pSamplShadow;
-		static ID3D11SamplerState*		g_pSSClampPoint;
-		static ID3D11SamplerState*		g_pSSClampLinear;
+		static ComPtr <ID3D11SamplerState>		g_pSamplShadow;
+		static ComPtr <ID3D11SamplerState>		g_pSSClampPoint;
+		static ComPtr <ID3D11SamplerState>		g_pSSClampLinear;
 
-		static ID3D11RasterizerState*	g_pRSWireFrame;
-		static ID3D11RasterizerState*	g_pRSSold;
+		static ComPtr <ID3D11RasterizerState>	g_pRSWireFrame;
+		static ComPtr <ID3D11RasterizerState>	g_pRSSold;
 
-		static ID3D11DepthStencilState* g_pDSS;
-		static ID3D11DepthStencilState* g_pDSSDisable;
+		static ComPtr<ID3D11DepthStencilState> g_pDSS;
+		static ComPtr<ID3D11DepthStencilState> g_pDSSDisable;
 
 		// tool & edit
-		static Microsoft::WRL::ComPtr<ID3D11SamplerState>	g_pSSEdit;
-		static Microsoft::WRL::ComPtr<ID3D11BlendState>		g_pBSEdit;
-		static Microsoft::WRL::ComPtr<ID3D11RasterizerState>	g_pRSEdit;
-		static Microsoft::WRL::ComPtr<ID3D11DepthStencilState> g_pDSSEdit;
-		static D3D11_SAMPLER_DESC g_SamplerDesc;
-		static D3D11_BLEND_DESC g_BlendDesc;
-		static D3D11_RASTERIZER_DESC g_RasterizerDesc;
-		static D3D11_DEPTH_STENCIL_DESC g_DepthStencilDesc;
+		static ComPtr<ID3D11SamplerState>				g_pSSEdit;
+		static ComPtr<ID3D11BlendState>					g_pBSEdit;
+		static ComPtr<ID3D11RasterizerState>			g_pRSEdit;
+		static ComPtr<ID3D11DepthStencilState>			g_pDSSEdit;
+
+		static D3D11_SAMPLER_DESC						g_SamplerDesc;
+		static D3D11_BLEND_DESC							g_BlendDesc;
+		static D3D11_RASTERIZER_DESC					g_RasterizerDesc;
+		static D3D11_DEPTH_STENCIL_DESC					g_DepthStencilDesc;
+
+		//Func
 		static HRESULT SetSamplerState(ID3D11Device* pd3dDevice,
 			ID3D11DeviceContext* pContext,
 			D3D11_SAMPLER_DESC* pDesc,

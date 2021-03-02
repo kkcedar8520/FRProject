@@ -104,7 +104,7 @@
 
 		//렉트의 높이와 넓이 *3 만큼으로 
 		DWORD dwSize = (dwTR - dwTL)*(dwTR - dwTL) * 2 * 3;
-		pNode->m_IndexList.resize(dwSize);
+		//pNode->m_IndexList.resize(dwSize);
 
 		DWORD dwStartCol = dwTL / m_pMap->m_iRowNum;
 		DWORD dwEndCol = dwBL / m_pMap->m_iRowNum;;
@@ -118,9 +118,9 @@
 		//박스의 MinMax를 찾는과정 AABB 박스를 만들기위해
 		if (pNode->m_ObjList.size() <= 0)
 		{
-			for (DWORD dwCol = dwStartCol; dwCol < dwStartCol; dwCol++)
+			for (DWORD dwCol = dwStartCol; dwCol <= dwEndCol; dwCol++)
 			{
-				for (DWORD dwRow = dwStartRow; dwRow < dwEndRoW; dwRow++)
+				for (DWORD dwRow = dwStartRow; dwRow <= dwEndRoW; dwRow++)
 				{
 					dwIndex = dwCol * m_pMap->m_iRowNum + dwRow;
 					if (pNode->m_Box.vMin.y > m_pMap->m_VertexData[dwIndex].p.y)
@@ -158,16 +158,10 @@
 		pNode->m_Box.vAxis[1] = D3DXVECTOR3(0, 1, 0);
 		pNode->m_Box.vAxis[2] = D3DXVECTOR3(0, 0, 1);
 		D3DXVECTOR3 vHalf = pNode->m_Box.vMax - pNode->m_Box.vCenter;
-		pNode->m_Box.fExtent[0]=D3DXVec3Dot(&pNode->m_Box.vAxis[0], &vHalf);
-		pNode->m_Box.fExtent[1] =D3DXVec3Dot(&pNode->m_Box.vAxis[1], &vHalf);
-		pNode->m_Box.fExtent[2] =D3DXVec3Dot(&pNode->m_Box.vAxis[2], &vHalf);
-
-		//AABB 박스의높이가 0일경우 최소높이 세팅
-		if ((pNode->m_Box.vMax.y == 0 && pNode->m_Box.vMin.y == 0))
-		{
-			pNode->m_Box.fExtent[1] = 1;
-			pNode->m_Box.vMax.y += 1;
-		}
+		pNode->m_Box.fExtent[0] = pNode->m_Box.vMax.x - pNode->m_Box.vCenter.x;
+		pNode->m_Box.fExtent[1] = pNode->m_Box.vMax.y - pNode->m_Box.vCenter.y;
+		pNode->m_Box.fExtent[2] = pNode->m_Box.vMax.z - pNode->m_Box.vCenter.z;
+		
 
 		D3DXVECTOR3 BoxVertex[8];
 
@@ -244,14 +238,14 @@
 		if (pMap == nullptr)return FALSE;
 		m_pMap = pMap;
 		m_pMap->m_pCamera = pCamera;
-		m_dwWidth = m_pMap->m_iColumNum;
-		m_dwHeight = m_pMap->m_iRowNum;
+		m_dwWidth = m_pMap->m_iRowNum;
+		m_dwHeight = m_pMap->m_iColumNum;
 		m_iNumFace = (m_dwWidth - 1)*(m_dwHeight - 1) * 2;
 		Release();//전 데이터 삭제
 
 		Set();
 		DWORD dwTL = 0;
-		DWORD dwTR = m_pMap->m_iColumNum - 1;
+		DWORD dwTR = m_pMap->m_iRowNum - 1;
 		DWORD dwBL = m_pMap->m_iColumNum*(m_pMap->m_iRowNum - 1);
 		DWORD dwBR = m_pMap->m_iColumNum*m_pMap->m_iRowNum - 1;
 		m_pRootNode = CreateNode(nullptr, dwTL, dwTR, dwBL, dwBR);
@@ -334,11 +328,11 @@
 
 		if (pNode->m_isLeaf == TRUE)
 		{
-			/*int Pos = m_pMap->m_pCamera->CheckOBBInPlane(pNode->m_Box);
+			int Pos = m_pMap->m_pCamera->CheckOBBInPlane(pNode->m_Box);
 			if (Pos != P_BACK)
 			{
 				DrawLine(pNode);
-			}*/
+			}
 
 		}
 		for (int iNode = 0; iNode < 4; iNode++)
@@ -744,24 +738,7 @@
 		}
 		return t_Pos;
 	}
-	//bool HQuadTree::CheckRect(JH_Node* pNode, JH_MapObj* Obj)
-	//{
-	//	JH_Box Box = Obj->GetObj()->GetCharBox();
-	//	if (pNode->m_Box.vMax.x >= Box.vMax.x &&pNode->m_Box.vMin.x <= Box.vMin.x)
-	//	{
-	//		//if (pNode->m_Box.vMin.y <= Obj.m_Box.vMin.y &&
-	//		//	pNode->m_Box.vMax.y >= Obj.m_Box.vMax.y)
-	//		{
-	//			if (pNode->m_Box.vMax.z >= Box.vMax.z && pNode->m_Box.vMin.z <= Box.vMin.z)
-	//			{
-	//				return true;
-	//			}
-	//		}
-	//	}
 
-
-	//	return false;
-	//}
 	void  HQuadTree::FindObjectNode(JH_Node* pNode, std::shared_ptr<JH_MapObj> Obj)
 	{
 		if (pNode == nullptr) return;
@@ -913,9 +890,8 @@
 		for (int iNode = 0; iNode < m_DrawNodeList.size(); iNode++)
 		{
 			JH_Node* pNode = m_DrawNodeList[iNode];
-			m_pMap->m_dxHelper.GetDeviceContext()->IASetIndexBuffer(pNode->m_pIndexBuffer.Get(),
-				DXGI_FORMAT_R32_UINT, 0);
-			m_pMap->m_dxHelper.GetDeviceContext()->DrawIndexed(pNode->m_IndexList.size(), 0, 0);
+			DX::GetContext()->IASetIndexBuffer(pNode->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT,0);
+			DX::GetContext()->DrawIndexed(pNode->m_IndexList.size(), 0, 0);
 		}
 		return true;
 	}
@@ -990,7 +966,7 @@
 	void HQuadTree::FindDrawNode(JH_Node* pNode)
 	{
 		if (pNode == nullptr) return;
-		int pos = m_pMap->m_pCamera->CheckOBBInPlane(pNode->m_Box);
+		P_POSITION pos = m_pMap->m_pCamera->CheckOBBInPlane(pNode->m_Box);
 		for (auto obj : pNode->m_ObjList)
 		{
 		/*	JH_Box Box = obj.second->GetObj()->GetCharBox();
@@ -1002,14 +978,33 @@
 			}*/
 		}
 
-		if (pNode->m_isLeaf == TRUE && pos != P_BACK)
+		//if (pNode->m_isLeaf == TRUE && pos != P_BACK)
+		//{
+		//	m_DrawNodeList.push_back(pNode);
+		//	return;
+		//}
+
+	
+		// 리프노드 일 경우는 완전히 제외되지 않았다면(걸쳐 있거나 완전 포함)추가한다.
+		if (pNode->m_isLeaf &&  pos != P_BACK)
 		{
 			m_DrawNodeList.push_back(pNode);
+			//VisibleObject(pNode);
+			return;
+		}
+		// 완전히 포함되어 있으면 자식을 탐색하지 않고 노드를 추가한다.
+		if (pos == P_FRONT)
+		{
+			m_DrawNodeList.push_back(pNode);
+			VisibleNode(pNode);
 			return;
 		}
 
-	
-
+		 //걸쳐져 있는 노드에 포함된 오브젝트 체크
+	/*	if (t_Pos == P_SPANNING)
+		{
+			VisibleObject(pNode);
+		}*/
 		for (int iNode = 0; iNode < 4; iNode++)
 		{
 			FindDrawNode(pNode->m_pChild[iNode]);

@@ -99,16 +99,16 @@ public:
 	int					m_iTemp;
 	TCHAR				m_pBuffer[256];
 	TCHAR				m_pString[256];
-	TCHAR		m_tmpBuffer[MAX_PATH];
+	TCHAR				m_tmpBuffer[MAX_PATH];
 public:
 	INT	AddMap(const TCHAR* LoadFile);
 	INT AddGameMap(std::shared_ptr<JH_Map> pMap, std::shared_ptr<HQuadTree> pQuadTree);
 	inline	void SetCurrentMap(std::shared_ptr<LEVEL> pMap) { m_CurrentMap = pMap; };
 	inline	std::shared_ptr<LEVEL> GetCurrentMap() { return m_CurrentMap; };
 	inline	void SetMap(std::shared_ptr<JH_Map> pMap) { m_CurrentMap->m_pMap = pMap; }
-	inline	void SetCurrentQuadTree(std::shared_ptr< HQuadTree> pQuadTree) { m_CurrentMap->m_pQuadTree = pQuadTree; }
+	inline	void SetCurrentQuadTree(std::shared_ptr< HQuadTree> pQuadTree) { m_CurrentMap->m_pMap->m_QuadTree = pQuadTree; }
 	inline	std::shared_ptr<JH_Map> GetMap() { return m_CurrentMap->m_pMap; }
-	inline	std::shared_ptr<HQuadTree> GetCurrentQuadTree() { return m_CurrentMap->m_pQuadTree; }
+	inline	std::shared_ptr<HQuadTree> GetCurrentQuadTree() { return m_CurrentMap->m_pMap->m_QuadTree; }
 
 	TCHAR* FixupName(T_STR name);
 	JH_Map* CreateMap(std::wstring MapName,int iWidth,

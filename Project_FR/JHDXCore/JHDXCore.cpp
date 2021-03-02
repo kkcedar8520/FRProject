@@ -96,7 +96,7 @@ bool JHDXCore::CoreInit()
 }
 bool JHDXCore::PreRender()
 {
-	float clearColor[] = {1,1,1,1 };
+	float clearColor[] = {1,0,1,1 };
 	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), clearColor);
 	m_pImmediateContext->ClearDepthStencilView(
 		m_pDepthStencilView.Get(),
@@ -104,12 +104,12 @@ bool JHDXCore::PreRender()
 	m_pImmediateContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	DX::ApplyBS(GetContext().Get(), DX::JH_DxState::g_pAlpahBlend);
-	DX::ApplySS(GetContext().Get(), DX::JH_DxState::g_pSamplerState);
-	DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSSold);
+	DX::ApplyBS(GetContext().Get(), DX::JH_DxState::g_pAlpahBlend.Get());
+	DX::ApplySS(GetContext().Get(), DX::JH_DxState::g_pSamplerState.Get());
+	DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSSold.Get());
 	if (m_bWireFrame == true)
 	{
-		DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSWireFrame);
+		DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSWireFrame.Get());
 	}
 	//DX::ApplyDSS(GetContext().Get(), DX::JH_DxState::g_pDSS);
 	SetViewPort();
