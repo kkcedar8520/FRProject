@@ -512,7 +512,47 @@
 
 
 	}
+	void HQuadTree::FindSelectPoint()
+	{
+		JH_Node* pNode = nullptr;
+		GetSelectNode(m_pRootNode);
 
+
+		D3DXVECTOR3 v0, v1, v2;
+		if (m_SelectNodeList.size() <= 0) return ;
+		//노드들에서 평면 교점찾기
+		for (int iNode = 0; iNode <
+			m_SelectNodeList.size(); iNode++)
+		{
+			DWORD dwFace =m_SelectNodeList[iNode]->m_IndexList.size() / 3;
+			for (int iFace = 0; iFace < dwFace; iFace++)
+			{
+				DWORD i0 = m_SelectNodeList[iNode]->m_IndexList[iFace * 3 + 0];
+				DWORD i1 = m_SelectNodeList[iNode]->m_IndexList[iFace * 3 + 1];
+				DWORD i2 = m_SelectNodeList[iNode]->m_IndexList[iFace * 3 + 2];
+				v0 = m_pMap->m_VertexData[i0].p;
+				v1 = m_pMap->m_VertexData[i1].p;
+				v2 = m_pMap->m_VertexData[i2].p;
+
+				D3DXVECTOR3 vDIR = I_Select.m_Ray.vDirection;
+				D3DXVECTOR3 vEnd = I_Select.m_Ray.vOrigin + vDIR * m_pMap->m_pCamera->m_fFar;
+
+				D3DXVECTOR3 vNormal;
+				D3DXVECTOR3 e0 = v1 - v0;
+				D3DXVECTOR3 e1 = v2 - v0;
+				D3DXVec3Cross(&vNormal, &e0, &e1);
+
+				if (I_Select.PickCheck(v0, v1, v2))
+				{
+					pNode =m_SelectNodeList[iNode];
+					m_SelectNodeList.clear();
+
+					m_SelectNodeList.emplace_back(pNode);
+					break;
+				}
+			}
+		}
+	}
 
 	void HQuadTree::GetSelectNode(JH_Node* pNode)
 	{
@@ -885,7 +925,7 @@
 		}
 
 
-		
+		DX::GetContext()->PSSetShaderResources(2, 1, m_pMap->m_pCopySrv.GetAddressOf());
 
 		for (int iNode = 0; iNode < m_DrawNodeList.size(); iNode++)
 		{

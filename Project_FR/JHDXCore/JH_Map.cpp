@@ -3,7 +3,10 @@
 
 
 //툴관련 함수
-
+	void JH_Map::SetSplattingAlphaShaderResouceView(ID3D11ShaderResourceView* pSrv)
+	{
+		m_pCopySrv = pSrv;
+	}
 	INT JH_Map::AddSplattTexture(const TCHAR* pFileName, int Num, float Alpha)
 	{
 		if (!this) return -1;
@@ -29,6 +32,10 @@
 	void JH_Map::MapUpDown(UINT Index, float Value)
 	{
 		m_VertexData[Index].p.y += Value  ;
+	}
+	void JH_Map::MapFlatting(UINT Index)
+	{
+		m_VertexData[Index].p.y = 0;
 	}
 	// Base Function
 

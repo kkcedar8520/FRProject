@@ -198,6 +198,9 @@
     <ClInclude Include="JH_SkyBox.h">
       <Filter>Map</Filter>
     </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JHDXCore.cpp">
@@ -334,6 +337,9 @@
     </ClCompile>
     <ClCompile Include="JH_DXHelperEX.cpp">
       <Filter>소스 파일\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

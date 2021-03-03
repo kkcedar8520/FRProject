@@ -182,6 +182,7 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Colider.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="HArcBall.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="JHCamera.h" />
@@ -234,6 +235,7 @@ copy "*.lib" "../../lib/"
     <ClCompile Include="BinaryWriter.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Colider.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="HArcBall.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="JHCamera.cpp" />

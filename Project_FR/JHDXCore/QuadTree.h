@@ -60,6 +60,8 @@ class JH_Map;
 		JH_Node* CreateNode(JH_Node* pParent, DWORD dwTL, DWORD dwTR, DWORD dwBL, DWORD dwBR);
 		void GetSelectNode(JH_Node* pNode);
 		void GetSelectObj(JH_Node* pNode);
+		void FindSelectPoint();
+
 		bool GetObjectAddNode(std::shared_ptr<JH_MapObj> Obj);
 		bool GetCotainObjNode(JH_Node* pNode);
 		bool ChangeObjectNode(std::shared_ptr<JH_MapObj> Obj);

@@ -98,36 +98,40 @@
 		HRESULT Load(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext);
 		HRESULT LoadMap(ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context, const TCHAR* ShaderFileName = L"../../data/shader/DefaultShader.txt", const TCHAR* TexFileName = nullptr, const CHAR* VSName = "VS", const CHAR* PSName = "PS");
 		HRESULT CreateHeightMap(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext, const TCHAR* TextureFileName);
+		float Lerp(float fStart, float fEnd, float fTangent);
+
 		void SetMapDesc(const TCHAR* TextureFileName,
 			const TCHAR* ShaderFileName,
 			int ColumNum,
 			int RowNum,
 			float fSellDistance,
 			float fScaleHeight);
-		void    SetMatrix(D3DXMATRIX* matWorld,
+		void SetMatrix(D3DXMATRIX* matWorld,
 			D3DXMATRIX* matView,
 			D3DXMATRIX* matProj)override;
 		void UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data);
-		float Lerp(float fStart, float fEnd, float fTangent);
 
+		void SetSplattingAlphaShaderResouceView(ID3D11ShaderResourceView* pSrv);
 		
 		//노말맵 접선 벡터 계산
 
 	//툴 관련 함수
-		INT AddSplattTexture(const TCHAR* pFileName, int Num, float Alpha = 0.0f);
+		INT			AddSplattTexture(const TCHAR* pFileName, int Num, float Alpha = 0.0f);
 		D3DXVECTOR3 GetCharPos(){ return m_CharPos; }
 		void		SetCharPos(D3DXVECTOR3 vPos) { m_CharPos = vPos; }
 	//
-		void SetCamera(JHCamera* Camera) { m_pCamera = Camera; }
+		void		SetCamera(JHCamera* Camera) { m_pCamera = Camera; }
+		void		MapUpDown(UINT Index, float Value);
+		void		MapFlatting(UINT Index);
 	public:
-		void MapUpDown(UINT Index, float Value);
+	
 	public:
-		HRESULT CreateInputLayout()override;
+		HRESULT		CreateInputLayout()override;
 		HRESULT		CreateVertexData()override;
 		HRESULT		CreateIndexData()override;
-		bool Render()override;
-		bool Frame()override;
-		bool Release()override;
+		bool		Render()override;
+		bool		Frame()override;
+		bool		Release()override;
 
 	public:
 		bool NoneLightRenderSet(JHCamera* pCamera);

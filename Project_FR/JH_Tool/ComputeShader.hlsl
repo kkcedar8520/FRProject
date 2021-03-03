@@ -36,8 +36,8 @@ void CSMAIN(uint3 GroupID : SV_GroupID, uint3 DispatchThreadID : SV_DispatchThre
 	//texturelocation.x = DispatchThreadID.x;
 	//texturelocation.y = DispatchThreadID.y;
 
-	float iHalfCol = Buffer0[0].iCol / 2.0f;
-	float iHalfRow = Buffer0[0].iRow / 2.0f;
+	float iHalfCol = Buffer0.iCol / 2.0f;
+	float iHalfRow = Buffer0.iRow / 2.0f;
 
 
 
@@ -45,24 +45,20 @@ void CSMAIN(uint3 GroupID : SV_GroupID, uint3 DispatchThreadID : SV_DispatchThre
 	vPos.x = (texturelocation.x - iHalfRow);
 	vPos.y = -(texturelocation.y - iHalfRow);
 
-	float fDistance = distance(texturelocation.xy, Buffer0[0].vPickPos.xz);
+	float fDistance = distance(texturelocation.xy, Buffer0.vPickPos.xz);
 
 
-	float a = 1 - smoothstep(Buffer0[0].g_fRadius, Buffer0[0].g_fRadius + 20, fDistance);
+	float a = 1 - smoothstep(Buffer0.g_fRadius, Buffer0.g_fRadius + 20, fDistance);
 
 
 
 	float4 fAlpha = InputMap.Load(texturelocation);
 
-	//if (a == 0)
-	//{
-	//	return;
-	//}
 
 
 
 
-	switch (Buffer0[0].iIndex)
+	switch (Buffer0.iIndex)
 	{
 	case 0:
 	{

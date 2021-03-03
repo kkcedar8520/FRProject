@@ -21,7 +21,7 @@ JH_MapForm::JH_MapForm()
 	, m_NormalMapFile(_T("../../data/Map/Texture/stones_NM_height.tga"))
 	, m_HeightMapFile(_T("../../data/map/Texture/Generic_Rubber_A_Height_129.bmp"))
 	, m_Brush(_T(""))
-	, m_SplattTexture1(_T(""))
+	, m_SplattTexture1(_T("../../data/map/Texture/032.bmp"))
 	, m_SplattTexture2(_T(""))
 	, m_SplattTexture3(_T(""))
 	, m_SplattTexture4(_T(""))
@@ -33,7 +33,7 @@ JH_MapForm::JH_MapForm()
 	, m_LoadFileName(_T(""))
 	, m_SplattTexture(_T(""))
 	, m_HeightValue(0)
-	, m_fRadius(0)
+	, m_fRadius(1)
 
 	, m_CharX(0)
 	, m_CharY(0)
@@ -139,6 +139,15 @@ void JH_MapForm::OnBnClickedOk()
 		m_HeightMapFile);
 
 	I_MapMgr.SetCamera(pApp->m_Core.m_pMainCamera.get());
+
+	pApp->m_Core.m_CS.CreateComputeShader(L"../../data/shader/ComputeShader.hlsl","CSMAIN");
+	pApp->m_Core.m_CSBuf.iCol = I_MapMgr.GetCurrentMap()->m_pMap->m_iColumNum - 1;
+	pApp->m_Core.m_CSBuf.iRow = I_MapMgr.GetCurrentMap()->m_pMap->m_iRowNum - 1;
+
+	pApp->m_Core.m_CS.CreateStreamSRV(I_MapMgr.GetCurrentMap()->m_pMap->m_iRowNum - 1, I_MapMgr.GetCurrentMap()->m_pMap->m_iColumNum - 1);
+	pApp->m_Core.m_CS.SetStructureBuffer(&pApp->m_Core.m_CSBuf,sizeof(CSBUFF));
+
+	I_MapMgr.GetCurrentMap()->m_pMap->SetSplattingAlphaShaderResouceView(pApp->m_Core.m_CS.m_pDescSrv.Get());
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
@@ -245,6 +254,7 @@ void JH_MapForm::OnEnChangeEdit7()
 
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 	pApp->m_Core.m_Sphere.Radius = m_fRadius;
+	pApp->m_Core.m_CSBuf.fRadius = m_fRadius;
 	UpdateData(TRUE);
 }
 
@@ -269,8 +279,7 @@ void JH_MapForm::OnBnClickedOk5()
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 
-	//pApp->m_Core.bSplatting = !pApp->m_Core.bSplatting;
-	//pApp->m_Core.m_ToolState = SPLATTING;
+	pApp->m_Core.m_eState = TOOLSTATE::SPLATTING;
 }
 
 
@@ -289,14 +298,14 @@ void JH_MapForm::OnBnClickedOk6()
 
 	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
 		L"bmp Files(*.bmp)|*.bmp| All Files(*.*)|*.*|", this);
-	//if (dlg.DoModal() == IDOK)
-	//{
-	//	FileName = dlg.GetPathName();
-	//	m_SplattTexture1 = FileName;
-	//	m_SplattTex1ID=pApp->m_Core.m_Map->AddSplattTexture(m_SplattTexture1,1);
-	//	pApp->m_Core.m_vBuf0[0].iIndex = 0;
-	//	UpdateData(FALSE);
-	//}
+	if (dlg.DoModal() == IDOK)
+	{
+		FileName = dlg.GetPathName();
+		m_SplattTexture1 = FileName;
+		m_SplattTex1ID=I_MapMgr.GetCurrentMap()->m_pMap->AddSplattTexture(m_SplattTexture1,1);
+		pApp->m_Core.m_CSBuf.iIndex = 0;
+		UpdateData(FALSE);
+	}
 }
 
 
@@ -310,14 +319,15 @@ void JH_MapForm::OnSplattTexture2BnClickedOk()
 	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
 		L"bmp Files(*.bmp)|*.bmp| All Files(*.*)|*.*|", this);
 
-	//if (dlg.DoModal() == IDOK)
-	//{
-	//	FileName = dlg.GetPathName();
-	//	m_SplattTexture2 = FileName;
-	//	m_SplattTex2ID = pApp->m_Core.m_Map->AddSplattTexture(m_SplattTexture2,2);
-	//	pApp->m_Core.m_vBuf0[0].iIndex = 1;
-	//	UpdateData(FALSE);
-	//}
+
+	if (dlg.DoModal() == IDOK)
+	{
+		FileName = dlg.GetPathName();
+		m_SplattTexture2 = FileName;
+		m_SplattTex2ID = I_MapMgr.GetCurrentMap()->m_pMap->AddSplattTexture(m_SplattTexture2, 2);
+		pApp->m_Core.m_CSBuf.iIndex = 1;
+		UpdateData(FALSE);
+	}
 }
 
 
@@ -339,6 +349,14 @@ void JH_MapForm::OnSplattTexture3BnClickedOk()
 	//	pApp->m_Core.m_vBuf0[0].iIndex = 2;
 	//	UpdateData(FALSE);
 	//}
+	if (dlg.DoModal() == IDOK)
+	{
+		FileName = dlg.GetPathName();
+		m_SplattTexture3 = FileName;
+		m_SplattTex3ID = I_MapMgr.GetCurrentMap()->m_pMap->AddSplattTexture(m_SplattTexture3, 3);
+		pApp->m_Core.m_CSBuf.iIndex = 2;
+		UpdateData(FALSE);
+	}
 }
 
 
@@ -353,14 +371,14 @@ void JH_MapForm::OnSplattTexture4BnClickedOk()
 	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
 		L"bmp Files(*.bmp)|*.bmp| All Files(*.*)|*.*|", this);
 
-	//if (dlg.DoModal() == IDOK)
-	//{
-	//	FileName = dlg.GetPathName();
-	//	m_SplattTexture4 = FileName;
-	//	m_SplattTex4ID = pApp->m_Core.m_Map->AddSplattTexture(m_SplattTexture4,4);
-	//	pApp->m_Core.m_vBuf0[0].iIndex = 3;
-	//	UpdateData(FALSE);
-	//}
+	if (dlg.DoModal() == IDOK)
+	{
+		FileName = dlg.GetPathName();
+		m_SplattTexture4 = FileName;
+		m_SplattTex4ID = I_MapMgr.GetCurrentMap()->m_pMap->AddSplattTexture(m_SplattTexture4, 4);
+		pApp->m_Core.m_CSBuf.iIndex = 3;
+		UpdateData(FALSE);
+	}
 }
 
 
@@ -532,11 +550,11 @@ void JH_MapForm::OnMapUpDown()
 
 void JH_MapForm::OnMapFlatt()
 {
-	//UpdateData(TRUE);
-	//CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 
-	//pApp->m_Core.bMapFlatting = !pApp->m_Core.bMapFlatting;
-	//pApp->m_Core.m_ToolState = FLATTING;
+	
+	pApp->m_Core.m_eState = TOOLSTATE::FLATTING;
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 

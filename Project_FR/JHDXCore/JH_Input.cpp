@@ -8,7 +8,7 @@ DWORD  JH_Input::KeyCheck(DWORD inputkey)
 	if (iKEY & 0x8000)
 	{
 		if (m_StateKey[inputkey]==KEY_FREE ||
-			m_StateKey[inputkey]==KEY_HOLD)
+			m_StateKey[inputkey]== KEY_UP)
 		{
 			return m_StateKey[inputkey] = KEY_PUSH;
 		}

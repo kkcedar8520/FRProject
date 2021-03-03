@@ -17,6 +17,12 @@ namespace DX
 		UINT iVertexSize,
 		bool bDynamic=false);
 
+	HRESULT CreateComputeShader(LPCWSTR pSrcFile, LPCSTR pFunctionName, ID3D11Device* pDevice, ID3D11ComputeShader** ppShaderOut);
+
+	HRESULT CreateBufferSRV(ID3D11Device* pd3dDevice, ID3D11Buffer* buf, ID3D11ShaderResourceView** srv);
+	HRESULT CreateBufferUAV(ID3D11Device* pd3dDevice, ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppSRVOut);
+	HRESULT CreateStructuredBuffer(ID3D11Device* pd3dDevice, UINT uElementSize, UINT uCount, VOID* pInitData, ID3D11Buffer** ppBufOut);
+
 
 	ComPtr<ID3D11Device> GetDevice();
 	ComPtr<ID3D11DeviceContext> GetContext();
