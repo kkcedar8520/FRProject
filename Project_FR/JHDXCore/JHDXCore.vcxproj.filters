@@ -27,12 +27,6 @@
     <Filter Include="Light">
       <UniqueIdentifier>{529f18df-8493-4991-a46a-a71d7fd445fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Obj">
-      <UniqueIdentifier>{df89195c-d891-42dc-8f37-d34ef4b9905c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Obj\text">
-      <UniqueIdentifier>{f286eb92-c679-49a5-a0f9-aa659cd7742b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
@@ -42,6 +36,15 @@
     </Filter>
     <Filter Include="Refference">
       <UniqueIdentifier>{72ee55bc-6a41-41f7-98d7-bb41a60f929e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Obj">
+      <UniqueIdentifier>{df89195c-d891-42dc-8f37-d34ef4b9905c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Obj\text">
+      <UniqueIdentifier>{f286eb92-c679-49a5-a0f9-aa659cd7742b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Colider">
+      <UniqueIdentifier>{a6787062-0228-4de0-b264-3ffab42c8fb6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,9 +120,6 @@
     <ClInclude Include="JH_Select.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="JH_BaseObj.h">
-      <Filter>Shape</Filter>
-    </ClInclude>
     <ClInclude Include="MaxObj.h">
       <Filter>Obj</Filter>
     </ClInclude>
@@ -177,9 +177,6 @@
     <ClInclude Include="Collider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Colider.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="JH_MapMgr.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -200,6 +197,21 @@
     </ClInclude>
     <ClInclude Include="ComputeShader.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ObjMgr.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_BaseObj.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Colider.h">
+      <Filter>Colider</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ColliderBox.h">
+      <Filter>Colider</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ObjData.h">
+      <Filter>Obj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -314,9 +326,6 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Colider.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="JH_MapMgr.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -340,6 +349,18 @@
     </ClCompile>
     <ClCompile Include="ComputeShader.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ObjMgr.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Colider.cpp">
+      <Filter>Colider</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ColliderBox.cpp">
+      <Filter>Colider</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ObjData.cpp">
+      <Filter>Obj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,76 @@
+#include "JH_ColliderBox.h"
+void JH_ColliderBox::UpdateBox()
+{
+	m_VertexData[0] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMax.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 0.0f));
+	m_VertexData[1] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMax.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 0.0f));
+	m_VertexData[2] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMin.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
+	m_VertexData[3] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMin.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
+	// Right
+	m_VertexData[4] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMax.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 0.0f));
+	m_VertexData[5] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMax.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 0.0f));
+	m_VertexData[6] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMin.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
+	m_VertexData[7] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMin.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
+	// back
+	m_VertexData[8] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMax.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 0.0f));
+	m_VertexData[9] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMax.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 0.0f));
+	m_VertexData[10] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMin.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
+	m_VertexData[11] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMin.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
+	// left
+	m_VertexData[12] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMax.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 0.0f));
+	m_VertexData[13] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMax.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 0.0f));
+	m_VertexData[14] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMin.y, vMin.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
+	m_VertexData[15] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMin.y, vMax.z), D3DXVECTOR3(-1.0f, 0.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
+	// up
+	m_VertexData[16] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMax.y, vMax.z), D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 0.0f));
+	m_VertexData[17] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMax.y, vMax.z), D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 0.0f));
+	m_VertexData[18] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMax.y, vMin.z), D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
+	m_VertexData[19] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMax.y, vMin.z), D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
+	// down
+	m_VertexData[20] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMin.y, vMin.z), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 0.0f));
+	m_VertexData[21] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMin.y, vMin.z), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 0.0f));
+	m_VertexData[22] = PNCT_VERTEX(D3DXVECTOR3(vMax.x, vMin.y, vMax.z), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
+	m_VertexData[23] = PNCT_VERTEX(D3DXVECTOR3(vMin.x, vMin.y, vMax.z), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
+
+
+
+
+
+	UpdateVB();
+}
+
+void	JH_ColliderBox::SetTransform(D3DXMATRIX& Mat)
+{
+	m_matWorld = Mat;
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR, mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matWorld);
+
+	D3DXMatrixRotationQuaternion(&mR, &qR);
+	JH_Box::SetScale(vS);
+	JH_Box::SetPosition(vP);
+	JH_Box::SetRotation(mR);
+	UpdateBox();
+}
+void	JH_ColliderBox::SetPos(D3DXVECTOR3 vPos)
+{
+	JH_Model::SetPos(vPos);
+	JH_Box::SetPosition(vPos);
+	UpdateBox();
+}
+void	JH_ColliderBox::SetScale(D3DXVECTOR3 vScale)
+{
+	JH_Model::SetScale(vScale);
+	JH_Box::SetScale(vScale);
+	UpdateBox();
+}
+void	JH_ColliderBox::SetRotation(D3DXMATRIX Mat)
+{
+	JH_Model::SetRotation(Mat);
+	JH_Box::SetRotation(Mat);
+	UpdateBox();
+}
+void JH_ColliderBox::UpdateVB()
+{
+	DX::GetContext()->UpdateSubresource(m_pVertexBuffer.Get(), 0, 0, &m_VertexData.at(0), 0, 0);
+}

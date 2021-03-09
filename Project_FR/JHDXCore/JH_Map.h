@@ -129,6 +129,7 @@
 		HRESULT		CreateInputLayout()override;
 		HRESULT		CreateVertexData()override;
 		HRESULT		CreateIndexData()override;
+		HRESULT		LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNormalTexName = nullptr)override;
 		bool		Render()override;
 		bool		Frame()override;
 		bool		Release()override;

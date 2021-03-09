@@ -10,18 +10,18 @@ HRESULT JH_ShapeLine::CreateInputLayout()
 	};
 	UINT iElementCount = sizeof(layout) /
 		sizeof(layout[0]);
-	hr = m_dxHelper.GetDevice()->CreateInputLayout(
+	hr = GetDevice()->CreateInputLayout(
 		layout,
 		iElementCount,
-		m_dxHelper.GetVertexCode()->GetBufferPointer(),
-		m_dxHelper.GetVertexCode()->GetBufferSize(),
-		m_dxHelper.GetLayoutAdress());
+		GetVertexCode()->GetBufferPointer(),
+		GetVertexCode()->GetBufferSize(),
+		GetLayoutAdress());
 	return hr;
 }
 HRESULT JH_ShapeLine::CreateVertexData()
 {
 	HRESULT hr = S_OK;
-	m_dxHelper.m_iVertexSize = sizeof(PC_VERTEX);
+	m_iVertexSize = sizeof(PC_VERTEX);
 	m_VertexLineData.resize(2);
 	m_VertexLineData[0].p = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_VertexLineData[1].p = D3DXVECTOR3(100.0f, 0.0f, 0.0f);
@@ -42,11 +42,11 @@ HRESULT JH_ShapeLine::CreateVertexBuffer()
 {
 	HRESULT hr = S_OK;
 	if (m_VertexLineData.size() <= 0) return E_FAIL;
-	m_dxHelper.m_iNumVertex = m_VertexLineData.size();
+	m_iNumVertex = m_VertexLineData.size();
 	D3D11_BUFFER_DESC pDesc;
 	ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
 	pDesc.Usage = D3D11_USAGE_DEFAULT;
-	pDesc.ByteWidth = m_dxHelper.m_iVertexSize * m_VertexLineData.size();
+	pDesc.ByteWidth = m_iVertexSize * m_VertexLineData.size();
 	pDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA pInitialData;
@@ -54,16 +54,20 @@ HRESULT JH_ShapeLine::CreateVertexBuffer()
 		sizeof(D3D11_SUBRESOURCE_DATA));
 	pInitialData.pSysMem = &m_VertexLineData.at(0);
 
-	hr = m_dxHelper.GetDevice()->CreateBuffer(&pDesc,
+	hr = GetDevice()->CreateBuffer(&pDesc,
 		&pInitialData,
-		m_dxHelper.GetVertexBufferAddress());
+		GetVertexBufferAddress());
 	return hr;
 }
 bool JH_ShapeLine::PostRender()
 {
-	m_dxHelper.GetDeviceContext()->IASetPrimitiveTopology(
+	GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	m_dxHelper.PostRender();
+
+	JH_Model::PostRender();
+
+	GetDeviceContext()->IASetPrimitiveTopology(
+		D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	return true;
 }
 bool	JH_ShapeLine::Draw(D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR4 color)
@@ -72,8 +76,8 @@ bool	JH_ShapeLine::Draw(D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR4 color)
 	m_VertexLineData[0].c = color;
 	m_VertexLineData[1].p = v1;
 	m_VertexLineData[1].c = color;
-	m_dxHelper.GetDeviceContext()->UpdateSubresource(
-		m_dxHelper.GetVertexBuffer(),
+	GetDeviceContext()->UpdateSubresource(
+		GetVertexBuffer(),
 		0, NULL,
 		&m_VertexLineData.at(0), 0, 0);
 	return Render();

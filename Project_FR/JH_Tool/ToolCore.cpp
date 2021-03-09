@@ -59,7 +59,7 @@ void ToolCore::MapFlatting()
 		}
 
 	}
-	DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->m_dxHelper.GetVertexBuffer(), 0, 0, &pQuadTree->m_pMap->m_VertexData.at(0), 0, 0);
+	DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->GetVertexBuffer(), 0, 0, &pQuadTree->m_pMap->m_VertexData.at(0), 0, 0);
 
 	return ;
 }
@@ -122,7 +122,7 @@ bool ToolCore::MapUpDown()
 		}
 
 	}
-	DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->m_dxHelper.GetVertexBuffer(), 0, 0, &pQuadTree->m_pMap->m_VertexData.at(0), 0, 0);
+	DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->GetVertexBuffer(), 0, 0, &pQuadTree->m_pMap->m_VertexData.at(0), 0, 0);
 
 	return true;
 }
@@ -142,6 +142,24 @@ bool ToolCore::MapSplatting()
 	m_CS.RunComputeShaderSplatting(m_CSBuf.iRow / 16, m_CSBuf.iCol / 16, 1);
 	
 	return true;
+}
+void ToolCore::ObjectCollocate()
+{
+	int IObj;
+	//노드 교점찾기
+	I_MapMgr.GetCurrentQuadTree()->FindSelectPoint();
+	if (I_MapMgr.GetCurrentQuadTree()->m_SelectNodeList.size() <= 0)return ;
+	m_Sphere.vCenter = I_Select.m_vIntersection;
+
+	IObj = I_ObjMgr.CreateObject(m_ObjFileName);
+	 if(IObj==-1) { return ; }
+	 JH_Obj* pObj=I_ObjMgr.GetPtr(IObj);
+	 pObj->SetPos(m_Sphere.vCenter);
+
+	I_ObjMgr.SetCamera(IObj,m_pMainCamera.get());
+	//노드에 저장실패시 오브젝트 삭제
+	if (!I_MapMgr.GetCurrentQuadTree()->ObjectAddNode(pObj))
+		I_ObjMgr.DeleteObject(IObj);
 }
 bool ToolCore::Init()
 {
@@ -165,7 +183,9 @@ bool ToolCore::Frame()
 	I_LIGHT_MGR.m_cbLight.vEyeDir[0] = { m_pMainCamera->m_vLookup,30 };
 	I_LIGHT_MGR.m_cbLight.vEyePos[0] = { m_pMainCamera->m_vPos,30 };
 
+
 	I_MapMgr.Frame();
+	I_ObjMgr.Frame();
 
 	m_DebugLine.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 
@@ -189,6 +209,13 @@ bool ToolCore::Frame()
 				MapFlatting();
 			break;
 		}
+		case TOOLSTATE::OBJECTNEW:
+		{
+			if (G_Input.KeyCheck(VK_LBUTTON)==KEY_PUSH)
+				ObjectCollocate();
+				break;
+		}
+		
 		default:
 			break;
 		}
@@ -196,7 +223,10 @@ bool ToolCore::Frame()
 }
 bool ToolCore::Render()
 {
+
 	I_MapMgr.Render();
+	I_ObjMgr.Render();
+
 	m_DebugLine.Draw(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(100, 0, 0), D3DXVECTOR4(1, 0, 0, 1));
 	m_DebugLine.Draw(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 100, 0), D3DXVECTOR4(0, 1, 0, 1));
 	m_DebugLine.Draw(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 100), D3DXVECTOR4(0, 0, 1, 1));

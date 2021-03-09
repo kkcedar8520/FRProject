@@ -1,4 +1,4 @@
-TextureCube			g_txCubeMap						: register(t3);
+TextureCube			g_txCubeMap						: register(t0);
 SamplerState        g_samPointClamp : register(s0);
 SamplerState        g_samLinearWrap : register(s1);
 

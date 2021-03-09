@@ -34,7 +34,7 @@ void JH_Frustum::SetMatrix(D3DXMATRIX* matWorld, D3DXMATRIX* matView, D3DXMATRIX
 	ExtractPlanesD3D(m_Plane, MatFrustum);
 	//m_Plane[0].CreatePlane(m_vFrustum[4], m_vFrustum[2], m_vFrustum[0]);//ÁÂ
 	//m_Plane[1].CreatePlane(m_vFrustum[5], m_vFrustum[1], m_vFrustum[3]);//¿ì
-
+	
 	//m_Plane[2].CreatePlane(m_vFrustum[4], m_vFrustum[0], m_vFrustum[5]);//À§
 	//m_Plane[3].CreatePlane(m_vFrustum[6], m_vFrustum[7], m_vFrustum[2]);//¾Æ·¡
 

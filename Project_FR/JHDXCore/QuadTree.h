@@ -15,7 +15,7 @@ class JH_Map;
 		float										m_fdistance;
 		float										m_fInterval;
 		
-
+	
 		int											m_iQuadTreeIndex;
 
 		JH_Node*									m_pRootNode;
@@ -26,7 +26,7 @@ class JH_Map;
 					
 
 		std::map<int, JH_Node*>						m_NodeList;
-		std::map<int, std::shared_ptr<JH_MapObj>>	m_ObjectList;
+		std::map<int,JH_Obj*>						m_ObjectList;
 		std::vector<JH_Node*>						m_SelectNodeList;
 		std::vector< std::shared_ptr<JH_MapObj>>	m_SelectObjList;
 		std::shared_ptr<JH_MapObj>					m_pSelectObj;
@@ -62,10 +62,10 @@ class JH_Map;
 		void GetSelectObj(JH_Node* pNode);
 		void FindSelectPoint();
 
-		bool GetObjectAddNode(std::shared_ptr<JH_MapObj> Obj);
+		bool ObjectAddNode(JH_Obj* Obj);
 		bool GetCotainObjNode(JH_Node* pNode);
 		bool ChangeObjectNode(std::shared_ptr<JH_MapObj> Obj);
-		JH_Node* FindNode(JH_Node* pNode, JH_MapObj* Obj);
+		JH_Node* FindNode(JH_Node* pNode, JH_Obj* Obj);
 		void FindObjectNode(JH_Node* pNode, std::shared_ptr<JH_MapObj> Obj);
 		void SetNeighborNode(JH_Node* pNode);
 		void FindNeighborNode(JH_Node* pNode);

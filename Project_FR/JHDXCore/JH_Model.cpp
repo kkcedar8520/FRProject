@@ -17,21 +17,62 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	{
 		m_matProj = *matProj;
 	}
-	m_dxHelper.GetDeviceContext()->UpdateSubresource(
-		m_dxHelper.GetConstantBuffer(),
+	DX::GetContext()->UpdateSubresource(
+		GetConstantBuffer(),
 		0, NULL, &m_cbData, 0, 0);
 
-	D3DXMatrixTranspose(&m_cbData.matWorld, &m_matWorld);//GPU의축과 다이렉트의 축이다름
+	
+	D3DXMatrixTranspose(&m_cbData.matWorld, &(m_matWorld*m_matTransform));//GPU의축과 다이렉트의 축이다름
 	D3DXMatrixTranspose(&m_cbData.matView, &m_matView);//
 	D3DXMatrixTranspose(&m_cbData.matProj, &m_matProj);//
 	
 	m_cbData.d.x = cosf(g_fProgramTime) *0.5f + 0.5f;
 	D3D11_MAPPED_SUBRESOURCE mss;
 
-	m_dxHelper.GetDeviceContext()->UpdateSubresource(
-		m_dxHelper.GetConstantBuffer(),
+	GetDeviceContext()->UpdateSubresource(
+		GetConstantBuffer(),
 		0, NULL, &m_cbData, 0, 0);
 
+}
+void JH_Model::SetTransform(D3DXMATRIX& Mat)
+{
+	m_matTransform = Mat;
+}
+void JH_Model::SetPos(D3DXVECTOR3 vPos)
+{
+	m_matTransform._41 = vPos.x;
+	m_matTransform._42 = vPos.y;
+	m_matTransform._43 = vPos.z;
+}
+void JH_Model::SetScale(D3DXVECTOR3 vScale)
+{
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR,mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matTransform);
+	vS = vScale;
+	
+	D3DXMatrixRotationQuaternion(&mR, &qR);
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matTransform = mS * mR;
+	m_matTransform._41 = vP.x;
+	m_matTransform._42 = vP.y;
+	m_matTransform._43 = vP.z;
+	
+}
+void JH_Model::SetRotation(D3DXMATRIX Mat)
+{
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR, mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matTransform);
+	
+	mR = Mat;
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matTransform = mS * mR;
+	m_matTransform._41 = vP.x;
+	m_matTransform._42 = vP.y;
+	m_matTransform._43 = vP.z;
 }
 void JH_Model::SetLightConstantBuffer(ID3D11Buffer* Buffer)
 {
@@ -79,7 +120,7 @@ bool	JH_Model::UpdateTangentBuffer()
 
 	if (m_VertexData.size() <= 0) { return false; }
 	m_TangentList.resize(m_VertexData.size());
-	for (int iIndex = 0; iIndex < m_dxHelper.m_iNumIndex; iIndex += 3)
+	for (int iIndex = 0; iIndex < m_iNumIndex; iIndex += 3)
 	{
 
 		i0 = m_IndexData[iIndex + 0];
@@ -125,11 +166,15 @@ bool	JH_Model::UpdateTangentBuffer()
 	}
 
 
-	m_pTangentVB.Attach(DX::CreateVertexBuffer(m_dxHelper.GetDevice(), &m_TangentList.at(0), m_TangentList.size(), sizeof(D3DXVECTOR3)));
+	m_pTangentVB.Attach(DX::CreateVertexBuffer(GetDevice(), &m_TangentList.at(0), m_TangentList.size(), sizeof(D3DXVECTOR3)));
 
 
 	return true;
 }
+
+
+
+
 
 
 HRESULT JH_Model::CreateVertexData()
@@ -146,11 +191,11 @@ HRESULT JH_Model::CreateVertexBuffer()
 	HRESULT hr = S_OK;
 	if (m_VertexData.size() <= 0) return E_FAIL;
 
-	m_dxHelper.m_iNumVertex = m_VertexData.size();
+	m_iNumVertex = m_VertexData.size();
 	D3D11_BUFFER_DESC pDesc;
 	ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
 	pDesc.Usage = D3D11_USAGE_DEFAULT;
-	pDesc.ByteWidth = m_dxHelper.m_iVertexSize * m_VertexData.size();
+	pDesc.ByteWidth = m_iVertexSize * m_VertexData.size();
 	pDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA pInitialData;
@@ -158,20 +203,20 @@ HRESULT JH_Model::CreateVertexBuffer()
 		sizeof(D3D11_SUBRESOURCE_DATA));
 	pInitialData.pSysMem = &m_VertexData.at(0);
 
-	hr = m_dxHelper.GetDevice()->CreateBuffer(&pDesc,
+	hr = GetDevice()->CreateBuffer(&pDesc,
 		&pInitialData,
-		m_dxHelper.GetVertexBufferAddress());
+		GetVertexBufferAddress());
 	return hr;
 }
 HRESULT JH_Model::CreateIndexBuffer()
 {
 	HRESULT hr = S_OK;
 	if (m_IndexData.size() <= 0) return S_OK;
-	m_dxHelper.m_iNumIndex = m_IndexData.size();
+	m_iNumIndex = m_IndexData.size();
 
 	D3D11_BUFFER_DESC pDesc;
 	ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
-	pDesc.Usage = D3D11_USAGE_DEFAULT;
+	pDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	pDesc.ByteWidth = sizeof(DWORD) * m_IndexData.size();
 	pDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
@@ -180,9 +225,9 @@ HRESULT JH_Model::CreateIndexBuffer()
 		sizeof(D3D11_SUBRESOURCE_DATA));
 	pInitialData.pSysMem = &m_IndexData.at(0);
 
-	hr = m_dxHelper.GetDevice()->CreateBuffer(&pDesc,
+	hr = GetDevice()->CreateBuffer(&pDesc,
 		&pInitialData,
-		m_dxHelper.GetIndexBufferAddress());
+		GetIndexBufferAddress());
 	return hr;
 }
 HRESULT JH_Model::CreateConstantBuffer()
@@ -193,10 +238,10 @@ HRESULT JH_Model::CreateConstantBuffer()
 	m_cbData.d.x = g_fProgramTime;
 
 	ComPtr<ID3D11Buffer> tcp; 
-	tcp.Attach(DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, 1, sizeof(CB_TF
+	tcp.Attach(DX::MakeConstantBuffer(GetDevice(), nullptr, 1, sizeof(CB_TF
 		)));
 
-	m_dxHelper.SetConstantBuffer(tcp.Get());
+	SetConstantBuffer(tcp.Get());
 
 	
 	//MAP_UNMAP CPU 개입할수있는 버퍼
@@ -212,12 +257,34 @@ HRESULT JH_Model::CreateConstantBuffer()
 	//	sizeof(D3D11_SUBRESOURCE_DATA));
 	//pInitialData.pSysMem = &m_cbData;
 
-	//hr = m_dxHelper.m_pd3dDevice->CreateBuffer(&pDesc,
+	//hr = m_pd3dDevice->CreateBuffer(&pDesc,
 	//	&pInitialData,
-	//	&m_dxHelper.m_pConstantBuffer);
+	//	&m_pConstantBuffer);
 	return hr;
 }
+HRESULT JH_Model::CreateInstancingBuffer()
+{
 
+	
+	HRESULT hr = S_OK;
+	if (GetInstanceMatrix().size() <= 0) { return S_FALSE; }
+	
+	D3D11_BUFFER_DESC pDesc;
+	ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
+	pDesc.Usage = D3D11_USAGE_DEFAULT;
+	pDesc.ByteWidth = sizeof(D3DXMATRIX) *GetInstanceMatrix().size();
+	pDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA pInitialData;
+	ZeroMemory(&pInitialData,
+		sizeof(D3D11_SUBRESOURCE_DATA));
+	pInitialData.pSysMem = GetInstanceMatrix().at(0);
+
+	hr = GetDevice()->CreateBuffer(&pDesc,
+		&pInitialData,
+		GetVertexBufferAddress());
+	return hr;
+}
 HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 	const CHAR* pszVSName,
 	const CHAR* pszPSName)
@@ -234,7 +301,7 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		0,
 		0,
 		NULL,
-		m_dxHelper.GetVertexCodeAddress(),
+		GetVertexCodeAddress(),
 		&pErrorMsgs,
 		NULL)))
 	{
@@ -242,11 +309,11 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		return hr;
 	}
 
-	m_dxHelper.GetDevice()->CreateVertexShader(
-		m_dxHelper.GetVertexCode()->GetBufferPointer(),
-		m_dxHelper.GetVertexCode()->GetBufferSize(),
+	GetDevice()->CreateVertexShader(
+		GetVertexCode()->GetBufferPointer(),
+		GetVertexCode()->GetBufferSize(),
 		NULL,
-		m_dxHelper.GetVertexShaderAddress());
+		GetVertexShaderAddress());
 
 	if (FAILED(hr = D3DX11CompileFromFile(
 		pszShaderFileName,
@@ -257,17 +324,17 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		0,
 		0,
 		NULL,
-		m_dxHelper.GetPixelCodeAddress(),
+		GetPixelCodeAddress(),
 		&pErrorMsgs, NULL)))
 	{
 		MessageBoxA(NULL, (char*)pErrorMsgs->GetBufferPointer(), "Error", MB_OK);
 		return hr;
 	}
-		m_dxHelper.GetDevice()->CreatePixelShader(
-		m_dxHelper.GetPixelCode()->GetBufferPointer(),
-		m_dxHelper.GetPixelCode()->GetBufferSize(),
+		GetDevice()->CreatePixelShader(
+		GetPixelCode()->GetBufferPointer(),
+		GetPixelCode()->GetBufferSize(),
 		NULL,
-		m_dxHelper.GetPixelShaderAddress());
+		GetPixelShaderAddress());
 	return hr;
 }
 HRESULT JH_Model::CreateInputLayout()
@@ -279,19 +346,25 @@ HRESULT JH_Model::CreateInputLayout()
 		{ "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEX",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 40,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		/*{"TANGENT",0,DXGI_FORMAT_R32G32B32_FLOAT,0,48,D3D11_INPUT_PER_VERTEX_DATA,0},*/
+		{"TANGENT",0,DXGI_FORMAT_R32G32B32_FLOAT,1,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+
+		{"INSTANCEWORLD",0,DXGI_FORMAT_R32G32B32_FLOAT,2,0,D3D11_INPUT_PER_INSTANCE_DATA,1},
+		{"INSTANCEWORLD",1,DXGI_FORMAT_R32G32B32_FLOAT,2,16,D3D11_INPUT_PER_INSTANCE_DATA,1},
+		{"INSTANCEWORLD",2,DXGI_FORMAT_R32G32B32_FLOAT,2,32,D3D11_INPUT_PER_INSTANCE_DATA,1},
+		{"INSTANCEWORLD",3,DXGI_FORMAT_R32G32B32_FLOAT,2,48,D3D11_INPUT_PER_INSTANCE_DATA,1},
+
 		// 가중치 인덱스 
 		/*{ "TEX",  1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEX",  2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 64,  D3D11_INPUT_PER_VERTEX_DATA, 0 },*/
 	};
 	UINT iElementCount = sizeof(layout) /
 		sizeof(layout[0]);
-	m_dxHelper.GetDevice()->CreateInputLayout(
+	GetDevice()->CreateInputLayout(
 		layout,
 		iElementCount,
-		m_dxHelper.GetVertexCode()->GetBufferPointer(),
-		m_dxHelper.GetVertexCode()->GetBufferSize(),
-		m_dxHelper.GetLayoutAdress());
+		GetVertexCode()->GetBufferPointer(),
+		GetVertexCode()->GetBufferSize(),
+		GetLayoutAdress());
 	return hr;
 }
 bool    JH_Model::Create(
@@ -303,8 +376,8 @@ bool    JH_Model::Create(
 	const CHAR* pszVSName,
 	const CHAR* pszPSName)
 {
-	m_dxHelper.SetDevice(pd3dDevice);
-	m_dxHelper.SetDeviceContext( pContext);
+	SetDevice(pd3dDevice);
+	SetDeviceContext( pContext);
 	if (!Init())
 	{
 		return false;
@@ -359,13 +432,13 @@ HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNorma
 	HRESULT hr = S_OK;
 
 
-	int iTex=I_Texture.Add(m_dxHelper.GetDevice(), pszTexFileName);
+	int iTex=I_Texture.Add(GetDevice(), pszTexFileName,L"../../data/Texture/");
 	if(I_Texture.GetPtr(iTex)!=nullptr)
-	m_dxHelper.SetShaderResourceView(I_Texture.GetPtr(iTex)->m_pTextureRV);
+	SetShaderResourceView(I_Texture.GetPtr(iTex)->m_pTextureRV);
 
 	if (pszNormalTexName == nullptr) return S_OK;
 
-	iTex=I_Texture.Add(m_dxHelper.GetDevice(), pszNormalTexName);
+	iTex=I_Texture.Add(GetDevice(), pszNormalTexName, L"../../data/Texture/");
 	if (I_Texture.GetPtr(iTex) != nullptr)
 		m_pNormSrv=I_Texture.GetPtr(iTex)->m_pTextureRV;
 
@@ -390,15 +463,30 @@ bool	JH_Model::PreRender()
 	UINT stride = sizeof(D3DXVECTOR3);
 	if (m_pNormSrv != nullptr)
 	{
-		m_dxHelper.GetDeviceContext()->PSSetShaderResources(1, 1, &m_pNormSrv);
-		m_dxHelper.GetDeviceContext()->IASetVertexBuffers(1, 1, m_pTangentVB.GetAddressOf(), &stride, &offset);
+		GetDeviceContext()->PSSetShaderResources(1, 1, &m_pNormSrv);
+		GetDeviceContext()->IASetVertexBuffers(1, 1, m_pTangentVB.GetAddressOf(), &stride, &offset);
 	}
 	if (m_pLightConstBuffer != nullptr)
 	{
-		m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(1, 1, m_pLightConstBuffer.GetAddressOf());
-		m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(1, 1, m_pLightConstBuffer.GetAddressOf());
+		GetDeviceContext()->VSSetConstantBuffers(1, 1, m_pLightConstBuffer.GetAddressOf());
+		GetDeviceContext()->PSSetConstantBuffers(1, 1, m_pLightConstBuffer.GetAddressOf());
 	}
-	m_dxHelper.PreRender();
+
+	stride = m_iVertexSize;
+
+	m_pContext->IASetVertexBuffers(
+		0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+	m_pContext->IASetIndexBuffer(m_pIndexBuffer.Get(),
+		DXGI_FORMAT_R32_UINT, 0);
+
+	m_pContext->VSSetShader(m_pVS.Get(), NULL, 0);
+	m_pContext->PSSetShader(m_pPS.Get(), NULL, 0);
+
+	m_pContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+	m_pContext->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+	m_pContext->IASetInputLayout(m_pVertexLayout.Get());
+	m_pContext->PSSetShaderResources(0, 1, m_pSRV.GetAddressOf());
 	return true;
 }
 bool	JH_Model::Render()
@@ -409,7 +497,19 @@ bool	JH_Model::Render()
 }
 bool	JH_Model::PostRender()
 {
-	m_dxHelper.PostRender();
+
+	if (m_matInstanceWorld.size() > 0 && m_iNumIndex > 0)
+	{
+		m_pContext->DrawIndexedInstanced(m_iNumIndex, m_matInstanceWorld.size(), 0, 0, 0);
+	}
+	else if (m_iNumIndex > 0)
+	{
+		m_pContext->DrawIndexed(m_iNumIndex, 0, 0);
+	}
+	else
+	{
+		m_pContext->Draw(m_iNumVertex, 0);
+	}
 	return true;
 }
 bool	JH_Model::Release()
@@ -421,6 +521,18 @@ bool	JH_Model::Release()
 
 JH_Model::JH_Model()
 {
+	m_iVertexSize = 0;
+	m_iNumVertex = 0;
+	m_iNumIndex = 0;
+	m_pVertexBuffer = nullptr;
+	m_pIndexBuffer = nullptr;
+	m_pVertexLayout = nullptr;
+	m_pConstantBuffer = nullptr;
+	m_pVS = nullptr;
+	m_pPS = nullptr;
+	m_pSRV = nullptr;
+
+	D3DXMatrixIdentity(&m_matTransform);
 	D3DXMatrixIdentity(&m_matWorld);
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProj);

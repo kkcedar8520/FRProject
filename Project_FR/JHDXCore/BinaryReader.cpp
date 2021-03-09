@@ -4,7 +4,7 @@ bool BinaryReader::Open(const std::string Path)
 {
 	m_fp = fopen(Path.c_str(), "rb");
 	
-	
+	if (m_fp == nullptr) { return false; }
 	return true;
 }
 bool BinaryReader::Close()

@@ -5,7 +5,7 @@
 HRESULT JH_ShapePlane::CreateVertexData()
 {
 	HRESULT hr = S_OK;
-	m_dxHelper.m_iVertexSize = sizeof(PNCT_VERTEX);
+	m_iVertexSize = sizeof(PNCT_VERTEX);
 	m_VertexData.resize(4);
 	m_VertexData[0].p = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
 	m_VertexData[1].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);

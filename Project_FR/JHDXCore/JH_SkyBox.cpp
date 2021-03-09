@@ -21,22 +21,22 @@
 		matSkyBoxView._43 = 0;
 
 	
-		DX::ApplyDSS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pDSSDisable.Get());
+		DX::ApplyDSS(GetDeviceContext(), DX::JH_DxState::g_pDSSDisable.Get());
 
 		ID3D11SamplerState* ppSamplerStates[2] = { DX::JH_DxState::g_pSSClampPoint.Get(),DX::JH_DxState::g_pSSClampLinear.Get() };
-		m_dxHelper.GetDeviceContext()->PSSetSamplers(0, 2, ppSamplerStates);
+		GetDeviceContext()->PSSetSamplers(0, 2, ppSamplerStates);
 
 		SetMatrix(&m_matWorld, &matSkyBoxView, &m_matProj);
 
 		PreRender();
 
 
-		m_dxHelper.GetDeviceContext()->PSSetShaderResources(3, 1, m_pCubeTexSRV.GetAddressOf());
-		m_dxHelper.GetDeviceContext()->DrawIndexed(36, 0, 0);
+		GetDeviceContext()->PSSetShaderResources(0, 1, m_pCubeTexSRV.GetAddressOf());
+		GetDeviceContext()->DrawIndexed(36, 0, 0);
 
-		DX::ApplyDSS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pDSS.Get());
-		DX::ApplyRS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pRSSold.Get());
-		DX::ApplySS(m_dxHelper.GetDeviceContext(), DX::JH_DxState::g_pSamplerState.Get());
+		DX::ApplyDSS(GetDeviceContext(), DX::JH_DxState::g_pDSS.Get());
+		DX::ApplyRS(GetDeviceContext(), DX::JH_DxState::g_pRSSold.Get());
+		DX::ApplySS(GetDeviceContext(), DX::JH_DxState::g_pSamplerState.Get());
 		return true;
 	}
 	//HRESULT JH_SkyBox::LoadTextures(ID3D11Device* pDevice, const TCHAR* pLoadTextureString)
@@ -63,7 +63,7 @@
 
 		for (int iTex = 0; iTex < iNumTexture; iTex++)
 		{
-			D3DX11CreateShaderResourceViewFromFile(m_dxHelper.GetDevice(),
+			D3DX11CreateShaderResourceViewFromFile(GetDevice(),
 				g_szSkyTexture[iTex],
 				NULL, NULL,
 				&m_pTexSRV[iTex],
@@ -76,7 +76,7 @@
 	{
 
 		HRESULT hr = S_OK;
-		if (FAILED(hr = D3DX11CreateShaderResourceViewFromFile(m_dxHelper.GetDevice(),
+		if (FAILED(hr = D3DX11CreateShaderResourceViewFromFile(GetDevice(),
 			Texture,
 			NULL, NULL,
 			m_pCubeTexSRV.GetAddressOf(),

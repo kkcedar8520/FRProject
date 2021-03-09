@@ -156,7 +156,7 @@
 
 	void  JH_Map::UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data)
 	{
-		m_dxHelper.GetDeviceContext()->UpdateSubresource(pConstantBuffer, 0, nullptr, Data, 0, 0);
+		GetDeviceContext()->UpdateSubresource(pConstantBuffer, 0, nullptr, Data, 0, 0);
 	}
 	void    JH_Map::SetMatrix(D3DXMATRIX* matWorld,
 		D3DXMATRIX* matView,
@@ -183,14 +183,14 @@
 		D3DXMatrixTranspose(&m_cbData.matProj, &m_matProj);
 		D3DXMatrixTranspose(&m_cbData.matNormal, &m_matNormal);
 
-		if (m_dxHelper.GetConstantBuffer() != nullptr)
+		if (GetConstantBuffer() != nullptr)
 		{
-			m_dxHelper.GetDeviceContext()->UpdateSubresource(
-				m_dxHelper.GetConstantBuffer(),
+			GetDeviceContext()->UpdateSubresource(
+				GetConstantBuffer(),
 				0, NULL, &m_cbData, 0, 0);
 
-			//m_dxHelper.GetDeviceContext()->UpdateSubresource(
-			//	m_dxHelper.GetConstantBuffer(),
+			//GetDeviceContext()->UpdateSubresource(
+			//	GetConstantBuffer(),
 			//	0, NULL, &m_matNormal, 0, 0);
 		}
 		
@@ -228,9 +228,11 @@
 		LoadInfo.MipLevels = 1;
 
 		ID3D11Resource* pResource = nullptr;
+		std::wstring Path = TextureFileName;
+		Path = L"../../data/Map/Texture/" + Path;
 
 		HRESULT hr;
-		hr = D3DX11CreateTextureFromFile(pD3D11Device, TextureFileName, &LoadInfo, NULL, &pResource, NULL);
+		hr = D3DX11CreateTextureFromFile(pD3D11Device, Path.c_str(), &LoadInfo, NULL, &pResource, NULL);
 		if (hr != S_OK)
 		{
 			return hr;
@@ -301,14 +303,14 @@
 			SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
 
 		m_SkyBox = std::make_shared<JH_SkyBox>();
-		m_SkyBox->CreateSkyBox(m_dxHelper.GetDevice(), m_dxHelper.GetDeviceContext(), L"SkyObj.hlsl");
-		m_SkyBox->CreateTexuture(m_dxHelper.GetDevice(), m_dxHelper.GetDeviceContext(), L"../../data/sky/StarFiled2.dds");
+		m_SkyBox->CreateSkyBox(GetDevice(), GetDeviceContext(), L"SkyObj.hlsl");
+		m_SkyBox->CreateTexuture(GetDevice(), GetDeviceContext(), L"../../data/sky/StarFiled2.dds");
 
 
 
 
 
-		m_CBSub.Attach(DX::MakeConstantBuffer(m_dxHelper.GetDevice(), nullptr, sizeof(CB_SPT), 1));
+		m_CBSub.Attach(DX::MakeConstantBuffer(GetDevice(), nullptr, sizeof(CB_SPT), 1));
 		return true;
 	}
 	
@@ -316,7 +318,7 @@
 	{
 
 		HRESULT hr = S_OK;
-		m_dxHelper.m_iVertexSize = sizeof(PNCT_VERTEX);
+		m_iVertexSize = sizeof(PNCT_VERTEX);
 		m_VertexData.resize(m_iVertices);
 		m_vHeightList.resize(m_iVertices);
 		float fHalfCols = m_iCellCol / 2.0f;
@@ -445,15 +447,32 @@
 		};
 		UINT iElementCount = sizeof(layout) /
 			sizeof(layout[0]);
-		m_dxHelper.GetDevice()->CreateInputLayout(
+		GetDevice()->CreateInputLayout(
 			layout,
 			iElementCount,
-			m_dxHelper.GetVertexCode()->GetBufferPointer(),
-			m_dxHelper.GetVertexCode()->GetBufferSize(),
-			m_dxHelper.GetLayoutAdress());
+			GetVertexCode()->GetBufferPointer(),
+			GetVertexCode()->GetBufferSize(),
+			GetLayoutAdress());
 		return hr;
 	}
+	HRESULT	JH_Map::LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNormalTexName)
+	{
+		if (pszTexFileName == nullptr) { return S_FALSE; }
+		HRESULT hr = S_OK;
 
+
+		int iTex = I_Texture.Add(GetDevice(), pszTexFileName, L"../../data/Map/Texture/");
+		if (I_Texture.GetPtr(iTex) != nullptr)
+			SetShaderResourceView(I_Texture.GetPtr(iTex)->m_pTextureRV);
+
+		if (pszNormalTexName == nullptr) return S_OK;
+
+		iTex = I_Texture.Add(GetDevice(), pszNormalTexName, L"../../data/Map/Texture/");
+		if (I_Texture.GetPtr(iTex) != nullptr)
+			m_pNormSrv = I_Texture.GetPtr(iTex)->m_pTextureRV;
+
+		return hr;
+	}
 
 	bool JH_Map::Frame()
 	{
@@ -465,8 +484,8 @@
 		UpdateConstantBuffer(m_pLightConstBuffer.Get(), &I_LIGHT_MGR.m_cbLight);
 
 
-		//m_dxHelper.GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
-		//m_dxHelper.GetDeviceContext()->PSSetConstantBuffers(3, 1, pBuffers);
+		//GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
+		//GetDeviceContext()->PSSetConstantBuffers(3, 1, pBuffers);
 
 		
 		m_QuadTree->Frame();
@@ -477,7 +496,7 @@
 
 	bool JH_Map::Render()
 	{
-		m_dxHelper.GetDeviceContext()->PSSetShaderResources(2, 1,m_pCopySrv.GetAddressOf());
+		GetDeviceContext()->PSSetShaderResources(2, 1,m_pCopySrv.GetAddressOf());
 		if (m_QuadTree != nullptr)
 		{
 			m_SkyBox->Render();

@@ -1,20 +1,98 @@
 #include "JH_ObjMgr.h"
 
-//namespace JH {
-//	void JH_ObjMgr::AddObject(std::shared_ptr<JH_MapObj> Obj)
-//	{
-//		m_ObjectList.insert(std::make_pair(Obj->GetID(), Obj));
-//	}
-//	JH_ObjMgr::JH_ObjMgr()
-//	{
-//	}
-//
-//
-//	JH_ObjMgr::~JH_ObjMgr()
-//	{
-//		for(auto iter : m_ObjectList)
-//		{
-//			iter.second = nullptr;
-//		}
-//	}
-//}
+
+
+	int JH_ObjMgr::CreateObject(const std::string file)
+	{
+
+	
+		shared_ptr<JH_Obj> pObj = make_shared<JH_Obj>();
+		if (!pObj->ReadFile(file)) { return -1;}
+		
+		pObj->SetID(m_ObjID++);
+		m_ObjectList.emplace_back(pObj);
+
+		return m_ObjectList.size()-1;
+	}
+	void JH_ObjMgr::DeleteObject(int Index)
+	{
+		auto iter=m_ObjectList.begin()+Index;
+
+		if(iter!=m_ObjectList.end())
+		m_ObjectList.erase(iter);
+	}
+	JH_Obj* JH_ObjMgr::FindObjectByIndex(int Index)
+	{
+
+		assert(m_ObjectList[Index]);
+		return m_ObjectList[Index].get();
+
+
+	}
+	int	JH_ObjMgr::LoadData(const std::string str)
+	{
+		
+		for (auto ObjData:m_ObjDataList)
+		{
+			if (ObjData.second->GetName() == str)
+			{
+				return ObjData.first;
+			}
+		}
+		shared_ptr<JH_ObjData> pObj = make_shared<JH_ObjData>();
+
+		if (pObj->ReadFile(str))
+		{
+			m_ID++;
+			m_ObjDataList.insert(std::make_pair(m_ID, pObj));
+			return m_ID;
+		}
+
+
+	}
+	JH_ObjData*	JH_ObjMgr::GetDataPtr(int Index)
+	{
+		ObjIter Iter;
+		Iter=m_ObjDataList.find(Index);
+		if (Iter != m_ObjDataList.end())
+		return Iter->second.get();
+
+		return nullptr;
+
+	}
+	void JH_ObjMgr::SetCamera(int Index, JHCamera* Camera)
+	{
+		JH_Obj* Obj=FindObjectByIndex(Index);
+		if (Obj != nullptr)
+			Obj->SetCamera(Camera);
+	}
+	bool JH_ObjMgr::Frame()
+	{
+		m_DrawObjectList.clear();
+		for (auto Obj : m_ObjectList)
+		{
+			 
+			P_POSITION pos = Obj->GetCamera()->CheckOBBInPlane(Obj->GetColliderBox());
+			if (pos != P_BACK)
+				m_DrawObjectList.emplace_back(Obj);
+			Obj->Frame();
+		}
+		return true;
+	}
+	bool JH_ObjMgr::Render()
+	{
+		for (auto Obj : m_DrawObjectList)
+		{
+			Obj->Render();
+		}
+		return true;
+	}
+	JH_ObjMgr::JH_ObjMgr()
+	{
+	}
+
+
+	JH_ObjMgr::~JH_ObjMgr()
+	{
+	
+	}

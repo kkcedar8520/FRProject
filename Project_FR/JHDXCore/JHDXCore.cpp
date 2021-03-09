@@ -111,7 +111,7 @@ bool JHDXCore::PreRender()
 	{
 		DX::ApplyRS(GetContext().Get(), DX::JH_DxState::g_pRSWireFrame.Get());
 	}
-	//DX::ApplyDSS(GetContext().Get(), DX::JH_DxState::g_pDSS);
+	DX::ApplyDSS(GetContext().Get(), DX::JH_DxState::g_pDSS.Get());
 	SetViewPort();
 	return true;
 }

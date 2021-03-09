@@ -1,79 +1,30 @@
 #pragma once
 #include "JH_Obj.h"
-
+#include"JH_ObjMgr.h"
 
 bool JH_Obj::ReadFile(const std::string file)
 {
-	BinaryReader Reader;
 
-	std::string FullPath="../../data/model/binary/"+file+".md";
-	Reader.Open(FullPath);
+	int index = I_ObjMgr.LoadData(file);
 
-	m_materials.resize(Reader.Int());
 
-	if (m_materials.size() > 0)
-	{
-		for (int i = 0; i < m_materials.size(); ++i)
-		{
-			JH_Material& tMat=m_materials[i];
-
-			tMat.Name=Reader.WString();
-			Reader.Byte(&tMat.AmbientColor, sizeof(D3DXVECTOR4), 1);
-			Reader.Byte(&tMat.DiffuseColor, sizeof(D3DXVECTOR4), 1);
-			Reader.Byte(&tMat.SpecularColor, sizeof(D3DXVECTOR4), 1);
-			Reader.Byte(&tMat.EmissiveColor, sizeof(D3DXVECTOR4), 1);
-
-			tMat.SetDiffues(Reader.WString());
-			tMat.SetSpecular(Reader.WString());
-			tMat.SetEmissive(Reader.WString());
-			tMat.SetNormal(Reader.WString());
-
-		}
-	}
-	m_Bones.resize(Reader.Int());
-	if (m_Bones.size() > 0)
-	{
-		for (int i = 0; i < m_Bones.size(); ++i)
-		{
-			JH_Bone& tBone = m_Bones[i];
-
-			tBone.SetBoneName(Reader.WString());
-			tBone.SetBoneIndex(Reader.Int());
-			tBone.SetParentIndex(Reader.Int());
-			Reader.Byte(tBone.GetWorld(), sizeof(D3DXMATRIX), 1);
-		}
-	}
-
-	m_meshes.resize(Reader.Int());
-	if (m_meshes.size() > 0)
-	{
-		for (int i = 0; i < m_meshes.size(); ++i)
-		{
-			JH_Mesh& tMesh = m_meshes[i];
-
-			tMesh.SetName(Reader.WString());
-			tMesh.SetBoneIndex(Reader.Int());
-
-			tMesh.SetMatrerialName(Reader.WString());
-			tMesh.GetVertexData().resize(Reader.Int());
-			Reader.Byte(&tMesh.GetVertexData()[0], sizeof(PNCTIW_VERTEX),tMesh.GetVertexData().size());
-			tMesh.GetIndexData().resize(Reader.Int());
-			Reader.Byte(&tMesh.GetIndexData().at(0), sizeof(DWORD), tMesh.GetIndexData().size());
-			
-		}
-	}
-	Reader.Close();
+	m_ObjData = I_ObjMgr.GetDataPtr(index);
+	m_Name = file;
 	BindingMesh();
+	Init();
 
 	return true;
 }
 
 bool JH_Obj::Init()
 {
-	D3DXMatrixIdentity(&m_matWorld);
+	D3DXMatrixIdentity(&m_matTransform);
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProj);
 	D3DXMatrixIdentity(&m_matNormal);
+	
+	m_ColiderBox.CreateBox(m_ObjData->GetBone()[0].GetWorld());
+	m_ColiderBox.Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/BoxShader.txt", nullptr, nullptr);
 
 
 	
@@ -82,6 +33,12 @@ bool JH_Obj::Init()
 }
 bool JH_Obj::Frame()
 {
+	
+	m_ColiderBox.SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
+	for (auto mesh : m_ObjData->GetMesh())
+	{
+		mesh.Frame();
+	}
 	UpdateTarnsformCB();
 	return true;
 }
@@ -89,11 +46,16 @@ bool JH_Obj::Render()
 {
 	UINT offset = 0;
 	UINT Stride = 0;
-	for (auto mesh : m_meshes)
+	for (auto mesh : m_ObjData->GetMesh())
 	{
+		SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
 		mesh.Render();
 	}
 	return true;
+}
+void JH_Obj::RenderCollider()
+{
+	m_ColiderBox.Render();
 }
 bool JH_Obj::Release()
 {
@@ -102,9 +64,9 @@ bool JH_Obj::Release()
 
 void JH_Obj::BindingMesh()
 {
-	for (auto& mesh : m_meshes)
+	for (auto& mesh : m_ObjData->GetMesh())
 	{
-		JH_Bone& Bone=BoneFindByIndex(mesh.GetBoneIndex());
+		JH_Bone Bone=BoneFindByIndex(mesh.GetBoneIndex());
 		mesh.SetBone(Bone);
 		mesh.Binding(this);
 	}
@@ -112,9 +74,9 @@ void JH_Obj::BindingMesh()
 
 
 
-JH_Material& JH_Obj::MaterialFindByName(std::wstring Name)
+JH_Material JH_Obj::MaterialFindByName(std::wstring Name)
 {
-	for (auto& Mat:m_materials )
+	for (auto Mat:m_ObjData->GetMaterial() )
 	{
 		if (Mat.Name == Name)
 		{
@@ -122,14 +84,14 @@ JH_Material& JH_Obj::MaterialFindByName(std::wstring Name)
 		}
 	}
 }
-JH_Material& JH_Obj::MaterialFindByIndex(int  id)
+JH_Material JH_Obj::MaterialFindByIndex(int  id)
 {
-	return m_materials[id];
+	return m_ObjData->GetMaterial()[id];
 }
 
-JH_Bone& JH_Obj::BoneFindByName(std::wstring Name)
+JH_Bone JH_Obj::BoneFindByName(std::wstring Name)
 {
-	for (auto& Bone : m_Bones)
+	for (auto Bone : m_ObjData->GetBone())
 	{
 		if (Bone.GetBoneName() == Name)
 		{
@@ -137,9 +99,9 @@ JH_Bone& JH_Obj::BoneFindByName(std::wstring Name)
 		}
 	}
 }
-JH_Bone& JH_Obj::BoneFindByIndex(int id)
+JH_Bone JH_Obj::BoneFindByIndex(int id)
 {
-	for (auto& Bone : m_Bones)
+	for (auto Bone : m_ObjData->GetBone())
 	{
 		if (Bone.GetBoneIndex() == id)
 		{
@@ -148,20 +110,12 @@ JH_Bone& JH_Obj::BoneFindByIndex(int id)
 	}
 }
 
-//JH_Mesh& JH_Obj::MeshFindByName(std::wstring Name)
-//{
-//
-//}
-//JH_Mesh& JH_Obj::MeshFindByIndex(std::wstring Name)
-//{
-//
-//
-//}
-void JH_Obj::SetTransform(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Proj)
+
+void JH_Obj::SetMatrix(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Proj)
 {
 	if (world != nullptr)
 	{
-		m_matWorld =* world;
+		m_matTransform =* world;
 	}
 
 	if (View != nullptr)
@@ -175,18 +129,65 @@ void JH_Obj::SetTransform(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Pr
 	}
 
 
-	////D3DXMatrixTranspose(&m_sCBTF.matWorld,&m_matWorld);
+	////D3DXMatrixTranspose(&m_sCBTF.matWorld,&m_matTransform);
 	////D3DXMatrixTranspose(&m_sCBTF.matView, &m_matView);
 	////D3DXMatrixTranspose(&m_sCBTF.matProj, &m_matProj);
 	
 	//메쉬들의 트랜스폼 세팅
-	for(auto& mesh: m_meshes)
+	for(auto& mesh: m_ObjData->GetMesh())
 	{
-		D3DXMATRIX matfinal;
-		matfinal=mesh.m_matWorld*m_matWorld;
-		mesh.SetMatrix(&matfinal, &m_matView, &m_matProj);
+
+		mesh.SetMatrix(&m_matTransform, &m_matView, &m_matProj);
 		
 	}
+}
+
+void JH_Obj::SetTransform(D3DXMATRIX& Mat)
+{
+	m_matTransform = Mat;
+	m_ColiderBox.SetTransform(m_matTransform);
+}
+void JH_Obj::SetPos(D3DXVECTOR3 vPos)
+{
+	m_matTransform._41 = vPos.x;
+	m_matTransform._42 = vPos.y;
+	m_matTransform._43 = vPos.z;
+	m_ColiderBox.SetPos(vPos);
+}
+void JH_Obj::SetScale(D3DXVECTOR3 vScale)
+{
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR, mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matTransform);
+	vS = vScale;
+
+	D3DXMatrixRotationQuaternion(&mR, &qR);
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matTransform = mS * mR;
+	m_matTransform._41 = vP.x;
+	m_matTransform._42 = vP.y;
+	m_matTransform._43 = vP.z;
+	m_ColiderBox.SetScale(vScale);
+}
+void JH_Obj::SetRotation(D3DXMATRIX Mat)
+{
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR, mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matTransform);
+
+	mR = Mat;
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matTransform = mS * mR;
+	m_matTransform._41 = vP.x;
+	m_matTransform._42 = vP.y;
+	m_matTransform._43 = vP.z;
+	m_ColiderBox.SetRotation(Mat);
+}
+void JH_Obj::CreateColiderBox(D3DXMATRIX& mat)
+{
+	m_ColiderBox.CreateBox(mat);
 }
 
 void JH_Obj::UpdateTarnsformCB()

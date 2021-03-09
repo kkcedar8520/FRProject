@@ -65,4 +65,7 @@ public:
 	float m_ObjPositionX;
 	float m_ObjPositionY;
 	float m_ObjPositionZ;
+	afx_msg void OnBnClickedColider();
+	afx_msg void OnBnClickedEdit();
+	afx_msg void OnBnClickedCreate();
 };

@@ -120,7 +120,7 @@ namespace DX
 		// Z 버퍼 비교 활성화
 		dsd.DepthEnable = TRUE;
 		// z값 버퍼에 저장
-		dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		// 비교 연산
 		dsd.DepthFunc = D3D11_COMPARISON_LESS;
 		pd3dDevice->CreateDepthStencilState(&dsd, &g_pDSS);

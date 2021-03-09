@@ -94,7 +94,7 @@
 //				}
 //
 //			}
-//			DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->m_dxHelper.GetVertexBuffer(), 0, 0, &pMap->m_VertexData.at(0), 0, 0);
+//			DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->GetVertexBuffer(), 0, 0, &pMap->m_VertexData.at(0), 0, 0);
 //
 //			return true;
 //}

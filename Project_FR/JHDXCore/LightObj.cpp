@@ -15,8 +15,8 @@
 	void LightObj::CreateLightObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LightInfo light)
 	{
 
-		m_dxHelper.SetDevice( pDevice);
-		m_dxHelper.SetDeviceContext( pContext);
+		SetDevice( pDevice);
+		SetDeviceContext( pContext);
 
 
 
@@ -47,7 +47,7 @@
 	bool LightObj::Init()
 	{
 		//m_Shadow.m_DSFormat = DXGI_FORMAT_R32_TYPELESS;
-		//m_Shadow.Create(m_dxHelper.m_pd3dDevice);
+		//m_Shadow.Create(m_pd3dDevice);
 		m_LightObj.m_matWorld._41 = m_Info.LightPos.x;
 		m_LightObj.m_matWorld._42 = m_Info.LightPos.y;
 		m_LightObj.m_matWorld._43 = m_Info.LightPos.z;
@@ -64,7 +64,7 @@
 
 
 		//D3DXMatrixLookAtLH(,)
-		//m_dxHelper.m_matWorld
+		//m_matWorld
 
 
 	}

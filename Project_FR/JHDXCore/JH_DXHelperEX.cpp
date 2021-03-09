@@ -5,69 +5,9 @@
 extern ComPtr<ID3D11Device>			g_pd3dDevice=nullptr;
 extern ComPtr<ID3D11DeviceContext>  g_pd3dDeviceContext=nullptr;
 
-void JH_DXHelperEX::PreRender()
-{
-	HRESULT hr = S_OK;
-	UINT stride=m_iVertexSize;
-	UINT offset = 0;
-	
-	m_pContext->IASetVertexBuffers(
-		0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
-
-	m_pContext->IASetIndexBuffer(m_pIndexBuffer.Get(),
-		DXGI_FORMAT_R32_UINT, 0);
-
-	m_pContext->VSSetShader(m_pVS.Get(), NULL, 0);
-	m_pContext->PSSetShader(m_pPS.Get(), NULL, 0);
-
-	m_pContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
-	m_pContext->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
-	m_pContext->IASetInputLayout(m_pVertexLayout.Get());
-	m_pContext->PSSetShaderResources(0, 1, m_pSRV.GetAddressOf());
-	
-}
-void JH_DXHelperEX::Render()
-{
-	PreRender();
-	PostRender();
-}
-void JH_DXHelperEX::PostRender()
-{
-	if (m_iNumIndex>0)
-	{
-		m_pContext->DrawIndexed(m_iNumIndex, 0, 0);
-	}
-	else
-	{
-		m_pContext->Draw(m_iNumVertex, 0);
-	}
-}
-JH_DXHelperEX::JH_DXHelperEX()
-{
-	m_iVertexSize = 0;
-	m_iNumVertex = 0;
-	m_iNumIndex = 0;
-	m_pVertexBuffer = nullptr;
-	m_pIndexBuffer = nullptr;
-	m_pVertexLayout = nullptr;
-	m_pConstantBuffer = nullptr;
-	m_pVS = nullptr;
-	m_pPS = nullptr;
-	m_pSRV = nullptr;
-}
 
 
-JH_DXHelperEX::~JH_DXHelperEX()
-{
-	//if (m_pVertexBuffer) m_pVertexBuffer->Release();
-	//if (m_pIndexBuffer)m_pIndexBuffer->Release();
-	//if (m_pVertexLayout)m_pVertexLayout->Release();
-	//if (m_pVS)m_pVS->Release();
-	//if (m_pPS)m_pPS->Release();
-	//if (m_pSRV)m_pSRV->Release();
-	//if (m_pVertexCode)m_pVertexCode->Release();
-	//if (m_pPixelCode)m_pPixelCode->Release();
-}
+
 
 namespace DX
 {

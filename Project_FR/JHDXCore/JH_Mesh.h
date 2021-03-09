@@ -33,7 +33,7 @@ private:
 	ComPtr<ID3D11Buffer>	m_pVB;
 	ComPtr<ID3D11Buffer>	m_pIB;
 
-	UINT					m_iVertexSize;
+	
 
 	//std::vector<PNCTIW_VERTEX> m_PNCTIWlist;
 	CB_TF							m_cbData;
@@ -64,7 +64,7 @@ public:
 	void SetMatrerialName(std::wstring&& str)	{ m_MaterialName = str;}
 	void SetWorld(D3DXMATRIX&& Mat)				{ m_matWorld = Mat; }
 	//Transform
-	void SetTransform(D3DXMATRIX* world=nullptr,D3DXMATRIX* view=nullptr,D3DXMATRIX* proj=nullptr);
+
 	//Bone
 	void SetBone(JH_Bone& bone) { m_Bone = bone; }
 public:
@@ -76,6 +76,8 @@ public:
 
 	HRESULT CreateVertexData()override;
 	HRESULT CreateIndexData()override;
+	HRESULT CreateVertexBuffer()override;
+	HRESULT	LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNormalTexName = nullptr)override;
 
 public:
 	JH_Mesh();

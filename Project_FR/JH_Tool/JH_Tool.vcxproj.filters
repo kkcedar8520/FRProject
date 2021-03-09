@@ -18,15 +18,15 @@
     <Filter Include="DIg\Map">
       <UniqueIdentifier>{881701ef-a020-420a-acbc-007322f45a5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DIg\Map\Obj">
-      <UniqueIdentifier>{1728f14b-8932-40d7-96db-6fb187e8a422}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="NewFilter1">
+    <Filter Include="소스 파일\NewFilter1">
       <UniqueIdentifier>{f3500b57-183b-42ec-8fd1-3e60e726fd7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DIg\Obj">
+      <UniqueIdentifier>{1728f14b-8932-40d7-96db-6fb187e8a422}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +76,7 @@
       <Filter>DIg</Filter>
     </ClInclude>
     <ClInclude Include="JH_ObjPane.h">
-      <Filter>DIg\Map\Obj</Filter>
+      <Filter>DIg\Obj</Filter>
     </ClInclude>
     <ClInclude Include="CPropMapWnd.h">
       <Filter>헤더 파일</Filter>
@@ -85,7 +85,7 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="JH_ObjForm.h">
-      <Filter>DIg\Map\Obj</Filter>
+      <Filter>DIg\Obj</Filter>
     </ClInclude>
     <ClInclude Include="ToolCore.h">
       <Filter>헤더 파일</Filter>
@@ -129,13 +129,13 @@
       <Filter>DIg</Filter>
     </ClCompile>
     <ClCompile Include="JH_ObjPane.cpp">
-      <Filter>DIg\Map\Obj</Filter>
+      <Filter>DIg\Obj</Filter>
     </ClCompile>
     <ClCompile Include="CPropMapWnd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="JH_ObjForm.cpp">
-      <Filter>DIg\Map\Obj</Filter>
+      <Filter>DIg\Obj</Filter>
     </ClCompile>
     <ClCompile Include="ToolCore.cpp">
       <Filter>소스 파일</Filter>

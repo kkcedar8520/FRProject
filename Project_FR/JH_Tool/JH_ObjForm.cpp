@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "JH_Tool.h"
 #include "JH_ObjForm.h"
+
 #include "afxdialogex.h"
 
 
@@ -50,25 +51,25 @@ JH_ObjForm* JH_ObjForm::CreateOne(CWnd* pParent)//하나의 윈도우에 하나�
 void JH_ObjForm::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
-	//DDX_Text(pDX, IDC_EDIT1, m_SkinName);
-	//DDX_Text(pDX, IDC_EDIT2, m_BoneName);
-	////DDX_Text(pDX, IDC_EDIT12, m_Value);
-	//DDX_Text(pDX, IDC_EDIT14, m_fScaleX);
-	//DDX_Text(pDX, IDC_EDIT15, m_fScaleY);
-	//DDX_Text(pDX, IDC_EDIT24, m_fScaleZ);
-	//DDX_Text(pDX, IDC_EDIT21, m_fTransX);
-	//DDX_Text(pDX, IDC_EDIT16, m_fTransZ);
-	//DDX_Text(pDX, IDC_EDIT22, m_fRotYaw);
-	//DDX_Text(pDX, IDC_EDIT23, m_fRotPit);
-	//DDX_Text(pDX, IDC_EDIT25, m_fRotRol);
-	//DDX_Text(pDX, IDC_EDIT19, m_fTransY);
-	//DDX_Control(pDX, IDC_LIST1, m_ObjectListBox);
-	//DDX_Text(pDX, IDC_SELECTOBJ, m_Obj_ID);
-	//DDX_Text(pDX, IDC_OBJNODE, m_ObjNode);
-	//DDX_Text(pDX, IDC_OBJFLAG, m_ObjFlag);
-	//DDX_Text(pDX, IDC_SELECTOBJ2, m_ObjPositionX);
-	//DDX_Text(pDX, IDC_SELECTOBJ3, m_ObjPositionY);
-	//DDX_Text(pDX, IDC_OBJFLAG2, m_ObjPositionZ);
+	DDX_Text(pDX, IDC_EDIT1, m_SkinName);
+	DDX_Text(pDX, IDC_EDIT2, m_BoneName);
+	DDX_Text(pDX, IDC_EDIT12, m_Value);
+	DDX_Text(pDX, IDC_EDIT14, m_fScaleX);
+	DDX_Text(pDX, IDC_EDIT15, m_fScaleY);
+	DDX_Text(pDX, IDC_EDIT24, m_fScaleZ);
+	DDX_Text(pDX, IDC_EDIT21, m_fTransX);
+	DDX_Text(pDX, IDC_EDIT16, m_fTransZ);
+	DDX_Text(pDX, IDC_EDIT22, m_fRotYaw);
+	DDX_Text(pDX, IDC_EDIT23, m_fRotPit);
+	DDX_Text(pDX, IDC_EDIT25, m_fRotRol);
+	DDX_Text(pDX, IDC_EDIT19, m_fTransY);
+	DDX_Control(pDX, IDC_LIST1, m_ObjectListBox);
+	DDX_Text(pDX, IDC_SELECTOBJ, m_Obj_ID);
+	DDX_Text(pDX, IDC_OBJNODE, m_ObjNode);
+	DDX_Text(pDX, IDC_OBJFLAG, m_ObjFlag);
+	DDX_Text(pDX, IDC_SELECTOBJ2, m_ObjPositionX);
+	DDX_Text(pDX, IDC_SELECTOBJ3, m_ObjPositionY);
+	DDX_Text(pDX, IDC_OBJFLAG2, m_ObjPositionZ);
 }
 
 
@@ -144,7 +145,7 @@ void JH_ObjForm::OnBnClickedBoneLoad()
 	static int Tick = 0;
 
 	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
-		L"mtr Files(*.mtr)|*.mtr|All Files(*.*)|*.*|", this);
+		L"md Files(*.md)|*.md|All Files(*.*)|*.*|", this);
 
 	TCHAR szFileName[MAX_PATH];
 	TCHAR Drive[MAX_PATH];
@@ -158,7 +159,7 @@ void JH_ObjForm::OnBnClickedBoneLoad()
 		_tsplitpath(FileName, Drive, Dir, FName, Ext);
 		Ext[4] = 0;
 		memset(szFileName, 0, sizeof(TCHAR) * MAX_PATH);
-		TCHAR Mdir[MAX_PATH] = L"../../data/Map/";
+		TCHAR Mdir[MAX_PATH] = L"../../data/Model/Binary/";
 		TCHAR* tok = wcstok(Dir, L"\\""");
 		bool b = false;
 		while (tok != nullptr)
@@ -179,7 +180,7 @@ void JH_ObjForm::OnBnClickedBoneLoad()
 			}
 
 		}
-		DirBuf += L"/";
+		/*DirBuf += L"/";*/
 		_stprintf_s(szFileName, _T("%s%s%s"), DirBuf.c_str(), FName, Ext);
 
 
@@ -206,40 +207,29 @@ void JH_ObjForm::OnBnClickedButton3()
 	T_STR DirBuf;
 	CString FileName;
 	CString SkinName, BoneName;
-	SkinName = m_SkinName;
-	_tsplitpath(SkinName, Drive, Dir, FName, Ext);
 
-	SkinName = Drive;
-	SkinName += Dir;
-	SkinName += FName;
+	std::wstring wstr;
+	std::string str;
+
 	BoneName = m_BoneName;
 	_tsplitpath(BoneName, Drive, Dir, FName, Ext);
-	BoneName = Drive;
-	BoneName += Dir;
-	BoneName += FName;
+	BoneName = FName;
 
-	//if (BoneName == SkinName)
-	//{
-	//	if (pApp->m_Core.CreateObj(
-	//		m_SkinName,
-	//		m_BoneName,
-	//		mWorld))
-	//	{
-	//		FileName = m_SkinName;
-	//		_tsplitpath(FileName, Drive, Dir, FName, Ext);
-	//	
 
-	//		FileName = Drive ;
-	//		FileName += Dir;
-	//		FileName += FName;
-	//		
+		
+	
+	wstr = FName;
 
-	//		m_ObjectListBox.AddString(FileName);
-	//	}
-	//}
 
-	//
-	//pApp->m_Core.m_ToolState = ADDOBJECT;
+
+	char buf[256] = { NULL };
+	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), wstr.size(), &buf[0], wstr.size() + 1,nullptr,nullptr);
+	
+	str=buf;
+
+	m_ObjectListBox.AddString(FName);
+
+
 }
 
 
@@ -338,14 +328,20 @@ void JH_ObjForm::OnLbnObjSelChange()
 {
 	CString name;
 	CString Ext;
-
+	std::string ObjName;
 
 	int iIndex = m_ObjectListBox.GetCurSel();
 	m_ObjectListBox.GetText(iIndex, name);
 	Ext = L".skn";
 	m_SkinName = name + Ext;
-	Ext = L".mtr";
-	m_BoneName = name + Ext;
+	Ext = L".md";
+	m_BoneName = name ;
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+	
+	char buf[255] = { NULL };
+	wcstombs(buf, m_BoneName.GetString(), m_BoneName.GetLength());
+	pApp->m_Core.m_ObjFileName = buf;
+
 	UpdateData(FALSE);
 }
 
@@ -374,6 +370,33 @@ void JH_ObjForm::OnEnChangeObjflag()
 
 	UpdateData(FALSE);
 }
+void JH_ObjForm::OnBnClickedColider()
+{
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+
+	
+	UpdateData(TRUE);
+
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+void JH_ObjForm::OnBnClickedEdit()
+{
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+
+	pApp->m_Core.m_eState = TOOLSTATE::OBJECTEDIT;
+	UpdateData(TRUE);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+void JH_ObjForm::OnBnClickedCreate()
+{
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+
+	pApp->m_Core.m_eState = TOOLSTATE::OBJECTNEW;
+	UpdateData(TRUE);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
 
 BEGIN_MESSAGE_MAP(JH_ObjForm, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON2, &JH_ObjForm::OnBnClickedButton2)
@@ -389,11 +412,21 @@ BEGIN_MESSAGE_MAP(JH_ObjForm, CFormView)
 	ON_LBN_SELCHANGE(IDC_LIST1, &JH_ObjForm::OnLbnObjSelChange)
 	ON_BN_CLICKED(IDC_SHOWINFOM, &JH_ObjForm::OnBnClickedShowinfom)
 	ON_EN_CHANGE(IDC_OBJFLAG, &JH_ObjForm::OnEnChangeObjflag)
+	ON_BN_CLICKED(IDC_COLIDER, &JH_ObjForm::OnBnClickedColider)
+	ON_BN_CLICKED(IDC_EDIT, &JH_ObjForm::OnBnClickedEdit)
+	ON_BN_CLICKED(IDC_Create, &JH_ObjForm::OnBnClickedCreate)
 END_MESSAGE_MAP()
 
 
 // JH_ObjForm 메시지 처리기
 #include"pch.h"
+
+
+
+
+
+
+
 
 
 

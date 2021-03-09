@@ -187,6 +187,9 @@ copy "*.lib" "../../lib/"
     <ClInclude Include="Device.h" />
     <ClInclude Include="JHCamera.h" />
     <ClInclude Include="JHDXCore.h" />
+    <ClInclude Include="JH_ColliderBox.h" />
+    <ClInclude Include="JH_ObjData.h" />
+    <ClInclude Include="JH_ObjMgr.h" />
     <ClInclude Include="JH_ShapeBox.h" />
     <ClInclude Include="JHTimer.h" />
     <ClInclude Include="JHWindow.h" />
@@ -240,6 +243,9 @@ copy "*.lib" "../../lib/"
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="JHCamera.cpp" />
     <ClCompile Include="JHDXCore.cpp" />
+    <ClCompile Include="JH_ColliderBox.cpp" />
+    <ClCompile Include="JH_ObjData.cpp" />
+    <ClCompile Include="JH_ObjMgr.cpp" />
     <ClCompile Include="JH_ShapeBox.cpp" />
     <ClCompile Include="JHTimer.cpp" />
     <ClCompile Include="JHWindow.cpp" />

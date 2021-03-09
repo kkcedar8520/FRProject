@@ -8,7 +8,7 @@ ModelLoader::~ModelLoader()
 {
 	//delete importer;
 }
-void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pDevice)
+void ModelLoader::ModelLoad(const string& fileName, ID3D11Device* pDevice)
 {
 
 	m_pDevice = pDevice;
@@ -52,19 +52,17 @@ void ModelLoader::ModelLoad(const string& fileName, JH_Obj& Obj,ID3D11Device* pD
 		m_numMaterial = m_pScene->mNumMaterials;
 
 		ReadMaterial();
-
-
 		ReadBoneData(m_pScene->mRootNode, 0, 0);
 		
 		FilePath = "../../Data/Model/Binary/" + fileName + ".md";
 		WriteModelBinary(FilePath);
 	
-		Obj.ReadFile(fileName);
+		
 	}
 }
 bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 {
-
+	
 	asBone pBone;
 
 
@@ -88,6 +86,7 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 	
 
 	//좌표계통일을위해 부모 좌표계를 곱함
+	
 	if (iParentIndex != 0)
 		MatParent = m_Bones[iParentIndex].m_Matworld;
 	else
@@ -101,6 +100,7 @@ bool ModelLoader::ReadBoneData(aiNode* Node, int Index, int iParentIndex)
 			ReadMeshData(Node, Index);
 		}
 		
+		//재귀호출 노드에해당하는 메쉬 읽음 노드:본 =1:1
 		for (int i = 0; i <Node->mNumChildren; i++)
 		{
 			ReadBoneData(Node->mChildren[i], m_Bones.size(), Index);
@@ -435,7 +435,7 @@ bool ModelLoader::WriteModelBinary(const std::string FilePath)
 	unique_ptr<BinaryWriter> Writer = make_unique<BinaryWriter>();
 
 	Writer->Open(FilePath);
-
+	
 	if (m_Materials.size() > 0)
 	{
 		Writer->Int(m_Materials.size());

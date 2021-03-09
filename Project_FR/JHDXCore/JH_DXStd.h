@@ -143,6 +143,87 @@ struct JH_Box
 	D3DXVECTOR3 vAxis[3];
 	float fExtent[3];
 	float fExtentXZ;			//y값을 고려하지 않은 상자의 대각선 길이
+
+	JH_Box()
+	{
+		vMin = D3DXVECTOR3(0, 0, 0);
+		vMax = D3DXVECTOR3(0, 0, 0);
+		vCenter = D3DXVECTOR3(0, 0, 0);
+
+		vAxis[0] = D3DXVECTOR3{ 1,0,0 };
+		vAxis[1] = D3DXVECTOR3{ 0,1,0 };
+		vAxis[2] = D3DXVECTOR3{ 0,0,1 };
+
+		fExtent[0] = 1.0f;
+		fExtent[1] = 1.0f;
+		fExtent[2] = 1.0f;
+	}
+	void CreateBox(D3DXMATRIX matTransform)
+	{
+		D3DXMATRIX mSRT, mS, mR;
+		D3DXVECTOR3	vS, vT;
+		D3DXQUATERNION qR;
+		D3DXMatrixIdentity(&mSRT);D3DXMatrixIdentity(&mS);D3DXMatrixIdentity(&mR);
+
+		D3DXMatrixDecompose(&vS, &qR, &vT, &matTransform);
+
+		D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+		D3DXMatrixRotationQuaternion(&mR, &qR);
+
+
+		mSRT = mS * mR;
+		mSRT._41 = vT.x;
+		mSRT._42 = vT.y;
+		mSRT._43 = vT.z;
+
+	
+		D3DXVec3TransformCoord(&vAxis[0], &vAxis[0], &mSRT);
+		D3DXVec3TransformCoord(&vAxis[1], &vAxis[1], &mSRT);
+		D3DXVec3TransformCoord(&vAxis[2], &vAxis[2], &mSRT);
+
+		D3DXVec3TransformCoord(&vCenter, &vCenter, &mSRT);
+
+		vMax = vCenter + vAxis[0] + vAxis[1] + vAxis[2];
+		vMin = vCenter - vAxis[0] - vAxis[1] - vAxis[2];
+		fExtent[0] = vMax.x - vCenter.x;
+		fExtent[1] = vMax.y - vCenter.y;
+		fExtent[2] = vMax.z - vCenter.z;
+
+		D3DXVec3Normalize(&vAxis[0], &vAxis[0]);
+		D3DXVec3Normalize(&vAxis[1], &vAxis[1]);
+		D3DXVec3Normalize(&vAxis[2], &vAxis[2]);
+		
+	}
+	void SetScale(D3DXVECTOR3& vScale)
+	{
+	
+		fExtent[0] *= fExtent[0] * vScale.x;
+		fExtent[1] *= fExtent[1] * vScale.y;
+		fExtent[2] *= fExtent[2] * vScale.z;
+
+		vMax = vCenter + vAxis[0]*fExtent[0] + vAxis[1] * fExtent[1] + vAxis[2] * fExtent[2];
+		vMin = vCenter - vAxis[0] * fExtent[0] - vAxis[1] * fExtent[1] - vAxis[2] * fExtent[2];
+
+
+	}
+	void SetRotation(D3DXMATRIX& Mat)
+	{
+
+		D3DXVec3TransformCoord(&vAxis[0], &vAxis[0], &Mat);
+		D3DXVec3TransformCoord(&vAxis[1], &vAxis[1], &Mat);
+		D3DXVec3TransformCoord(&vAxis[2], &vAxis[2], &Mat);
+
+		D3DXVec3TransformCoord(&vMin, &vMin, &Mat);
+		D3DXVec3TransformCoord(&vMax, &vMax, &Mat);
+	}
+	void SetPosition(D3DXVECTOR3& vPos)
+	{
+
+		vCenter = vPos;
+		vMax = vPos;
+		vMin = vPos;
+
+	}
 };
 struct JH_PLANE
 {

@@ -139,6 +139,9 @@
 #define IDC_SELECTOBJ2                  1030
 #define IDC_SELECTOBJ3                  1031
 #define IDC_OBJNODE                     1032
+#define IDC_COLIDER                     1045
+#define IDC_Create                      1046
+#define IDC_EDIT                        1047
 #define ID_TOOL_CREATEMAP               32771
 #define ID_TOOL_LOADOBJECT              32772
 
@@ -148,7 +151,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1031
+#define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           329
 #endif
 #endif

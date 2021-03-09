@@ -2,7 +2,7 @@
 //HRESULT MaxObj::CreateVertexData()
 //{
 //	HRESULT hr = S_OK;
-//	m_dxHelper.m_iVertexSize = sizeof(PNCT_VERTEX);
+//	m_iVertexSize = sizeof(PNCT_VERTEX);
 //	m_VertexData.resize(m_FaceBuffer.size()*3);
 //
 //	for (int iFace = 0; iFace < m_FaceBuffer.size(); iFace++)
@@ -34,8 +34,8 @@
 //}
 //bool	MaxObj::Load(ID3D11Device* pdvice, ID3D11DeviceContext* pContext, const TCHAR* LoadFile)
 //{
-//	m_dxHelper.m_pd3dDevice = pdvice;
-//	m_dxHelper.m_pContext = pContext;
+//	m_pd3dDevice = pdvice;
+//	m_pContext = pContext;
 //	Parsing(LoadFile);
 //	Convert();
 //	Create(pdvice, pContext, L"../../data/shader/ColorBlend.txt", L"../../data/Resource/Galloper.bmp");
@@ -100,7 +100,7 @@
 //				{
 //					if (m_ExpMtlList[iRef].submtl[i].m_MapList.size() > 0) {
 //
-//						JH_Mesh.subMesh[i].m_iTextIndex = I_Texture.Add(m_dxHelper.m_pd3dDevice.Get(),
+//						JH_Mesh.subMesh[i].m_iTextIndex = I_Texture.Add(m_pd3dDevice.Get(),
 //							m_ExpMtlList[iRef].submtl[i].m_MapList[0].szTextureName,
 //							L"../../data/Obj/");
 //
@@ -114,7 +114,7 @@
 //			{
 //				if (m_ExpMtlList[iRef].m_MapList.size() > 0) 
 //				{
-//					JH_Mesh.m_iTextIndex = I_Texture.Add(m_dxHelper.m_pd3dDevice.Get(),
+//					JH_Mesh.m_iTextIndex = I_Texture.Add(m_pd3dDevice.Get(),
 //						m_ExpMtlList[iRef].m_MapList[0].szTextureName,
 //						L"../../data/Obj/");
 //
@@ -641,7 +641,7 @@
 //}
 //bool MaxObj::Render()
 //{
-//	m_dxHelper.PreRender();
+//	PreRender();
 //	for (int iObj = 0; iObj < m_ExpObject.size() ;iObj++)
 //	{
 //		m_ExpObject[iObj].m_cbData = m_cbData;
@@ -651,8 +651,8 @@
 //			&m_ExpObject[iObj].m_matCalculation);
 //
 //
-//		m_dxHelper.m_pContext->UpdateSubresource(
-//			m_dxHelper.m_pConstantBuffer.Get(),
+//		m_pContext->UpdateSubresource(
+//			m_pConstantBuffer.Get(),
 //			0, NULL, &m_ExpObject[iObj].m_cbData, 0, 0);
 //
 //		if (m_ExpObject[iObj].subMesh.size() > 0)
@@ -663,13 +663,13 @@
 //				if (m_ExpObject[iObj].subMesh[iSub].m_pTexture != NULL)
 //				{
 //
-//					m_dxHelper.m_pContext->PSSetShaderResources(0, 1, &m_ExpObject[iObj].subMesh[iSub].m_pTexture->m_pTextureRV);
-//					m_dxHelper.m_pContext->Draw(m_ExpObject[iObj].subMesh[iSub].m_iNumVertex,
+//					m_pContext->PSSetShaderResources(0, 1, &m_ExpObject[iObj].subMesh[iSub].m_pTexture->m_pTextureRV);
+//					m_pContext->Draw(m_ExpObject[iObj].subMesh[iSub].m_iNumVertex,
 //						m_ExpObject[iObj].subMesh[iSub].m_iBaseVertex);
 //				}
 //				else
 //				{
-//					m_dxHelper.m_pContext->Draw(m_ExpObject[iObj].subMesh[iSub].m_iNumVertex,
+//					m_pContext->Draw(m_ExpObject[iObj].subMesh[iSub].m_iNumVertex,
 //						m_ExpObject[iObj].subMesh[iSub].m_iBaseVertex);
 //				}
 //
@@ -680,13 +680,13 @@
 //		{
 //			if (m_ExpObject[iObj].m_pTexture != nullptr)
 //			{
-//				m_dxHelper.m_pContext->PSSetShaderResources(0, 1, &m_ExpObject[iObj].m_pTexture->m_pTextureRV);
-//				m_dxHelper.m_pContext->Draw(m_ExpObject[iObj].m_iNumVertex,
+//				m_pContext->PSSetShaderResources(0, 1, &m_ExpObject[iObj].m_pTexture->m_pTextureRV);
+//				m_pContext->Draw(m_ExpObject[iObj].m_iNumVertex,
 //					m_ExpObject[iObj].m_iBaseVertex);
 //			}
 //			else
 //			{
-//				m_dxHelper.m_pContext->Draw(m_ExpObject[iObj].m_iNumVertex,
+//				m_pContext->Draw(m_ExpObject[iObj].m_iNumVertex,
 //					m_ExpObject[iObj].m_iBaseVertex);
 //			}
 //

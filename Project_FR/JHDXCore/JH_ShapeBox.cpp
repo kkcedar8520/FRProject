@@ -3,7 +3,7 @@
 HRESULT JH_ShapeBox::CreateVertexData()
 {
 	HRESULT hr = S_OK;
-	m_dxHelper.m_iVertexSize = sizeof(PNCT_VERTEX);
+	m_iVertexSize = sizeof(PNCT_VERTEX);
 	m_VertexData.resize(24);
 	// front
 	m_VertexData[0] = PNCT_VERTEX(D3DXVECTOR3(-1.0f, 1.0f, -1.0f), D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR2(0.0f, 0.0f));

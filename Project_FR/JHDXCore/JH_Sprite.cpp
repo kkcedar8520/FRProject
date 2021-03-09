@@ -55,9 +55,9 @@ bool JH_Sprite::PostRender()
 		m_VertexData[2].t = m_uvList[m_iIndex].uv[2];
 		m_VertexData[3].t = m_uvList[m_iIndex].uv[3];
 
-		m_dxHelper.GetDeviceContext()->UpdateSubresource(m_dxHelper.GetVertexBuffer(), 0, nullptr, &m_VertexData.at(0), 0, 0);
+		GetDeviceContext()->UpdateSubresource(GetVertexBuffer(), 0, nullptr, &m_VertexData.at(0), 0, 0);
 	}
-	m_dxHelper.PostRender();
+	PostRender();
 	return true;
 }
 

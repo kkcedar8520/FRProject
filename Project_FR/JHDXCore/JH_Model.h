@@ -125,16 +125,45 @@ struct CB_TF
 class JH_Model
 {
 public:
-	D3DXMATRIX	m_matNormal;
-	D3DXMATRIX	m_matWorld;
-	D3DXMATRIX	m_matView;
-	D3DXMATRIX  m_matProj;
+	UINT	m_iVertexSize;
+	UINT	m_iNumVertex;
+	UINT	m_iNumIndex;
+protected:
+	//DX
+	ComPtr<ID3D11Device>		m_pd3dDevice;
+	ComPtr<ID3D11DeviceContext>	m_pContext;
+
+	ComPtr<ID3D11Buffer>				m_pVertexBuffer;
+	ComPtr<ID3D11Buffer>				m_pIndexBuffer;
+	ComPtr<	ID3D11Buffer>				m_pConstantBuffer;
+	ComPtr<ID3D11InputLayout>			m_pVertexLayout;
+
+
+	ComPtr<ID3D11VertexShader>			m_pVS;
+	ComPtr<ID3D11PixelShader>			m_pPS;
+	ComPtr<ID3D11ShaderResourceView>	m_pSRV;
+
+
+
+	ComPtr<ID3DBlob>					m_pVertexCode;
+	ComPtr<ID3DBlob>					m_pPixelCode;
 public:
-	std::vector<PNCT_VERTEX>	m_VertexData;
-	std::vector<DWORD>			m_IndexData;
-	CB_TF						m_cbData;
+	//Transform
+	D3DXMATRIX							m_matTransform;
+	D3DXMATRIX							m_matNormal;
+	D3DXMATRIX							m_matWorld;
+	D3DXMATRIX							m_matView;
+	D3DXMATRIX							m_matProj;
+public:
+	std::vector<PNCT_VERTEX>			m_VertexData;
+	std::vector<DWORD>					m_IndexData;
+	CB_TF								m_cbData;
 	//Light ContanBuffer;
-	ComPtr<ID3D11Buffer>		m_pLightConstBuffer;
+	ComPtr<ID3D11Buffer>				m_pLightConstBuffer;
+	//Instance
+	ComPtr<ID3D11Buffer>				m_pInstancingBuffer;
+	vector<D3DXMATRIX>					m_matInstanceWorld;
+
 	D3DXVECTOR3 m_Pos;
 
 	//Normal
@@ -151,8 +180,8 @@ public:
 		D3DXVECTOR3 *vTangent);
 	void SetLightConstantBuffer(ID3D11Buffer* Buffer);
 public:
-	virtual void    SetMatrix(D3DXMATRIX* matWorld, D3DXMATRIX* matView, D3DXMATRIX* matProj);
-	bool    Create(ID3D11Device*,
+	virtual void    SetMatrix(D3DXMATRIX* matWorld=nullptr, D3DXMATRIX* matView=nullptr, D3DXMATRIX* matProj=nullptr);
+	bool			Create(ID3D11Device*,
 		ID3D11DeviceContext*,
 		const TCHAR* pszShaderFileName,
 		const TCHAR* pszTexFileName,
@@ -164,6 +193,7 @@ public:
 	virtual HRESULT CreateVertexBuffer();
 	virtual HRESULT CreateIndexBuffer();
 	virtual HRESULT CreateConstantBuffer();
+	virtual HRESULT CreateInstancingBuffer();
 	virtual HRESULT LoadShader(const TCHAR* pszShaderFileName,
 		const CHAR* pszVSName = "VS",
 		const CHAR* pszPSName = "PS");
@@ -171,6 +201,55 @@ public:
 	virtual HRESULT	LoadTexture(const TCHAR* pszTexFileName,const TCHAR* pszNormalTexName=nullptr);
 	virtual bool	UpdateBuffer();
 	virtual bool	UpdateTangentBuffer();
+	
+	virtual void	SetTransform(D3DXMATRIX& Mat);
+	virtual void	SetPos(D3DXVECTOR3 vPos);
+	virtual void	SetScale(D3DXVECTOR3 vScale);
+	virtual void	SetRotation(D3DXMATRIX Mat);
+public:
+
+
+	ID3D11Device*		 GetDevice() { return m_pd3dDevice.Get(); }
+	ID3D11DeviceContext* GetDeviceContext() { return m_pContext.Get(); }
+	ID3D11Buffer*		 GetConstantBuffer() { return m_pConstantBuffer.Get(); }
+	ID3D11Buffer*		 GetVertexBuffer() { return m_pVertexBuffer.Get(); }
+	ID3D11Buffer**		 GetVertexBufferAddress() { return m_pVertexBuffer.GetAddressOf(); }
+
+	ID3D11Buffer*		 GetIndexBuffer() { return m_pIndexBuffer.Get(); }
+	ID3D11Buffer**		 GetIndexBufferAddress() { return m_pIndexBuffer.GetAddressOf(); }
+
+	ID3D11Buffer*		 GetInstanceBuffer() { return m_pInstancingBuffer.Get(); }
+	ID3D11Buffer**		 GetInstanceBufferAddress() { return m_pInstancingBuffer.GetAddressOf(); }
+
+	vector<D3DXMATRIX>&	 GetInstanceMatrix() { return m_matInstanceWorld; }
+
+
+	ID3DBlob*			 GetVertexCode() { return m_pVertexCode.Get(); }
+	ID3DBlob*		     GetPixelCode() { return m_pPixelCode.Get(); }
+
+	ID3DBlob**			 GetVertexCodeAddress() { return m_pVertexCode.GetAddressOf(); }
+	ID3DBlob**		     GetPixelCodeAddress() { return m_pPixelCode.GetAddressOf(); }
+
+	ID3D11VertexShader*	 GetVertexShader() { return m_pVS.Get(); }
+	ID3D11PixelShader*   GetPixelShader() { return m_pPS.Get(); }
+
+	ID3D11VertexShader** GetVertexShaderAddress() { return m_pVS.GetAddressOf(); }
+	ID3D11PixelShader**  GetPixelShaderAddress() { return m_pPS.GetAddressOf(); }
+
+	ID3D11InputLayout**  GetLayoutAdress() { return m_pVertexLayout.GetAddressOf(); }
+
+
+	ID3D11ShaderResourceView*  GetShaderResourceView() { return m_pSRV.Get(); }
+	ID3D11ShaderResourceView** GetShaderResourceViewAddress() { return m_pSRV.GetAddressOf(); }
+
+	//Set
+	void	SetConstantBuffer(ID3D11Buffer* ConstantBuffer) { m_pConstantBuffer = ConstantBuffer; }
+	void	SetDevice(ID3D11Device* pDevice) { m_pd3dDevice = pDevice; }
+	void	SetDeviceContext(ID3D11DeviceContext* pContext) { m_pContext = pContext; }
+	void	SetShaderResourceView(ID3D11ShaderResourceView* srv) { m_pSRV = srv; }
+
+	//
+
 public:
 	virtual bool Init();
 	virtual bool Frame();
@@ -178,8 +257,7 @@ public:
 	virtual bool Release();
 	virtual	bool PostRender();
 	virtual bool PreRender();
-public:
-	JH_DXHelperEX	m_dxHelper;
+	
 public:
 	JH_Model();
 	virtual ~JH_Model();

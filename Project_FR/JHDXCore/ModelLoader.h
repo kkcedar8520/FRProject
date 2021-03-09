@@ -20,6 +20,7 @@ private:
 	vector<asMaterial>				m_Materials;	//메테리얼 정보
 	vector<asMesh>					m_meshes;        //매쉬 정보
 
+	
 
 	//vector<pair<string, Bone>>		m_Bones;        //뼈 정보
 
@@ -30,7 +31,7 @@ private:
 	ID3D11Device*					m_pDevice;
 	Assimp::Importer * importer;
 
-	
+	JH_ColliderBox					m_ColiderBox;
 
 	std::wstring WTextureName;
 
@@ -43,7 +44,7 @@ public:
 
 	
 
-	void ModelLoad(const string& fileName,JH_Obj& Obj,ID3D11Device* pDevice);
+	void ModelLoad(const string& fileName,ID3D11Device* pDevice);
 	//Animation Export
 	void ExportAnimClip(const std::string& fileName);
 	void ReadClipData(int AnimIndex);

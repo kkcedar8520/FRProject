@@ -1,6 +1,8 @@
 #pragma once
-#include"JH_Mesh.h"
-#include"BinaryReader.h"
+
+#include"JHCamera.h"
+#include"JH_ColliderBox.h"
+#include"JH_ObjData.h"
 struct SCENEINFO
 {
 	int FirstFrame;
@@ -17,45 +19,66 @@ class JH_Obj
 private:
 
 	SCENEINFO m_Scene;
+	int m_ID;
+	std::string						m_Name;
 
-	std::vector<JH_Mesh>			m_meshes;
-	std::vector<JH_Material>		m_materials;
-	std::vector<JH_Bone>			m_Bones;
+
 		
 	CB_TF							m_sCBTF;
 	ComPtr<ID3D11Buffer>			m_CBTF;
 
-	D3DXMATRIX						m_matWorld;
+	D3DXMATRIX						m_matTransform;
 	D3DXMATRIX						m_matView;
 	D3DXMATRIX						m_matProj;
 	D3DXMATRIX						m_matNormal;
+	//MeshBoneMatarial
+	JH_ObjData*						m_ObjData;
 	
 	//Colider
-	JH_Box							m_ColiderBox;
+	JH_ColliderBox					m_ColiderBox;
+	//Camera
+	JHCamera*						m_pCamera;
 public:
 
 	//Data
-	std::vector<JH_Material>& GetMaterial() { return m_materials; }
-	std::vector<JH_Mesh>& GetMesh() { return m_meshes; }
-	std::vector<JH_Bone>& GetBone() { return m_Bones; }
+	std::vector<JH_Material>& GetMaterial() { return m_ObjData->GetMaterial(); }
+	std::vector<JH_Mesh>& GetMesh() { return m_ObjData->GetMesh(); }
+	std::vector<JH_Bone>& GetBone() { return m_ObjData->GetBone(); }
+	//Name
+	std::string& GetName() { return m_Name; }
+	//Setting
+	D3DXMATRIX& GetTransform() { return m_matTransform; }
+	int			GetID() { return m_ID; }
+	void		SetID(int ID) { m_ID=ID; }
 	//
-	D3DXMATRIX& GetTransform() { return m_matWorld; }
-
+	void		SetCamera(JHCamera* Camera) { m_pCamera = Camera; }
+	JHCamera*	GetCamera()					{ return m_pCamera; }
+	//
+	void			CreateColiderBox(D3DXMATRIX& mat);
+	JH_ColliderBox& GetColliderBox() { return m_ColiderBox; }
+public:
+	//Craete
 	bool ReadFile(const std::string file);
 	void BindingMesh();
 public:
-	JH_Material& MaterialFindByName(std::wstring Name);
-	JH_Material& MaterialFindByIndex(int  id);
+	JH_Material MaterialFindByName(std::wstring Name);
+	JH_Material MaterialFindByIndex(int  id);
 
-	JH_Bone& BoneFindByName(std::wstring Name);
-	JH_Bone& BoneFindByIndex(int  id);
+	JH_Bone BoneFindByName(std::wstring Name);
+	JH_Bone BoneFindByIndex(int  id);
 
-	JH_Mesh& MeshFindByName(std::wstring Name);
-	JH_Mesh& MeshFindByIndex(int  id);
+	JH_Mesh MeshFindByName(std::wstring Name);
+	JH_Mesh MeshFindByIndex(int  id);
 public:
-	void SetTransform(D3DXMATRIX*  world =nullptr, D3DXMATRIX*  View=nullptr, D3DXMATRIX*  Proj=nullptr);
+	
+	void SetMatrix(D3DXMATRIX* matWorld = nullptr, D3DXMATRIX* matView = nullptr, D3DXMATRIX* matProj = nullptr);
+	void SetTransform(D3DXMATRIX& Mat);
+	void SetPos(D3DXVECTOR3 vPos);
+	void SetScale(D3DXVECTOR3 vScale);
+	void SetRotation(D3DXMATRIX Mat);
 	void UpdateTarnsformCB();
 	void CreateTransformCB();
+	void RenderCollider();
 public:
 	virtual bool Init();
 	virtual bool Frame();

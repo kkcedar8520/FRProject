@@ -119,7 +119,7 @@ INT TextureMgr::Add(ID3D11Device*	 pDevice, const TCHAR *pFileName, const TCHAR*
 		memset(szFileName, 0, sizeof(TCHAR) * MAX_PATH);
 		if (_tcsicmp(Ext, _T(".tga")) == 0)
 		{
-			_tcscpy(Ext, _T(".dds"));
+			_tcscpy(Ext, _T(".bmp"));
 		}
 		_stprintf_s(szFileName, _T("%s%s"), FName, Ext);
 
