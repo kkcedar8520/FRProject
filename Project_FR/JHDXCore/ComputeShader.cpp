@@ -116,3 +116,17 @@ void 	ComputeShader::RunComputeShaderSplatting(UINT X, UINT Y,UINT Z)
 
 
 }
+bool ComputeShader::Release()
+{
+	m_pCS.ReleaseAndGetAddressOf();
+	m_pStructureBF.ReleaseAndGetAddressOf();
+	m_pBufSrv.ReleaseAndGetAddressOf();
+	pUAVTexture.ReleaseAndGetAddressOf();
+	pReadTexture.ReleaseAndGetAddressOf();
+	pWriteTexture.ReleaseAndGetAddressOf();
+
+	m_pUAV.ReleaseAndGetAddressOf();
+	m_pReadSrv.ReleaseAndGetAddressOf();
+	m_pDescSrv.ReleaseAndGetAddressOf();
+	return false;
+}

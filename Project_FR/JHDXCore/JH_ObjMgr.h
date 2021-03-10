@@ -21,6 +21,7 @@
 		JH_Obj*		FindObjectByIndex(int Index);
 		int			LoadData(const std::string);
 		JH_ObjData*	GetDataPtr(int Index);
+		JH_ObjData*	GetDataPtr(std::string str);
 		JH_Obj*		GetPtr(int Index) { return m_ObjectList[Index].get(); }
 		void		SetCamera(int Index, JHCamera* Camera);
 	public:

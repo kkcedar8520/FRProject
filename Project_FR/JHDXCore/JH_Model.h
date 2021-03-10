@@ -149,6 +149,7 @@ protected:
 	ComPtr<ID3DBlob>					m_pPixelCode;
 public:
 	//Transform
+	D3DXMATRIX							m_matFinal;
 	D3DXMATRIX							m_matTransform;
 	D3DXMATRIX							m_matNormal;
 	D3DXMATRIX							m_matWorld;

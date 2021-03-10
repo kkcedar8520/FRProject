@@ -29,11 +29,11 @@
 		return-1;
 	}
 
-	void JH_Map::MapUpDown(UINT Index, float Value)
+	void JH_Map::UpDownMap(UINT Index, float Value)
 	{
 		m_VertexData[Index].p.y += Value  ;
 	}
-	void JH_Map::MapFlatting(UINT Index)
+	void JH_Map::FlattingMap(UINT Index)
 	{
 		m_VertexData[Index].p.y = 0;
 	}

@@ -8,6 +8,8 @@ public:
 	void	SetPos(D3DXVECTOR3 vPos)override;
 	void	SetScale(D3DXVECTOR3 vScale)override;
 	void	SetRotation(D3DXMATRIX Mat)override;
+public:
+	bool	Frame()override;
 
 	void UpdateBox();
 	void UpdateVB();

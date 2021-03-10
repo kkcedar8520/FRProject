@@ -9,7 +9,8 @@ bool Project_FR::Init()
 	
 	//test.Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/DefaultShader.txt",L"cncr25S.bmp");
 	TestObj.ReadFile("Box");
-	TestObj.SetCamera(m_pMainCamera.get());
+
+	
 	m_pMainCamera->CreateViewMatrix(D3DXVECTOR3(0, 0, -50.0f), D3DXVECTOR3(0, 0, 0));
 	m_pMainCamera->UpdateBasisVector();
 
@@ -17,7 +18,11 @@ bool Project_FR::Init()
 
 	float fAspect = (float)g_rtClient.right / g_rtClient.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
+	TestObj.SetCamera(m_pMainCamera.get());
+	TestObj.GetColliderBox().SetScale(D3DXVECTOR3(5, 5 ,5));
+	TestObj.GetColliderBox().SetPos(D3DXVECTOR3(0, 5, 0));
 	
+	TestObj.SetPos(D3DXVECTOR3(10, 10, 10));
 	return true;
 }
 bool Project_FR::Frame()
@@ -39,7 +44,7 @@ bool Project_FR::Render()
 {
 	TestObj.Render();
 	TestObj.RenderCollider();
-//	test.Render();
+
 	return true;
 }
 bool Project_FR::Release()

@@ -1,6 +1,6 @@
 #include"ToolCore.h"
 
-//bool ToolCore::MapUpDown()
+//bool ToolCore::UpDownMap()
 //{
 //	HQuadTree* pQuadTree=I_MapMgr.GetCurrentQuadTree().get();
 //	JH_Node* pNode = nullptr;
@@ -70,7 +70,7 @@
 //					float value = cos(fDet)*g_fProgramTime;
 //					if (m_Sphere.Radius > fDistance)
 //					{
-//						pQuadTree->m_pMap->MapUpDown(i0, value);
+//						pQuadTree->m_pMap->UpDownMap(i0, value);
 //						
 //
 //						//NorMalUpdate

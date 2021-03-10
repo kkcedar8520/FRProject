@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ToolCore.h"
-void ToolCore::MapFlatting()
+void ToolCore::FlattingMap()
 {
 	HQuadTree* pQuadTree = I_MapMgr.GetCurrentQuadTree().get();
 	JH_Node* pNode = nullptr;
@@ -35,7 +35,7 @@ void ToolCore::MapFlatting()
 			float value = cos(fDet)*g_SecondPerFrame;
 			if (m_Sphere.Radius > fDistance)
 			{
-				pQuadTree->m_pMap->MapFlatting(i0);
+				pQuadTree->m_pMap->FlattingMap(i0);
 
 
 				//NorMalUpdate
@@ -63,7 +63,7 @@ void ToolCore::MapFlatting()
 
 	return ;
 }
-bool ToolCore::MapUpDown()
+bool ToolCore::UpDownMap()
 {
 	HQuadTree* pQuadTree = I_MapMgr.GetCurrentQuadTree().get();
 	JH_Node* pNode = nullptr;
@@ -98,7 +98,7 @@ bool ToolCore::MapUpDown()
 			float value = cos(fDet)*g_SecondPerFrame;
 			if (m_Sphere.Radius > fDistance)
 			{
-				pQuadTree->m_pMap->MapUpDown(i0, value);
+				pQuadTree->m_pMap->UpDownMap(i0, value);
 
 
 				//NorMalUpdate
@@ -126,12 +126,12 @@ bool ToolCore::MapUpDown()
 
 	return true;
 }
-bool ToolCore::MapSplatting()
+bool ToolCore::SplattingMap()
 {
 
-	I_MapMgr.GetCurrentQuadTree()->FindSelectPoint();
-	if (I_MapMgr.GetCurrentQuadTree()->m_SelectNodeList.size() <= 0)return false;
+	if (!I_MapMgr.GetCurrentQuadTree()->FindSelectPoint()) { return false; }
 	m_Sphere.vCenter = I_Select.m_vIntersection;
+
 
 	//월드좌표를 텍스쳐 좌표 uv 값으로 변경
 	m_CSBuf.vPickPos = D3DXVECTOR3(m_Sphere.vCenter.x + ((m_CSBuf.iRow) / 2.0f),
@@ -143,23 +143,34 @@ bool ToolCore::MapSplatting()
 	
 	return true;
 }
-void ToolCore::ObjectCollocate()
+void ToolCore::CollocateObject()
 {
 	int IObj;
+
 	//노드 교점찾기
-	I_MapMgr.GetCurrentQuadTree()->FindSelectPoint();
-	if (I_MapMgr.GetCurrentQuadTree()->m_SelectNodeList.size() <= 0)return ;
+
+	if (!I_MapMgr.GetCurrentQuadTree()->FindSelectPoint()) { return; }
 	m_Sphere.vCenter = I_Select.m_vIntersection;
 
 	IObj = I_ObjMgr.CreateObject(m_ObjFileName);
 	 if(IObj==-1) { return ; }
 	 JH_Obj* pObj=I_ObjMgr.GetPtr(IObj);
 	 pObj->SetPos(m_Sphere.vCenter);
+	 pObj->GetColliderBox().SetPos(D3DXVECTOR3(0, 5, 0));
+	 pObj->GetColliderBox().SetScale(D3DXVECTOR3(5, 5, 5));
+
+
+
 
 	I_ObjMgr.SetCamera(IObj,m_pMainCamera.get());
 	//노드에 저장실패시 오브젝트 삭제
 	if (!I_MapMgr.GetCurrentQuadTree()->ObjectAddNode(pObj))
 		I_ObjMgr.DeleteObject(IObj);
+}
+void ToolCore::SelectObject()
+{
+	if (!I_MapMgr.GetCurrentQuadTree()->FindSelectPoint()) { return; }
+	m_Sphere.vCenter = I_Select.m_vIntersection;
 }
 bool ToolCore::Init()
 {
@@ -194,26 +205,33 @@ bool ToolCore::Frame()
 		case TOOLSTATE::HEIGHT:
 		{
 			if(G_Input.KeyCheck(VK_LBUTTON))
-			MapUpDown();
+			UpDownMap();
 			break;
 		}
 		case TOOLSTATE::SPLATTING:
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON))
-			MapSplatting();
+			SplattingMap();
 			break;
 		}
 		case TOOLSTATE::FLATTING:
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON))
-				MapFlatting();
+				FlattingMap();
 			break;
 		}
+		
 		case TOOLSTATE::OBJECTNEW:
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON)==KEY_PUSH)
-				ObjectCollocate();
+				CollocateObject();
 				break;
+		}
+		case TOOLSTATE::OBJECTEDIT:
+		{
+			if (G_Input.KeyCheck(VK_LBUTTON) == KEY_PUSH)
+				SelectObject();
+			break;
 		}
 		
 		default:

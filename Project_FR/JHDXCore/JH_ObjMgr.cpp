@@ -47,7 +47,7 @@
 			m_ObjDataList.insert(std::make_pair(m_ID, pObj));
 			return m_ID;
 		}
-
+		return -1;
 
 	}
 	JH_ObjData*	JH_ObjMgr::GetDataPtr(int Index)
@@ -59,6 +59,18 @@
 
 		return nullptr;
 
+	}
+	JH_ObjData*	JH_ObjMgr::GetDataPtr(std::string str)
+	{
+
+		for (auto ObjData : m_ObjDataList)
+		{
+			if (ObjData.second->GetName() == str)
+			{
+				return ObjData.second.get();
+			}
+		}
+		return nullptr;
 	}
 	void JH_ObjMgr::SetCamera(int Index, JHCamera* Camera)
 	{
@@ -83,6 +95,7 @@
 	{
 		for (auto Obj : m_DrawObjectList)
 		{
+			Obj->RenderCollider();
 			Obj->Render();
 		}
 		return true;

@@ -37,38 +37,30 @@ void JH_ColliderBox::UpdateBox()
 
 	UpdateVB();
 }
-
+bool JH_ColliderBox::Frame()
+{
+	JH_Box::CreateBox(m_matFinal);
+	return true;
+}
 void	JH_ColliderBox::SetTransform(D3DXMATRIX& Mat)
 {
-	m_matWorld = Mat;
-	D3DXVECTOR3 vS, vP;
-	D3DXQUATERNION qR;
-	D3DXMATRIX mR, mS;
-	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matWorld);
-
-	D3DXMatrixRotationQuaternion(&mR, &qR);
-	JH_Box::SetScale(vS);
-	JH_Box::SetPosition(vP);
-	JH_Box::SetRotation(mR);
-	UpdateBox();
+	m_matTransform = Mat;
+	JH_Box::CreateBox(m_matTransform);
 }
 void	JH_ColliderBox::SetPos(D3DXVECTOR3 vPos)
 {
 	JH_Model::SetPos(vPos);
 	JH_Box::SetPosition(vPos);
-	UpdateBox();
 }
 void	JH_ColliderBox::SetScale(D3DXVECTOR3 vScale)
 {
 	JH_Model::SetScale(vScale);
 	JH_Box::SetScale(vScale);
-	UpdateBox();
 }
 void	JH_ColliderBox::SetRotation(D3DXMATRIX Mat)
 {
 	JH_Model::SetRotation(Mat);
 	JH_Box::SetRotation(Mat);
-	UpdateBox();
 }
 void JH_ColliderBox::UpdateVB()
 {

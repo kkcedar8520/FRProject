@@ -29,7 +29,7 @@ class JH_Map;
 		std::map<int,JH_Obj*>						m_ObjectList;
 		std::vector<JH_Node*>						m_SelectNodeList;
 		std::vector< std::shared_ptr<JH_MapObj>>	m_SelectObjList;
-		std::shared_ptr<JH_MapObj>					m_pSelectObj;
+		
 
 		JH_Node*									m_pNearPointNode;
 		
@@ -58,9 +58,9 @@ class JH_Map;
 
 		
 		JH_Node* CreateNode(JH_Node* pParent, DWORD dwTL, DWORD dwTR, DWORD dwBL, DWORD dwBR);
-		void GetSelectNode(JH_Node* pNode);
-		void GetSelectObj(JH_Node* pNode);
-		void FindSelectPoint();
+		void	GetSelectNode(JH_Node* pNode);
+		JH_Obj*	GetSelectObj(JH_Node* pNode);
+		bool FindSelectPoint();
 
 		bool ObjectAddNode(JH_Obj* Obj);
 		bool GetCotainObjNode(JH_Node* pNode);

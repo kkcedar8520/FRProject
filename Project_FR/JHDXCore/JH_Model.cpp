@@ -20,9 +20,32 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	DX::GetContext()->UpdateSubresource(
 		GetConstantBuffer(),
 		0, NULL, &m_cbData, 0, 0);
-
 	
-	D3DXMatrixTranspose(&m_cbData.matWorld, &(m_matWorld*m_matTransform));//GPU의축과 다이렉트의 축이다름
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR, mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matTransform);
+
+
+	D3DXMatrixRotationQuaternion(&mR, &qR);
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matTransform = mS * mR;
+	m_matTransform._41 = vP.x;
+	m_matTransform._42 = vP.y;
+	m_matTransform._43 = vP.z;
+
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matWorld);
+
+
+	D3DXMatrixRotationQuaternion(&mR, &qR);
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matWorld = mS * mR;
+	m_matWorld._41 = vP.x;
+	m_matWorld._42 = vP.y;
+	m_matWorld._43 = vP.z;
+	m_matFinal= m_matTransform*m_matWorld;
+	
+	D3DXMatrixTranspose(&m_cbData.matWorld, &m_matFinal);//GPU의축과 다이렉트의 축이다름
 	D3DXMatrixTranspose(&m_cbData.matView, &m_matView);//
 	D3DXMatrixTranspose(&m_cbData.matProj, &m_matProj);//
 	
@@ -532,6 +555,7 @@ JH_Model::JH_Model()
 	m_pPS = nullptr;
 	m_pSRV = nullptr;
 
+	D3DXMatrixIdentity(&m_matFinal);
 	D3DXMatrixIdentity(&m_matTransform);
 	D3DXMatrixIdentity(&m_matWorld);
 	D3DXMatrixIdentity(&m_matView);

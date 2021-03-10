@@ -232,5 +232,8 @@
     <Text Include="..\..\Data\shader\LightShader.txt">
       <Filter>Shader</Filter>
     </Text>
+    <Text Include="..\..\Data\shader\BoxShader.txt">
+      <Filter>Shader\리소스 파일</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ class JH_ObjData
 {
 	
 public:
-	std::string									m_Name;
+	std::string						m_Name;
 	std::vector<JH_Mesh>			m_meshes;
 	std::vector<JH_Material>		m_materials;
 	std::vector<JH_Bone>			m_Bones;

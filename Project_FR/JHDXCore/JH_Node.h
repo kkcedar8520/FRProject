@@ -10,7 +10,7 @@
 		JH_PLANE											m_BoxPlane[6];
 		std::vector<int>									m_ObjListIndexList;
 		std::vector<JH_Node*>								m_NeighborNodeList;
-		std::map<int, std::shared_ptr<JH_Obj >>				m_ObjList;
+		std::map<int, JH_Obj*>								m_ObjList;
 		BOOL												m_isLeaf;
 		DWORD												m_dwDepth;
 		DWORD												m_dwCorner[4];// 꼭지점 네점

@@ -140,6 +140,7 @@ void JH_MapForm::OnBnClickedOk()
 
 	I_MapMgr.SetCamera(pApp->m_Core.m_pMainCamera.get());
 
+	pApp->m_Core.m_CS.Release();
 	pApp->m_Core.m_CS.CreateComputeShader(L"../../data/shader/ComputeShader.hlsl","CSMAIN");
 	pApp->m_Core.m_CSBuf.iCol = I_MapMgr.GetCurrentMap()->m_pMap->m_iColumNum - 1;
 	pApp->m_Core.m_CSBuf.iRow = I_MapMgr.GetCurrentMap()->m_pMap->m_iRowNum - 1;

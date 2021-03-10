@@ -23,6 +23,7 @@ public:
 	//Excute
 	void 	RunComputeShaderSplatting(UINT X, UINT Y, UINT Z);
 
+	bool	Release();
 };
 
 

@@ -524,12 +524,12 @@
 	//	m_GMDataList.push_back(m_CurrentMap);
 
 	//}
-	INT JH_MapMgr::AddGameMap(std::shared_ptr<JH_Map> pMap, std::shared_ptr<HQuadTree> pQuadTree)
+	INT JH_MapMgr::AddGameMap(std::shared_ptr<JH_Map> pMap)
 	{
 		std::shared_ptr <LEVEL>  GM;
 		GM = std::make_shared<LEVEL>();
 		GM->m_pMap = pMap;
-		GM->m_pQuadTree = pQuadTree;
+		
 
 		m_CurrentMap = GM;
 		
@@ -582,7 +582,7 @@
 		pLevel->MapFileName = MapName;
 		
 		pLevel->m_pMap = make_shared<JH_Map>();
-		pLevel->m_pQuadTree = make_shared<HQuadTree>();
+
 	
 		
 		pLevel->m_pMap->CreateMap(iWidth, iHeight, iCellCount, iCellSize, pTexturFileName, pNormalMapFileName, pHeightMapFileName);

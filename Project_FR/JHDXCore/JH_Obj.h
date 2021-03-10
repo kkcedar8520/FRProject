@@ -28,6 +28,7 @@ private:
 	ComPtr<ID3D11Buffer>			m_CBTF;
 
 	D3DXMATRIX						m_matTransform;
+	D3DXMATRIX						m_matWorld;
 	D3DXMATRIX						m_matView;
 	D3DXMATRIX						m_matProj;
 	D3DXMATRIX						m_matNormal;

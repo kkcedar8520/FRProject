@@ -195,9 +195,6 @@
     <ClInclude Include="JH_SkyBox.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="ComputeShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="JH_ObjMgr.h">
       <Filter>Obj</Filter>
     </ClInclude>
@@ -212,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="JH_ObjData.h">
       <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +347,6 @@
     <ClCompile Include="JH_DXHelperEX.cpp">
       <Filter>소스 파일\dx</Filter>
     </ClCompile>
-    <ClCompile Include="ComputeShader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="JH_ObjMgr.cpp">
       <Filter>Obj</Filter>
     </ClCompile>
@@ -361,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="JH_ObjData.cpp">
       <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

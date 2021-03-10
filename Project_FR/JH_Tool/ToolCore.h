@@ -28,6 +28,10 @@ enum class TOOLSTATE
 class ToolCore:public JHDXCore
 {
 public:
+	float m_fYaw=0.0f;
+	float m_fPitch=0.0f;
+	float m_fRoll=0.0f;
+public:
 	JH_ShapeLine	m_DebugLine;
 	ComputeShader   m_CS;
 	CSBUFF			m_CSBuf;
@@ -40,10 +44,11 @@ public:
 	//
 	std::string	m_ObjFileName;
 public:
-	bool MapUpDown();
-	bool MapSplatting();
-	void MapFlatting();
-	void ObjectCollocate();
+	bool UpDownMap();
+	bool SplattingMap();
+	void FlattingMap();
+	void CollocateObject();
+	void SelectObject();
 	JH_Node* ClikNode();
 public:
 

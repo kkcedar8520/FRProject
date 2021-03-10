@@ -138,17 +138,17 @@
 		{
 			//오브젝트들이 있을땐 오브젝트 크기에맞춰 AABX 박스를 만들어줘야함
 			//그렇지않으면 캐릭터를 찍어도 인식하지못함
-			D3DXVECTOR3 vAxis[3];
-			std::map<int, std::shared_ptr<JH_MapObj>>::iterator iter;
-		/*	for (iter = pNode->m_ObjList.begin(); iter != pNode->m_ObjList.end(); iter++)
+		/*	D3DXVECTOR3 vAxis[3];
+			std::map<int, JH_Obj*>::iterator iter;
+			for (iter = pNode->m_ObjList.begin(); iter != pNode->m_ObjList.end(); iter++)
 			{
-				if (pNode->m_Box.vMin.y > iter->second->GetObj()->GetCharBox().vMin.y)
+				if (pNode->m_Box.vMin.y > iter->second->GetColliderBox().vMin.y)
 				{
-					pNode->m_Box.vMin.y = iter->second->GetObj()->GetCharBox().vMin.y;
+					pNode->m_Box.vMin.y = iter->second->GetColliderBox().vMin.y;
 				}
-				if (pNode->m_Box.vMax.y < iter->second->GetObj()->GetCharBox().vMax.y)
+				if (pNode->m_Box.vMax.y < iter->second->GetColliderBox().vMax.y)
 				{
-					pNode->m_Box.vMax.y = iter->second->GetObj()->GetCharBox().vMax.y;
+					pNode->m_Box.vMax.y = iter->second->GetColliderBox().vMax.y;
 				}
 			}*/
 		}
@@ -529,14 +529,14 @@
 
 
 	}
-	void HQuadTree::FindSelectPoint()
+	bool HQuadTree::FindSelectPoint()
 	{
 		JH_Node* pNode = nullptr;
 		GetSelectNode(m_pRootNode);
 
 
 		D3DXVECTOR3 v0, v1, v2;
-		if (m_SelectNodeList.size() <= 0) return ;
+		if (m_SelectNodeList.size() <= 0) return  false;
 		//노드들에서 평면 교점찾기
 		for (int iNode = 0; iNode <
 			m_SelectNodeList.size(); iNode++)
@@ -563,12 +563,13 @@
 				{
 					pNode =m_SelectNodeList[iNode];
 					m_SelectNodeList.clear();
-
 					m_SelectNodeList.emplace_back(pNode);
-					break;
+					return true;
 				}
 			}
 		}
+		return false;
+		m_SelectNodeList.clear();
 	}
 
 	void HQuadTree::GetSelectNode(JH_Node* pNode)
@@ -606,31 +607,31 @@
 		return true;
 	}
 
-	void HQuadTree::GetSelectObj(JH_Node* pNode)
+	JH_Obj* HQuadTree::GetSelectObj(JH_Node* pNode)
 	{
-		if (pNode == nullptr) return;
+		if (pNode == nullptr) return nullptr;
 
 
-
-		/*for (auto Obj : m_ObjectList)
+		JH_Obj* pObj = nullptr;
+		for (auto Obj : m_ObjectList)
 		{
-			JH_Box Box = Obj.second->GetObj()->GetCharBox();
+			JH_Box& Box = Obj.second->GetColliderBox();
 
 			if (I_Select.OBBToRay(&Box))
 			{
-				float vInterLength = D3DXVec3Length(&(I_Select.m_vIntersection - m_pMap->m_pCamera->m_Pos));  ///잠시 주석처리
+				float vInterLength = D3DXVec3Length(&(I_Select.m_vIntersection -m_pMap->GetCamera()->m_vPos));  ///잠시 주석처리
 				if (m_fInterval > vInterLength)
 				{
 					m_fInterval = vInterLength;
-					m_pSelectObj = Obj.second;
+					pObj = Obj.second;
 
 				}
 
 			}
 		}
-*/
+
 		m_fInterval = 9999999.0f;
-		return;
+		return pObj;
 	}
 
 	bool HQuadTree::ObjectAddNode( JH_Obj* Obj)
@@ -647,8 +648,7 @@
 			if (pNode)
 			{
 
-				//Obj->SetQuadIndex(pNode->m_iQuadTreeIndex);
-				//Obj->SetNode(pNode);
+				//CreateBB(pNode);
 				pNode->m_ObjList.insert(make_pair(Obj->GetID(), Obj));
 				m_ObjectList.insert(make_pair(Obj->GetID(), Obj));
 				b = true;

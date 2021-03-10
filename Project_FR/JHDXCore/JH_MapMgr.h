@@ -80,7 +80,6 @@ struct LEVEL
 {
 	std::wstring MapFileName;
 	std::shared_ptr<JH_Map> m_pMap;
-	std::shared_ptr<HQuadTree> m_pQuadTree;
 	std::map <int, std::shared_ptr<JH_Obj>> m_ObjectList;
 };
 class JH_MapMgr :public Singleton<JH_MapMgr>
@@ -102,7 +101,7 @@ public:
 	TCHAR				m_tmpBuffer[MAX_PATH];
 public:
 	INT	AddMap(const TCHAR* LoadFile);
-	INT AddGameMap(std::shared_ptr<JH_Map> pMap, std::shared_ptr<HQuadTree> pQuadTree);
+	INT AddGameMap(std::shared_ptr<JH_Map> pMap);
 	inline	void SetCurrentMap(std::shared_ptr<LEVEL> pMap) { m_CurrentMap = pMap; };
 	inline	std::shared_ptr<LEVEL> GetCurrentMap() { return m_CurrentMap; };
 	inline	void SetMap(std::shared_ptr<JH_Map> pMap) { m_CurrentMap->m_pMap = pMap; }

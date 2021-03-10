@@ -121,8 +121,9 @@
 		void		SetCharPos(D3DXVECTOR3 vPos) { m_CharPos = vPos; }
 	//
 		void		SetCamera(JHCamera* Camera) { m_pCamera = Camera; }
-		void		MapUpDown(UINT Index, float Value);
-		void		MapFlatting(UINT Index);
+		JHCamera*	GetCamera()					{ return m_pCamera; }
+		void		UpDownMap(UINT Index, float Value);
+		void		FlattingMap(UINT Index);
 	public:
 	
 	public:
