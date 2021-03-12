@@ -502,7 +502,7 @@
 			m_SkyBox->Render();
 			JH_Model::PreRender();
 			m_QuadTree->Render();
-			m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
+			//m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
 		}
 		else
 		{

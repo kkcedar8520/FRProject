@@ -19,10 +19,10 @@ bool Project_FR::Init()
 	float fAspect = (float)g_rtClient.right / g_rtClient.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
 	TestObj.SetCamera(m_pMainCamera.get());
-	TestObj.GetColliderBox().SetScale(D3DXVECTOR3(5, 5 ,5));
-	TestObj.GetColliderBox().SetPos(D3DXVECTOR3(0, 5, 0));
-	
-	TestObj.SetPos(D3DXVECTOR3(10, 10, 10));
+	TestObj.GetColliderBox().SetScale(D3DXVECTOR3(5,5,5));
+	TestObj.SetScale(D3DXVECTOR3(1, 2, 1));
+
+	m_DebugLine.Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/LineShader.txt", nullptr);
 	return true;
 }
 bool Project_FR::Frame()
@@ -30,6 +30,7 @@ bool Project_FR::Frame()
 
 
 
+	m_DebugLine.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 
 
 	TestObj.Frame();
@@ -42,6 +43,13 @@ bool Project_FR::Frame()
 }
 bool Project_FR::Render()
 {
+
+	m_DebugLine.Draw(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(100, 0, 0), D3DXVECTOR4(1, 0, 0, 1));
+	m_DebugLine.Draw(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 100, 0), D3DXVECTOR4(0, 1, 0, 1));
+	m_DebugLine.Draw(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 100), D3DXVECTOR4(0, 0, 1, 1));
+
+
+	TestObj.Frame();
 	TestObj.Render();
 	TestObj.RenderCollider();
 

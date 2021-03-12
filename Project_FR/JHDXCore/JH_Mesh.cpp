@@ -110,7 +110,7 @@ void JH_Mesh::Binding(JH_Obj* Obj)
 	std::wstring tex=Obj->MaterialFindByName(m_MaterialName).Diffuse.c_str();
 	JH_Model::Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/ObjShader.hlsl", tex.c_str());
 
-	m_matWorld = m_Bone.GetWorld();
+	//m_matWorld = m_Bone.GetWorld();
 	m_matTransform= m_Bone.GetWorld();
 }
 

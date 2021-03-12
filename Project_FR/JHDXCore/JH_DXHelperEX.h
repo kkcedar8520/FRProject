@@ -28,6 +28,8 @@ namespace DX
 	ComPtr<ID3D11DeviceContext> GetContext();
 	
 	void SetDXGlobal(ComPtr<ID3D11Device>	pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dDeviceContext);
+
+	D3DXMATRIX DecomposeMtrixMultiply(D3DXMATRIX  mat1, D3DXMATRIX  mat2);
 }
 
 class JH_DXHelperEX

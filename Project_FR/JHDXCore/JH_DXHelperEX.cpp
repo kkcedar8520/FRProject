@@ -318,6 +318,36 @@ namespace DX
 
 	}
 
+	D3DXMATRIX DecomposeMtrixMultiply(D3DXMATRIX  mat1, D3DXMATRIX  mat2)
+	{
 
+
+		D3DXVECTOR3 vS, vP, vP1,vP2;
+		D3DXQUATERNION qR;
+		D3DXMATRIX mR, mS,mR1,mS1;
+		D3DXMatrixDecompose(&vS, &qR, &vP, &mat1);
+
+
+		D3DXMatrixRotationQuaternion(&mR, &qR);
+		D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+
+
+		D3DXMatrixDecompose(&vS, &qR, &vP1, &mat2);
+
+
+		D3DXMatrixRotationQuaternion(&mR1, &qR);
+		D3DXMatrixScaling(&mS1, vS.x, vS.y, vS.z);
+		mat1 = mS * mR*mS1*mR1;
+		mat1._41 = vP.x+vP1.x;
+		mat1._42 = vP.y+vP1.y;
+		mat1._43 = vP.z+vP1.z;
+
+		return mat1 ;
+
+
+
+
+	
+	}
 	
 }

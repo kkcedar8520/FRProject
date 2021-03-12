@@ -49,16 +49,17 @@ bool JH_Obj::Frame()
 	m_ColiderBox.SetMatrix(&m_matTransform, &m_pCamera->m_matView, &m_pCamera->m_matProj);
 	m_ColiderBox.Frame();
 
-	UpdateTarnsformCB();
+	//UpdateTarnsformCB();
 	return true;
 }
 bool JH_Obj::Render()
 {
 	UINT offset = 0;
 	UINT Stride = 0;
+	SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
 	for (auto mesh : m_ObjData->GetMesh())
 	{
-		SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
+
 		mesh.Render();
 	}
 	return true;
@@ -147,7 +148,7 @@ void JH_Obj::SetMatrix(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Proj)
 	//메쉬들의 트랜스폼 세팅
 	for(auto& mesh: m_ObjData->GetMesh())
 	{
-		D3DXMATRIX matFinal = m_matWorld * m_matTransform;
+		D3DXMATRIX matFinal = DX::DecomposeMtrixMultiply(m_matWorld, m_matTransform);
 		mesh.SetMatrix(&matFinal, &m_matView, &m_matProj);
 		
 	}
@@ -156,13 +157,22 @@ void JH_Obj::SetMatrix(D3DXMATRIX*  world, D3DXMATRIX*  View, D3DXMATRIX*  Proj)
 void JH_Obj::SetTransform(D3DXMATRIX& Mat)
 {
 	m_matTransform = Mat;
-	m_ColiderBox.SetTransform(m_matTransform);
+	m_ColiderBox.m_matWorld = m_matTransform;
+	
+	m_ColiderBox.m_matFinal=DX::DecomposeMtrixMultiply(m_matTransform, m_ColiderBox.m_matTransform);
+	m_ColiderBox.CreateBox(m_ColiderBox.m_matFinal);
 }
 void JH_Obj::SetPos(D3DXVECTOR3 vPos)
 {
 	m_matTransform._41 = vPos.x;
 	m_matTransform._42 = vPos.y;
 	m_matTransform._43 = vPos.z;
+
+	m_ColiderBox.m_matWorld = m_matTransform;
+
+	m_ColiderBox.m_matFinal = DX::DecomposeMtrixMultiply(m_matTransform, m_ColiderBox.m_matTransform);
+	m_ColiderBox.CreateBox(m_ColiderBox.m_matFinal);
+	
 }
 void JH_Obj::SetScale(D3DXVECTOR3 vScale)
 {
@@ -178,6 +188,34 @@ void JH_Obj::SetScale(D3DXVECTOR3 vScale)
 	m_matTransform._41 = vP.x;
 	m_matTransform._42 = vP.y;
 	m_matTransform._43 = vP.z;
+
+	m_ColiderBox.m_matWorld = m_matTransform;
+
+	m_ColiderBox.m_matFinal = DX::DecomposeMtrixMultiply(m_ColiderBox.m_matWorld, m_ColiderBox.m_matTransform);
+	m_ColiderBox.CreateBox(m_ColiderBox.m_matFinal);
+}
+void JH_Obj::SetRotation(D3DXMATRIX Mat)
+{
+	D3DXVECTOR3 vS, vP;
+	D3DXQUATERNION qR;
+	D3DXMATRIX mR, mS;
+	D3DXMatrixDecompose(&vS, &qR, &vP, &m_matTransform);
+
+
+	D3DXMatrixRotationQuaternion(&mR, &qR);
+	mR = Mat;
+
+	D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+	m_matTransform = mS * mR;
+	m_matTransform._41 = vP.x;
+	m_matTransform._42 = vP.y;
+	m_matTransform._43 = vP.z;
+
+	m_ColiderBox.m_matWorld = m_matTransform;
+
+	m_ColiderBox.m_matFinal = DX::DecomposeMtrixMultiply(m_ColiderBox.m_matWorld, m_ColiderBox.m_matTransform);
+
+	m_ColiderBox.CreateBox(m_ColiderBox.m_matFinal);
 }
 void JH_Obj::CreateColiderBox(D3DXMATRIX& mat)
 {

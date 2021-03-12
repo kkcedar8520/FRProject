@@ -396,8 +396,8 @@ void JH_MapForm::OnEnChangeEdit14()
 	UpdateData(TRUE);
 	
 
-
-	//I_Texture.GetPtr(m_SplattTex1ID)->SetAlpha(m_SplattTex1Alpha);
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();	
+	pApp->m_Core.m_CSBuf.Alpha[0]=m_SplattTex1Alpha;
 	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 }

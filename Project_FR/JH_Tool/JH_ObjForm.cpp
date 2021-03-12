@@ -259,13 +259,19 @@ void JH_ObjForm::OnBnClickedRotation()
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 
+	if (!pApp->m_Core.m_pSelectObj)return;
+	
+	D3DXMATRIX Rot;
+	D3DXQUATERNION qR;
+	float fYaw = m_fRotYaw * D3DX_PI/180;
+	float fPit = m_fRotPit * D3DX_PI/180;
+	float fRoll = m_fRotRol * D3DX_PI/180;
 
-	//if (!pApp->m_Core.m_pSelectMapObj)return;
-	//pApp->m_Core.m_fYaw =m_fRotYaw ;
-	//pApp->m_Core.m_fPitch = m_fRotPit;
-	//pApp->m_Core.m_fRoll = m_fRotRol;
-	//pApp->m_Core.ObjRotation();
-	//pApp->m_Core.m_QuadTree->ChangeObjectNode(pApp->m_Core.m_pSelectMapObj);
+	D3DXQuaternionRotationYawPitchRoll(&qR, fYaw, fPit, fRoll);
+	D3DXVECTOR3 vCenter = pApp->m_Core.m_pSelectObj->GetColliderBox().vCenter;
+	D3DXMatrixAffineTransformation(&Rot, 1.0f, NULL, &qR, &vCenter);
+
+	pApp->m_Core.m_pSelectObj->SetRotation(Rot);
 
 
 	UpdateData(FALSE);
@@ -290,15 +296,8 @@ void JH_ObjForm::OnBnClickedScale()
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 
-	//if (!pApp->m_Core.m_pSelectMapObj)return;
-	//if (m_fScaleX != 0.0f && m_fScaleY != 0.0f && m_fScaleZ != 0.0f)
-	//{
-	//	pApp->m_Core.m_fScaleX = m_fScaleX;
-	//	pApp->m_Core.m_fScaleY = m_fScaleY;
-	//	pApp->m_Core.m_fScaleZ = m_fScaleZ;
-	//}
-	//pApp->m_Core.ObjScale();
-	//pApp->m_Core.m_QuadTree->ChangeObjectNode(pApp->m_Core.m_pSelectMapObj);
+	if (!pApp->m_Core.m_pSelectObj)return;
+	pApp->m_Core.m_pSelectObj->SetScale(D3DXVECTOR3(m_fScaleX, m_fScaleY, m_fScaleZ));
 
 	UpdateData(FALSE);
 }
@@ -314,12 +313,9 @@ void JH_ObjForm::OnBnClickedTransLation()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	//if (!pApp->m_Core.m_pSelectMapObj)return;
-	//pApp->m_Core.m_matMove._41 = m_fTransX;
-	//pApp->m_Core.m_matMove._42 = m_fTransY;
-	//pApp->m_Core.m_matMove._43 = m_fTransZ;
-	//pApp->m_Core.ObjTranslation();
-	//pApp->m_Core.m_QuadTree->ChangeObjectNode(pApp->m_Core.m_pSelectMapObj);
+	if (!pApp->m_Core.m_pSelectObj)return;
+	pApp->m_Core.m_pSelectObj->SetPos(D3DXVECTOR3(m_fTransX, m_fTransY, m_fTransZ));
+	
 
 	UpdateData(FALSE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.

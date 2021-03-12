@@ -95,7 +95,8 @@
 	{
 		for (auto Obj : m_DrawObjectList)
 		{
-			Obj->RenderCollider();
+			if (Obj->bColider)
+				Obj->RenderCollider();
 			Obj->Render();
 		}
 		return true;

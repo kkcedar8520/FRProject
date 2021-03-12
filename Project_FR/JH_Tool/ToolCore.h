@@ -40,7 +40,7 @@ public:
 	TOOLSTATE	m_eState= TOOLSTATE::BASE;
 	
 	SPHERE		m_Sphere;
-
+	JH_Obj*		m_pSelectObj;
 	//
 	std::string	m_ObjFileName;
 public:

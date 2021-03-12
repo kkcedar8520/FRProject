@@ -162,9 +162,6 @@
     <ClInclude Include="LoadType.h">
       <Filter>Obj</Filter>
     </ClInclude>
-    <ClInclude Include="JH_Map.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="JH_MapLod.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -212,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="ComputeShader.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_Map.h">
+      <Filter>Obj\text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

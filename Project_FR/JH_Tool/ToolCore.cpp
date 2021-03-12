@@ -148,7 +148,7 @@ void ToolCore::CollocateObject()
 	int IObj;
 
 	//노드 교점찾기
-
+	if (I_MapMgr.GetCurrentQuadTree() == nullptr) { return; }
 	if (!I_MapMgr.GetCurrentQuadTree()->FindSelectPoint()) { return; }
 	m_Sphere.vCenter = I_Select.m_vIntersection;
 
@@ -156,7 +156,8 @@ void ToolCore::CollocateObject()
 	 if(IObj==-1) { return ; }
 	 JH_Obj* pObj=I_ObjMgr.GetPtr(IObj);
 	 pObj->SetPos(m_Sphere.vCenter);
-	 pObj->GetColliderBox().SetPos(D3DXVECTOR3(0, 5, 0));
+
+
 	 pObj->GetColliderBox().SetScale(D3DXVECTOR3(5, 5, 5));
 
 
@@ -167,10 +168,13 @@ void ToolCore::CollocateObject()
 	if (!I_MapMgr.GetCurrentQuadTree()->ObjectAddNode(pObj))
 		I_ObjMgr.DeleteObject(IObj);
 }
+
 void ToolCore::SelectObject()
 {
-	if (!I_MapMgr.GetCurrentQuadTree()->FindSelectPoint()) { return; }
-	m_Sphere.vCenter = I_Select.m_vIntersection;
+
+	m_pSelectObj=I_MapMgr.GetCurrentQuadTree()->GetSelectObj();
+	if (m_pSelectObj != nullptr)
+		m_pSelectObj->bColider = true;
 }
 bool ToolCore::Init()
 {
@@ -189,11 +193,16 @@ bool ToolCore::Init()
 }
 bool ToolCore::Frame()
 {
+	if (I_MapMgr.GetCurrentMap() == nullptr) { return false; }
+	if(I_MapMgr.GetCurrentQuadTree()!=nullptr)
+	I_MapMgr.GetCurrentQuadTree()->FindSelectPoint();
+	m_Sphere.vCenter = I_Select.m_vIntersection;
 
 	I_LIGHT_MGR.Frame();
 	I_LIGHT_MGR.m_cbLight.vEyeDir[0] = { m_pMainCamera->m_vLookup,30 };
 	I_LIGHT_MGR.m_cbLight.vEyePos[0] = { m_pMainCamera->m_vPos,30 };
 
+	I_LIGHT_MGR.m_cbLight.vLightPos[1] = {D3DXVECTOR4(m_Sphere.vCenter.x,m_Sphere.vCenter.y+10,m_Sphere.vCenter.z,2) };
 
 	I_MapMgr.Frame();
 	I_ObjMgr.Frame();
@@ -206,18 +215,24 @@ bool ToolCore::Frame()
 		{
 			if(G_Input.KeyCheck(VK_LBUTTON))
 			UpDownMap();
+
+			m_pSelectObj = nullptr;
 			break;
 		}
 		case TOOLSTATE::SPLATTING:
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON))
 			SplattingMap();
+
+			m_pSelectObj = nullptr;
 			break;
 		}
 		case TOOLSTATE::FLATTING:
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON))
 				FlattingMap();
+
+			m_pSelectObj = nullptr;
 			break;
 		}
 		
@@ -225,12 +240,16 @@ bool ToolCore::Frame()
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON)==KEY_PUSH)
 				CollocateObject();
+
+			m_pSelectObj = nullptr;
 				break;
 		}
 		case TOOLSTATE::OBJECTEDIT:
 		{
 			if (G_Input.KeyCheck(VK_LBUTTON) == KEY_PUSH)
+				if(m_pSelectObj==nullptr)
 				SelectObject();
+		
 			break;
 		}
 		

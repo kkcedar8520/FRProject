@@ -146,20 +146,25 @@ struct JH_Box
 
 	JH_Box()
 	{
-		vMin = D3DXVECTOR3(0, 0, 0);
-		vMax = D3DXVECTOR3(0, 0, 0);
+		Init();
+	}
+	void Init()
+	{
+		vMin = D3DXVECTOR3(-1, -1, -1);
+		vMax = D3DXVECTOR3(1, 1, 1);
 		vCenter = D3DXVECTOR3(0, 0, 0);
 
 		vAxis[0] = D3DXVECTOR3{ 1,0,0 };
 		vAxis[1] = D3DXVECTOR3{ 0,1,0 };
 		vAxis[2] = D3DXVECTOR3{ 0,0,1 };
 
-		fExtent[0] = 1.0f;
-		fExtent[1] = 1.0f;
-		fExtent[2] = 1.0f;
+		fExtent[0] = vMax.x-vCenter.x;
+		fExtent[1] = vMax.y - vCenter.y;
+		fExtent[2] = vMax.z - vCenter.z;
 	}
 	void CreateBox(D3DXMATRIX matTransform)
 	{
+		Init();
 		D3DXMATRIX mSRT, mS, mR;
 		D3DXVECTOR3	vS, vT;
 		D3DXQUATERNION qR;
@@ -175,23 +180,26 @@ struct JH_Box
 		mSRT._41 = vT.x;
 		mSRT._42 = vT.y;
 		mSRT._43 = vT.z;
-
+		
+		fExtent[0] *= vS.x;
+		fExtent[1] *= vS.y;
+		fExtent[2] *= vS.z;
 	
-		D3DXVec3TransformCoord(&vAxis[0], &vAxis[0], &mSRT);
-		D3DXVec3TransformCoord(&vAxis[1], &vAxis[1], &mSRT);
-		D3DXVec3TransformCoord(&vAxis[2], &vAxis[2], &mSRT);
-
-		D3DXVec3TransformCoord(&vCenter, &vCenter, &mSRT);
-
-		vMax = vCenter + vAxis[0] + vAxis[1] + vAxis[2];
-		vMin = vCenter - vAxis[0] - vAxis[1] - vAxis[2];
-		fExtent[0] = vMax.x - vCenter.x;
-		fExtent[1] = vMax.y - vCenter.y;
-		fExtent[2] = vMax.z - vCenter.z;
+		D3DXVec3TransformCoord(&vAxis[0], &vAxis[0], &mR);
+		D3DXVec3TransformCoord(&vAxis[1], &vAxis[1], &mR);
+		D3DXVec3TransformCoord(&vAxis[2], &vAxis[2], &mR);
 
 		D3DXVec3Normalize(&vAxis[0], &vAxis[0]);
 		D3DXVec3Normalize(&vAxis[1], &vAxis[1]);
 		D3DXVec3Normalize(&vAxis[2], &vAxis[2]);
+
+		vCenter = vT;
+
+		vMax = vCenter + vAxis[0]*vS.x + vAxis[1]*vS.y + vAxis[2]*vS.z;
+		vMin = vCenter - vAxis[0] * vS.x - vAxis[1] * vS.y - vAxis[2] * vS.z;
+	
+	
+
 		
 	}
 	void SetScale(D3DXVECTOR3& vScale)
@@ -278,6 +286,7 @@ struct JH_RAY
 		//fExtent > 0  세그먼트
 	}
 };
+
 
 #ifndef SAFE_ZERO
 #define SAFE_ZERO(A)				{ A = 0; }

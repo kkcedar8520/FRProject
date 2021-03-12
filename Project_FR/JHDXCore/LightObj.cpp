@@ -90,8 +90,7 @@
 		m_Info.LightDir.z = m_Info.At.z - m_Info.LightPos.z;
 
 		D3DXVec3Normalize(&m_Info.LightDir, &m_Info.LightDir);
-		//m_cbLight.vLightPos.x = m_cbLight.vLightPos.x*cosf(g_fProgramTime);
-		//m_cbLight.vLightPos.z = m_cbLight.vLightPos.z*sinf(-g_fProgramTime);
+
 
 		m_LightObj.m_Pos.x = Lightpos.x;
 		m_LightObj.m_Pos.z = Lightpos.z;

@@ -16,10 +16,14 @@ struct SCENEINFO
 };
 class JH_Obj 
 {
+public:
+	bool bColider = false;
 private:
 
 	SCENEINFO m_Scene;
 	int m_ID;
+
+
 	std::string						m_Name;
 
 

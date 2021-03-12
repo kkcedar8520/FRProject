@@ -48,7 +48,7 @@ void CSMAIN(uint3 GroupID : SV_GroupID, uint3 DispatchThreadID : SV_DispatchThre
 	float fDistance = distance(texturelocation.xy, Buffer0.vPickPos.xz);
 
 
-	float a = 1 - smoothstep(Buffer0.g_fRadius, Buffer0.g_fRadius + 20, fDistance);
+	float a = (1 - smoothstep(Buffer0.g_fRadius, Buffer0.g_fRadius + 20, fDistance));
 
 
 
@@ -65,7 +65,7 @@ void CSMAIN(uint3 GroupID : SV_GroupID, uint3 DispatchThreadID : SV_DispatchThre
 		if (fAlpha.x < a)
 		{
 
-			fAlpha.x = a;//* Buffer0[0].Alpha[0];
+			fAlpha.x = a* Buffer0.Alpha[0];
 		}
 		break;
 	}

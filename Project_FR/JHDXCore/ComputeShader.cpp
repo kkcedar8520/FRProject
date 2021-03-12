@@ -70,21 +70,18 @@ void 	ComputeShader::RunComputeShaderSplatting(UINT X, UINT Y,UINT Z)
 {
 
 	ID3D11ShaderResourceView* ppSRVNULL[2] = { nullptr, nullptr };
-	//DX::GetContext()->CSSetShaderResources(0, 2, ppSRVNULL);
-	//DX::GetContext()->CSSetShaderResources(1, 2, ppSRVNULL);
 	ID3D11UnorderedAccessView* ppUAViewNULL[1] = { nullptr };
-	//DX::GetContext()->CSSetUnorderedAccessViews(0, 1, ppUAViewNULL, NULL);
-	//DX::GetContext()->CSSetShader(NULL, NULL, 0);
+
 
 	DX::GetContext()->CSSetShader(m_pCS.Get(), NULL, 0);
 
 
-	DX::GetContext()->CSSetShaderResources(0, 1, m_pReadSrv.GetAddressOf());
+	DX::GetContext()->CSSetShaderResources(0, 1, m_pDescSrv.GetAddressOf());
 	DX::GetContext()->CSSetShaderResources(1, 1, m_pBufSrv.GetAddressOf());
 
 
 
-	DX::GetContext()->CSSetUnorderedAccessViews(0, 1, m_pUAV.GetAddressOf(), NULL);
+	DX::GetContext()->CSSetUnorderedAccessViews(0, 1, m_pUAV.GetAddressOf(), nullptr);
 	ID3D11Buffer* ppCBNULL[1] = { NULL };
 	DX::GetContext()->CSSetConstantBuffers(0, 1, ppCBNULL);
 
