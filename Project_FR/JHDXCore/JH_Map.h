@@ -109,7 +109,7 @@
 		void SetMatrix(D3DXMATRIX* matWorld,
 			D3DXMATRIX* matView,
 			D3DXMATRIX* matProj)override;
-		void UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data);
+
 
 		void SetSplattingAlphaShaderResouceView(ID3D11ShaderResourceView* pSrv);
 		

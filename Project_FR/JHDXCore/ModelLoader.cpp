@@ -137,6 +137,7 @@ bool ModelLoader::ReadMeshData(aiNode* Node, int IBoneIndex)
 		
 		SrcMaterial->Get(AI_MATKEY_NAME, tName);
 
+
 		int length = strlen(tName.C_Str());
 
 		MultiByteToWideChar(CP_ACP, 0, tName.C_Str(), length, &WTextureName[0], length + 1);
@@ -211,8 +212,7 @@ bool ModelLoader::ReadMaterial()
 		SrcMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor);
 
 		SrcMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexterureName);
-		
-		
+
 
 		//CHAR ->WCHAR º¯°æ
 		//Diffuse
@@ -233,15 +233,7 @@ bool ModelLoader::ReadMaterial()
 		//Ambient
 		SrcMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiColor);
 
-		SrcMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aiTexterureName);
-		
 
-		strsize = MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), -1, NULL, NULL);
-		MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), strlen(aiTexterureName.C_Str()), &WTextureName[0], strsize);
-		lstrcpynW(WTextureName, WTextureName, strsize);
-		I_Texture.Add(m_pDevice, WTextureName, L"../../data/Texture/");
-
-		m_Materials[i].Normal = I_Texture.SplitPath(WTextureName);
 		m_Materials[i].AmbientColor.x = aiColor.r;
 		m_Materials[i].AmbientColor.y = aiColor.g;
 		m_Materials[i].AmbientColor.z = aiColor.b;
@@ -279,6 +271,22 @@ bool ModelLoader::ReadMaterial()
 		m_Materials[i].EmissiveColor.y = aiColor.g;
 		m_Materials[i].EmissiveColor.z = aiColor.b;
 		m_Materials[i].EmissiveColor.w = 1.0;
+
+
+		SrcMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiColor);
+
+		SrcMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexterureName);
+
+
+		strsize = MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), -1, NULL, NULL);
+		MultiByteToWideChar(CP_ACP, 0, aiTexterureName.C_Str(), strlen(aiTexterureName.C_Str()), &WTextureName[0], strsize);
+		lstrcpynW(WTextureName, WTextureName, strsize);
+		I_Texture.Add(m_pDevice, WTextureName, L"../../data/Texture/");
+
+		m_Materials[i].Normal = I_Texture.SplitPath(WTextureName);
+
+	
+
 	}
 
 	return true;

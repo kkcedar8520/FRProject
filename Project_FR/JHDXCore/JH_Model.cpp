@@ -29,7 +29,7 @@ void    JH_Model::SetMatrix(D3DXMATRIX* matWorld,
 	D3DXMatrixTranspose(&m_cbData.matView, &m_matView);//
 	D3DXMatrixTranspose(&m_cbData.matProj, &m_matProj);//
 	
-	m_cbData.d.x = cosf(g_fProgramTime) *0.5f + 0.5f;
+
 	D3D11_MAPPED_SUBRESOURCE mss;
 
 	GetDeviceContext()->UpdateSubresource(
@@ -237,8 +237,7 @@ HRESULT JH_Model::CreateConstantBuffer()
 {
 	HRESULT hr=S_OK;
 	ZeroMemory(&m_cbData, sizeof(CB_TF));
-	m_cbData.d = D3DXVECTOR4(1, 1, 1, 1);
-	m_cbData.d.x = g_fProgramTime;
+
 
 	ComPtr<ID3D11Buffer> tcp; 
 	tcp.Attach(DX::MakeConstantBuffer(GetDevice(), nullptr, 1, sizeof(CB_TF
@@ -410,10 +409,6 @@ bool    JH_Model::Create(
 	{
 		return false;
 	}
-	if (FAILED(UpdateBuffer()))
-	{
-		return false;
-	}
 	if (FAILED(CreateInputLayout()))
 	{
 		return false;
@@ -447,8 +442,13 @@ HRESULT	JH_Model::LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNorma
 
 	return hr;
 }
-bool	JH_Model::UpdateBuffer()
+void  JH_Model::UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data)
 {
+	
+}
+bool	JH_Model::UpdateBuffer(ID3D11Buffer* pBuffer, void* Data)
+{
+	DX::GetContext()->UpdateSubresource(pBuffer, 0, nullptr, Data, 0, 0);
 	return true;
 }
 bool	JH_Model::Init()
@@ -541,7 +541,6 @@ JH_Model::JH_Model()
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProj);
 	D3DXMatrixIdentity(&m_matNormal);
-	m_cbData.d = D3DXVECTOR4(1, 1, 1, 1);
 	m_Pos= D3DXVECTOR3(0,0,0);
 }
 

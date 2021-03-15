@@ -154,10 +154,7 @@
 		return	m_VertexData[iRow*m_iRowNum + iCol].p.y;
 	}
 
-	void  JH_Map::UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data)
-	{
-		GetDeviceContext()->UpdateSubresource(pConstantBuffer, 0, nullptr, Data, 0, 0);
-	}
+
 	void    JH_Map::SetMatrix(D3DXMATRIX* matWorld,
 		D3DXMATRIX* matView,
 		D3DXMATRIX* matProj)
@@ -481,7 +478,7 @@
 		m_SkyBox->Frame();
 
 		
-		UpdateConstantBuffer(m_pLightConstBuffer.Get(), &I_LIGHT_MGR.m_cbLight);
+		UpdateBuffer(m_pLightConstBuffer.Get(), &I_LIGHT_MGR.m_cbLight);
 
 
 		//GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
@@ -502,7 +499,7 @@
 			m_SkyBox->Render();
 			JH_Model::PreRender();
 			m_QuadTree->Render();
-			//m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
+			m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
 		}
 		else
 		{

@@ -7,10 +7,10 @@ void ToolCore::FlattingMap()
 	JH_Map*  pMap = nullptr;
 
 
-	pQuadTree->FindSelectPoint();
+	//pQuadTree->FindSelectPoint();
 
 
-	m_Sphere.vCenter = I_Select.m_vIntersection;
+	//m_Sphere.vCenter = I_Select.m_vIntersection;
 
 	if (pQuadTree->m_SelectNodeList.size() <= 0)return ;
 	pNode = pQuadTree->m_SelectNodeList[0];
@@ -69,62 +69,101 @@ bool ToolCore::UpDownMap()
 	JH_Node* pNode = nullptr;
 	JH_Map*  pMap = nullptr;
 
+	std::vector<JH_Node*> NodeList;
 
-	pQuadTree->FindSelectPoint();
+	//pQuadTree->FindSelectPoint();
 
 
-	m_Sphere.vCenter = I_Select.m_vIntersection;
+	//m_Sphere.vCenter = I_Select.m_vIntersection;
 
 	if (pQuadTree->m_SelectNodeList.size() <= 0)return false;
 	pNode = pQuadTree->m_SelectNodeList[0];
 	//원의 반지름 거리에 있는 정점만 올림 
 	float fDistance;
 
+	
+	
+
 	if (pNode == nullptr)return false;
-	DWORD dwFace = pNode->m_IndexList.size() / 3;
+	
 
-	for (int iFace = 0; iFace < dwFace; iFace++)
+	NodeList.emplace_back(pNode);
+	
+
+	for (auto pNode : pQuadTree->m_NodeList)
 	{
-		for (int iV = 0; iV < 3; iV++)
-		{
-			DWORD i0 = pNode->m_IndexList[iFace * 3 + iV];
+		
 
+			D3DXVECTOR2 NodeXZ, vPickXZ, MaxXZ;
+			NodeXZ = D3DXVECTOR2(pNode.second->m_Box.vCenter.x, pNode.second->m_Box.vCenter.z);
+			MaxXZ = D3DXVECTOR2(pNode.second->m_Box.vMax.x, pNode.second->m_Box.vMax.z);
 
-			fDistance = D3DXVec3Length(&D3DXVECTOR3(m_Sphere.vCenter - pQuadTree->m_pMap->m_VertexData[i0].p));
+			vPickXZ = D3DXVECTOR2(m_Sphere.vCenter.x, m_Sphere.vCenter.z);
 
-			//코사인함수를 이용하여 원형으로 올림
-			float  fDet = (fDistance / m_Sphere.Radius)*D3DX_PI / 2.0;
-
-			float value = cos(fDet)*g_SecondPerFrame;
+			fDistance = D3DXVec2Length(&D3DXVECTOR2(NodeXZ - vPickXZ));
+			fDistance -= D3DXVec2Length(&D3DXVECTOR2(MaxXZ - NodeXZ));
 			if (m_Sphere.Radius > fDistance)
-			{
-				pQuadTree->m_pMap->UpDownMap(i0, value);
+				NodeList.emplace_back(pNode.second);
 
-
-				//NorMalUpdate
-				DWORD i0 = pNode->m_IndexList[iFace * 3 + 0];
-				DWORD i1 = pNode->m_IndexList[iFace * 3 + 1];
-				DWORD i2 = pNode->m_IndexList[iFace * 3 + 2];
-
-				D3DXVECTOR3 vFaceNormal, E0, E1;
-				E0 = pQuadTree->m_pMap->m_VertexData[i1].p - pQuadTree->m_pMap->m_VertexData[i0].p;
-				E1 = pQuadTree->m_pMap->m_VertexData[i2].p - pQuadTree->m_pMap->m_VertexData[i0].p;
-
-				D3DXVec3Cross(&vFaceNormal, &E0, &E1);
-				D3DXVec3Normalize(&vFaceNormal, &vFaceNormal);
-
-				pQuadTree->m_pMap->m_VertexData[i0].n = vFaceNormal;
-				pQuadTree->m_pMap->m_VertexData[i1].n = vFaceNormal;
-				pQuadTree->m_pMap->m_VertexData[i2].n = vFaceNormal;
-			}
-
-
-		}
 
 	}
-	DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->GetVertexBuffer(), 0, 0, &pQuadTree->m_pMap->m_VertexData.at(0), 0, 0);
 
-	return true;
+		for (auto pNode : NodeList)
+		{
+			DWORD dwFace = pNode->m_IndexList.size() / 3;
+
+			for (int iFace = 0; iFace < dwFace; iFace++)
+			{
+				for (int iV = 0; iV < 3; iV++)
+				{
+					DWORD i0 = pNode->m_IndexList[iFace * 3 + iV];
+
+					D3DXVECTOR2 VertexXZ, vPickXZ;
+
+					VertexXZ = D3DXVECTOR2(pQuadTree->m_pMap->m_VertexData[i0].p.x, pQuadTree->m_pMap->m_VertexData[i0].p.z);
+
+					vPickXZ = D3DXVECTOR2(m_Sphere.vCenter.x, m_Sphere.vCenter.z);
+
+					fDistance = D3DXVec2Length(&D3DXVECTOR2(VertexXZ - vPickXZ));
+
+
+					//코사인함수를 이용하여 원형으로 올림
+					float  f = (fDistance / m_Sphere.Radius);
+					float  fDet = f * (D3DX_PI / 2.0);
+
+					float value = cos(fDet)*g_SecondPerFrame;
+					if (m_Sphere.Radius > fDistance)
+					{
+						pQuadTree->m_pMap->UpDownMap(i0, value);
+
+
+						//NorMalUpdate
+						DWORD i0 = pNode->m_IndexList[iFace * 3 + 0];
+						DWORD i1 = pNode->m_IndexList[iFace * 3 + 1];
+						DWORD i2 = pNode->m_IndexList[iFace * 3 + 2];
+
+						D3DXVECTOR3 vFaceNormal, E0, E1;
+						E0 = pQuadTree->m_pMap->m_VertexData[i1].p - pQuadTree->m_pMap->m_VertexData[i0].p;
+						E1 = pQuadTree->m_pMap->m_VertexData[i2].p - pQuadTree->m_pMap->m_VertexData[i0].p;
+
+						D3DXVec3Cross(&vFaceNormal, &E0, &E1);
+						D3DXVec3Normalize(&vFaceNormal, &vFaceNormal);
+
+						pQuadTree->m_pMap->m_VertexData[i0].n = vFaceNormal;
+						pQuadTree->m_pMap->m_VertexData[i1].n = vFaceNormal;
+						pQuadTree->m_pMap->m_VertexData[i2].n = vFaceNormal;
+					}
+
+
+				}
+
+			}
+			pQuadTree->CreateBB(pNode);
+		}
+		DX::GetContext()->UpdateSubresource(pQuadTree->m_pMap->GetVertexBuffer(), 0, 0, &pQuadTree->m_pMap->m_VertexData.at(0), 0, 0);
+
+		return true;
+	
 }
 bool ToolCore::SplattingMap()
 {
@@ -150,17 +189,17 @@ void ToolCore::CollocateObject()
 	//노드 교점찾기
 	if (I_MapMgr.GetCurrentQuadTree() == nullptr) { return; }
 	if (!I_MapMgr.GetCurrentQuadTree()->FindSelectPoint()) { return; }
+	if (I_MapMgr.GetCurrentQuadTree()->m_SelectNodeList.size() <= 0)return ;
 	m_Sphere.vCenter = I_Select.m_vIntersection;
 
 	IObj = I_ObjMgr.CreateObject(m_ObjFileName);
 	 if(IObj==-1) { return ; }
 	 JH_Obj* pObj=I_ObjMgr.GetPtr(IObj);
 	 pObj->SetPos(m_Sphere.vCenter);
-
-
 	 pObj->GetColliderBox().SetScale(D3DXVECTOR3(5, 5, 5));
+	 pObj->SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
 
-
+	 
 
 
 	I_ObjMgr.SetCamera(IObj,m_pMainCamera.get());
@@ -201,8 +240,9 @@ bool ToolCore::Frame()
 	I_LIGHT_MGR.Frame();
 	I_LIGHT_MGR.m_cbLight.vEyeDir[0] = { m_pMainCamera->m_vLookup,30 };
 	I_LIGHT_MGR.m_cbLight.vEyePos[0] = { m_pMainCamera->m_vPos,30 };
-
 	I_LIGHT_MGR.m_cbLight.vLightPos[1] = {D3DXVECTOR4(m_Sphere.vCenter.x,m_Sphere.vCenter.y+10,m_Sphere.vCenter.z,2) };
+	I_LIGHT_MGR.m_cbLight.vSpotLight[1].w = m_Sphere.Radius;
+
 
 	I_MapMgr.Frame();
 	I_ObjMgr.Frame();

@@ -211,7 +211,7 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="JH_Map.h">
-      <Filter>Obj\text</Filter>
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

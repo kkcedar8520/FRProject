@@ -86,12 +86,9 @@ struct PNCT2T3_VERTEX
 		this->t3 = t3;
 	}
 };
-struct PNCTIW_VERTEX
+struct PNCTIW_VERTEX:public PNCT_VERTEX
 {
-	D3DXVECTOR3 p;
-	D3DXVECTOR3 n;
-	D3DXVECTOR4 c;
-	D3DXVECTOR2 t;
+
 	D3DXVECTOR4 i;
 	D3DXVECTOR4 w;
 	bool operator == (const PNCTIW_VERTEX& v)
@@ -119,7 +116,6 @@ struct CB_TF
 	D3DXMATRIX matView;
 	D3DXMATRIX matProj;
 	D3DXMATRIX matNormal;
-	D3DXVECTOR4 d;
 };
 
 class JH_Model
@@ -200,9 +196,9 @@ public:
 		const CHAR* pszPSName = "PS");
 	virtual HRESULT CreateInputLayout();
 	virtual HRESULT	LoadTexture(const TCHAR* pszTexFileName,const TCHAR* pszNormalTexName=nullptr);
-	virtual bool	UpdateBuffer();
+	virtual bool	UpdateBuffer(ID3D11Buffer* pBuffer, void* Data);
 	virtual bool	UpdateTangentBuffer();
-	
+	virtual void	UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data);
 	virtual void	SetTransform(D3DXMATRIX& Mat);
 	virtual void	SetPos(D3DXVECTOR3 vPos);
 	virtual void	SetScale(D3DXVECTOR3 vScale);

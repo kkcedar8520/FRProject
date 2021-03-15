@@ -9,7 +9,7 @@ bool JH_Material::Init()
 	m_CBMT.EmissiveColor = EmissiveColor;
 	m_CBMT.SpecularColor = SpecularColor;
 
-	m_CB = DX::MakeConstantBuffer(DX::GetDevice().Get(), &m_CBMT, sizeof(CB_MT), 1);
+	m_CB.Attach(DX::MakeConstantBuffer(DX::GetDevice().Get(), &m_CBMT, sizeof(CB_MT), 1));
 	
 
 
@@ -29,8 +29,8 @@ bool JH_Material::Render()
 
 	
 
-	DX::GetContext()->VSSetShaderResources(0, 1, &I_Texture.GetPtr(Diffuse.c_str())->m_pTextureRV);
-	DX::GetContext()->PSSetShaderResources(0, 1, &I_Texture.GetPtr(Diffuse.c_str())->m_pTextureRV);
+	//DX::GetContext()->VSSetShaderResources(0, 1, &I_Texture.GetPtr(Diffuse.c_str())->m_pTextureRV);
+	//DX::GetContext()->PSSetShaderResources(0, 1, &I_Texture.GetPtr(Diffuse.c_str())->m_pTextureRV);
 
 
 	return true;

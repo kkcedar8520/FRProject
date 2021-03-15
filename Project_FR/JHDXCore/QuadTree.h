@@ -61,6 +61,7 @@ class JH_Map;
 		void	GetSelectNode(JH_Node* pNode);
 		JH_Obj*	GetSelectObj();
 		bool FindSelectPoint();
+		bool FindNearSpecificRangeNode();
 
 		bool ObjectAddNode(JH_Obj* Obj);
 		bool GetCotainObjNode(JH_Node* pNode);

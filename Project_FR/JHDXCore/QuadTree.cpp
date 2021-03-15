@@ -568,7 +568,11 @@ bool HQuadTree::FindSelectPoint()
 	return false;
 	m_SelectNodeList.clear();
 }
+bool HQuadTree::FindNearSpecificRangeNode()
+{
 
+	return true;
+}
 void HQuadTree::GetSelectNode(JH_Node* pNode)
 {
 

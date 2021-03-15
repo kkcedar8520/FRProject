@@ -14,7 +14,7 @@ struct SCENEINFO
 	int iMaxWeight;		// 정점 당 가중치
 	int iBindPose;		// 바인딩 포즈 에니메이션 여부
 };
-class JH_Obj 
+class JH_Obj :public JH_Model
 {
 public:
 	bool bColider = false;
@@ -27,15 +27,14 @@ private:
 	std::string						m_Name;
 
 
-		
+	//D3DXMATRIX						m_matTransform;
+//D3DXMATRIX						m_matWorld;
+//D3DXMATRIX						m_matView;
+//D3DXMATRIX						m_matProj;
+//D3DXMATRIX						m_matNormal;
 	CB_TF							m_sCBTF;
 	ComPtr<ID3D11Buffer>			m_CBTF;
 
-	D3DXMATRIX						m_matTransform;
-	D3DXMATRIX						m_matWorld;
-	D3DXMATRIX						m_matView;
-	D3DXMATRIX						m_matProj;
-	D3DXMATRIX						m_matNormal;
 	//MeshBoneMatarial
 	JH_ObjData*						m_ObjData;
 	
@@ -65,30 +64,32 @@ public:
 	//Craete
 	bool ReadFile(const std::string file);
 	void BindingMesh();
+	void InitMaterial();
 public:
-	JH_Material MaterialFindByName(std::wstring Name);
-	JH_Material MaterialFindByIndex(int  id);
+	JH_Material* MaterialFindByName(std::wstring Name);
+	JH_Material* MaterialFindByIndex(int  id);
 
-	JH_Bone BoneFindByName(std::wstring Name);
-	JH_Bone BoneFindByIndex(int  id);
+	JH_Bone* BoneFindByName(std::wstring Name);
+	JH_Bone* BoneFindByIndex(int  id);
 
-	JH_Mesh MeshFindByName(std::wstring Name);
-	JH_Mesh MeshFindByIndex(int  id);
+	JH_Mesh* MeshFindByName(std::wstring Name);
+	JH_Mesh *MeshFindByIndex(int  id);
 public:
 	
-	void SetMatrix(D3DXMATRIX* matWorld = nullptr, D3DXMATRIX* matView = nullptr, D3DXMATRIX* matProj = nullptr);
-	void SetTransform(D3DXMATRIX& Mat);
-	void SetPos(D3DXVECTOR3 vPos);
-	void SetScale(D3DXVECTOR3 vScale);
-	void SetRotation(D3DXMATRIX Mat);
+	
+	void SetMatrix(D3DXMATRIX* matWorld = nullptr, D3DXMATRIX* matView = nullptr, D3DXMATRIX* matProj = nullptr)override;
+	void SetTransform(D3DXMATRIX& Mat)override;
+	void SetPos(D3DXVECTOR3 vPos)override;
+	void SetScale(D3DXVECTOR3 vScale)override;
+	void SetRotation(D3DXMATRIX Mat)override;
 	void UpdateTarnsformCB();
 	void CreateTransformCB();
 	void RenderCollider();
 public:
-	virtual bool Init();
-	virtual bool Frame();
-	virtual bool Render();
-	virtual bool Release();
+	 bool Init()override;
+	 bool Frame()override;
+	 bool Render()override;
+	 bool Release()override;
 public:
 	JH_Obj();
 	virtual ~JH_Obj();

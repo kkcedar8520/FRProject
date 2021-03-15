@@ -1,6 +1,7 @@
 #pragma once
 #include "JH_Obj.h"
 #include"JH_ObjMgr.h"
+#include"LightMgr.h"
 
 bool JH_Obj::ReadFile(const std::string file)
 {
@@ -14,6 +15,7 @@ bool JH_Obj::ReadFile(const std::string file)
 
 		m_ObjData = I_ObjMgr.GetDataPtr(index);
 		
+		InitMaterial();
 		BindingMesh();
 
 	}
@@ -22,7 +24,13 @@ bool JH_Obj::ReadFile(const std::string file)
 	Init();
 	return true;
 }
-
+void JH_Obj::InitMaterial()
+{
+	for (auto& mat : m_ObjData->m_materials)
+	{
+		mat.Init();
+	}
+}
 bool JH_Obj::Init()
 {
 	D3DXMatrixIdentity(&m_matTransform);
@@ -41,7 +49,7 @@ bool JH_Obj::Init()
 bool JH_Obj::Frame()
 { 
 
-	for (auto mesh : m_ObjData->GetMesh())
+	for (auto& mesh : m_ObjData->GetMesh())
 	{
 
 		mesh.Frame();
@@ -49,6 +57,7 @@ bool JH_Obj::Frame()
 	m_ColiderBox.SetMatrix(&m_matTransform, &m_pCamera->m_matView, &m_pCamera->m_matProj);
 	m_ColiderBox.Frame();
 
+	UpdateBuffer(m_pLightConstBuffer.Get(), &I_LIGHT_MGR.m_cbLight);
 	//UpdateTarnsformCB();
 	return true;
 }
@@ -57,9 +66,9 @@ bool JH_Obj::Render()
 	UINT offset = 0;
 	UINT Stride = 0;
 	SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
-	for (auto mesh : m_ObjData->GetMesh())
+	for (auto& mesh : m_ObjData->GetMesh())
 	{
-
+	
 		mesh.Render();
 	}
 	return true;
@@ -77,46 +86,46 @@ void JH_Obj::BindingMesh()
 {
 	for (auto& mesh : m_ObjData->GetMesh())
 	{
-		JH_Bone Bone=BoneFindByIndex(mesh.GetBoneIndex());
-		mesh.SetBone(Bone);
+		JH_Bone* pBone=BoneFindByIndex(mesh.GetBoneIndex());
+		mesh.SetBone(pBone);
 		mesh.Binding(this);
 	}
 }
 
 
 
-JH_Material JH_Obj::MaterialFindByName(std::wstring Name)
+JH_Material* JH_Obj::MaterialFindByName(std::wstring Name)
 {
-	for (auto Mat:m_ObjData->GetMaterial() )
+	for (auto& Mat:m_ObjData->GetMaterial() )
 	{
 		if (Mat.Name == Name)
 		{
-			return Mat;
+			return &Mat;
 		}
 	}
 }
-JH_Material JH_Obj::MaterialFindByIndex(int  id)
+JH_Material* JH_Obj::MaterialFindByIndex(int  id)
 {
-	return m_ObjData->GetMaterial()[id];
+	return &m_ObjData->GetMaterial()[id];
 }
 
-JH_Bone JH_Obj::BoneFindByName(std::wstring Name)
+JH_Bone* JH_Obj::BoneFindByName(std::wstring Name)
 {
-	for (auto Bone : m_ObjData->GetBone())
+	for (auto& Bone : m_ObjData->GetBone())
 	{
 		if (Bone.GetBoneName() == Name)
 		{
-			return Bone;
+			return &Bone;
 		}
 	}
 }
-JH_Bone JH_Obj::BoneFindByIndex(int id)
+JH_Bone* JH_Obj::BoneFindByIndex(int id)
 {
-	for (auto Bone : m_ObjData->GetBone())
+	for (auto& Bone : m_ObjData->GetBone())
 	{
 		if (Bone.GetBoneIndex() == id)
 		{
-			return Bone;
+			return &Bone;
 		}
 	}
 }

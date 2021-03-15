@@ -39,9 +39,9 @@ private:
 	CB_TF							m_cbData;
 private:
 	//BONE
-	JH_Bone m_Bone;
+	JH_Bone* m_pBone;
 	//Material
-	JH_Material m_Material;
+	JH_Material* m_Material;
 	std::vector<PNCTIW_VERTEX>		m_VertexData;
 public:
 	//Interface
@@ -66,7 +66,7 @@ public:
 	//Transform
 
 	//Bone
-	void SetBone(JH_Bone& bone) { m_Bone = bone; }
+	void SetBone(JH_Bone* bone) { m_pBone = bone; }
 public:
 	void Binding(JH_Obj* Obj);
 	bool Init()override;
@@ -78,7 +78,7 @@ public:
 	HRESULT CreateIndexData()override;
 	HRESULT CreateVertexBuffer()override;
 	HRESULT	LoadTexture(const TCHAR* pszTexFileName, const TCHAR* pszNormalTexName = nullptr)override;
-
+	bool	UpdateTangentBuffer()override;
 public:
 	JH_Mesh();
 	~JH_Mesh();
