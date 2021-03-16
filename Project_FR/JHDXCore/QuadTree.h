@@ -28,7 +28,7 @@ class JH_Map;
 		std::map<int, JH_Node*>						m_NodeList;
 		std::map<int,JH_Obj*>						m_ObjectList;
 		std::vector<JH_Node*>						m_SelectNodeList;
-		std::vector< std::shared_ptr<JH_MapObj>>	m_SelectObjList;
+	
 		
 
 		JH_Node*									m_pNearPointNode;

@@ -194,7 +194,7 @@ void ToolCore::CollocateObject()
 
 	IObj = I_ObjMgr.CreateObject(m_ObjFileName);
 	 if(IObj==-1) { return ; }
-	 JH_Obj* pObj=I_ObjMgr.GetPtr(IObj);
+	 JH_Obj* pObj=I_ObjMgr.GetPtr(IObj).get();
 	 pObj->SetPos(m_Sphere.vCenter);
 	 pObj->GetColliderBox().SetScale(D3DXVECTOR3(5, 5, 5));
 	 pObj->SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
@@ -234,8 +234,8 @@ bool ToolCore::Frame()
 {
 	if (I_MapMgr.GetCurrentMap() == nullptr) { return false; }
 	if(I_MapMgr.GetCurrentQuadTree()!=nullptr)
-	I_MapMgr.GetCurrentQuadTree()->FindSelectPoint();
-	m_Sphere.vCenter = I_Select.m_vIntersection;
+	//I_MapMgr.GetCurrentQuadTree()->FindSelectPoint();
+	//m_Sphere.vCenter = I_Select.m_vIntersection;
 
 	I_LIGHT_MGR.Frame();
 	I_LIGHT_MGR.m_cbLight.vEyeDir[0] = { m_pMainCamera->m_vLookup,30 };
@@ -300,7 +300,6 @@ bool ToolCore::Frame()
 }
 bool ToolCore::Render()
 {
-
 	I_MapMgr.Render();
 	I_ObjMgr.Render();
 

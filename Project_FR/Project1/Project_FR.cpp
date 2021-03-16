@@ -1,7 +1,7 @@
 #include "Project_FR.h"
 #include"LightMgr.h"
-
-
+#include"BinaryWriter.h"
+#include"BinaryReader.h"
 
 bool Project_FR::Init()
 {
@@ -27,6 +27,8 @@ bool Project_FR::Init()
 		Mesh.SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
 	}
 	TestObj.SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
+
+
 	m_DebugLine.Create(DX::GetDevice().Get(), DX::GetContext().Get(), L"../../data/shader/LineShader.txt", nullptr);
 	return true;
 }

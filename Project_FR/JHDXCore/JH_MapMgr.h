@@ -4,6 +4,8 @@
 #include"QuadTree.h"
 #include"JH_DebugCamera.h"
 #include"JH_Select.h"
+#include"BinaryWriter.h"
+#include"BinaryReader.h"
 #define CTL_CHARS		31
 #define SINGLE_QUOTE	39 // ( ' )
 #define ALMOST_ZERO 1.0e-4f
@@ -78,7 +80,7 @@ struct MAPDATA
 
 struct LEVEL
 {
-	std::wstring MapFileName;
+	std::string MapFileName;
 	std::shared_ptr<JH_Map> m_pMap;
 	std::map <int, std::shared_ptr<JH_Obj>> m_ObjectList;
 };
@@ -110,28 +112,22 @@ public:
 	inline	std::shared_ptr<HQuadTree> GetCurrentQuadTree() { return m_CurrentMap->m_pMap->m_QuadTree; }
 
 	TCHAR* FixupName(T_STR name);
-	JH_Map* CreateMap(std::wstring MapName,int iWidth,
+	std::shared_ptr<JH_Map> CreateMap(std::string MapName,int iWidth,
 		int iHeight,
 		int iCellCount,
 		int iCellSize,
 		const TCHAR* pTexturFileName,
 		const TCHAR* pNormalMapFileName,
-		const TCHAR* pHeightMapFileName = nullptr);
-	bool LoadMap(JH_Map* pMap, HQuadTree* pQuad, int iWidth,
-		int iHeight,
-		int iCellCount,
-		int iCellSize,
-		const TCHAR* pTexturFileName,
-		const TCHAR* pShaderFileName,
-		const TCHAR* pLightShaderName,
-		const TCHAR* pNormalMapFileName,
-		const TCHAR* pHeightMapFileName = nullptr);
+		const TCHAR* pHeightMapFileName = nullptr,
+		bool bQuad = true);
+
 	INT AddObject(OBJECT Obj);
 	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, JHCamera* pCamera, JH_Select* select);
-	bool SaveMapData(const TCHAR* LoadFile);
+	bool	SaveMapData(const std::string File);
+	std::shared_ptr<JH_Map> LoadMap(const std::string File);
 
-	void SaveToQuadTree(JH_Node* pNode, FILE* fp);
-	void LoadToQuadTree(JH_Node* pNode, FILE* fp);
+	void SaveToQuadTree(HQuadTree* QuadTree,JH_Node* pNode, BinaryWriter* Writer);
+	void LoadToQuadTree(HQuadTree* QuadTree, JH_Node* pNode, BinaryReader* Reader);
 	//
 	void SetCamera(JHCamera* Camera);
 public:

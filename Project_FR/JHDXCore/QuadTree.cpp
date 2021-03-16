@@ -81,8 +81,8 @@ void HQuadTree::Set()
 {
 	m_BoxLine = std::make_shared<JH_ShapeLine>();
 
-	m_BoxLine->Create(m_pMap->GetDevice(),
-		m_pMap->GetDeviceContext(),
+	m_BoxLine->Create(DX::GetDevice().Get(),
+		DX::GetContext().Get(),
 		L"../../data/shader/LineShader.txt", nullptr, nullptr, "VS", "PS");
 }
 void HQuadTree::CreateBB(JH_Node* pNode)
@@ -928,33 +928,7 @@ bool HQuadTree::Render()
 
 
 
-	ID3D11ShaderResourceView* SRVLIST[10] = { nullptr };
 
-	int iSPTNum = m_pMap->m_vSplattTextureList.size();//스플래팅 텍스쳐 개수
-
-
-	for (int i = 0; i < m_pMap->m_vSplattTextureList.size(); i++)
-	{
-
-		if (i >= 8)
-		{
-			iSPTNum = 8; //100 개이상 넘어가면 더이상 추가하지않음 
-			break;
-		}
-		SRVLIST[i] = m_pMap->m_vSplattTextureList[i]->m_pTextureRV;
-
-	}
-
-	if (iSPTNum > 0)
-	{
-		m_pMap->GetDeviceContext()->PSSetShaderResources(3,
-			iSPTNum, SRVLIST);
-		m_pMap->m_CBSubData.MapSubData.x = iSPTNum;
-		m_pMap->GetDeviceContext()->UpdateSubresource(m_pMap->m_CBSub.Get(), 0, 0, &m_pMap->m_CBSubData, 0, 0);
-	}
-
-	if (m_pMap->m_pCopySrv != nullptr)
-		DX::GetContext()->PSSetShaderResources(2, 1, m_pMap->m_pCopySrv.GetAddressOf());
 
 	for (int iNode = 0; iNode < m_DrawNodeList.size(); iNode++)
 	{

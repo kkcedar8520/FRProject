@@ -49,6 +49,8 @@
 		//SPlattingData
 		std::map<int, Texture*>											 m_vSplattTextureList;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>	 m_vSplattSRVList;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>				 m_pSplattAlphaSRV;
+		std::wstring													 m_AlphaTextureName;
 		//
 		CB_SPT m_CBSubData;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_CBSub;
@@ -70,16 +72,16 @@
 		int m_iCellCol;
 		int m_iCellRow;
 		int m_iCellCount;
+		float m_fCellDistance;
+		float m_fScaleHeight;
 		T_STR  m_TextureFileName;
 		T_STR  m_ShaderFileName;
 		T_STR  m_HegithFileName;
 		T_STR m_LightFileName;
-		float m_fCellDistance;
-		float m_fScaleHeight;
+
 
 		D3DXVECTOR3 m_CharPos;
 
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_pCopySrv;
 	public:
 		std::vector<float> m_vHeightList;
 	public:
@@ -93,11 +95,15 @@
 			const TCHAR* pTexturFileName,
 			const TCHAR* pNormalMapFileName = nullptr,
 			const TCHAR* pHeightMapFileName = nullptr,
-			const TCHAR* pLightShaderName = nullptr);
+			const TCHAR* pLightShaderName = nullptr,
+			bool bQuad = true);
+		bool CreateQuadTree();
 
 		HRESULT Load(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext);
 		HRESULT LoadMap(ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context, const TCHAR* ShaderFileName = L"../../data/shader/DefaultShader.txt", const TCHAR* TexFileName = nullptr, const CHAR* VSName = "VS", const CHAR* PSName = "PS");
 		HRESULT CreateHeightMap(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext, const TCHAR* TextureFileName);
+		bool CreateSkyBox(const TCHAR* pLoadShaderFile,
+			const TCHAR* pLoadTextureString);
 		float Lerp(float fStart, float fEnd, float fTangent);
 
 		void SetMapDesc(const TCHAR* TextureFileName,

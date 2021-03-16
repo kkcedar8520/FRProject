@@ -11,7 +11,7 @@ public:
 public:
 	bool String(const std::string Str);
 	bool String(const std::wstring Str);
-	bool Bool();
+	bool Bool(bool b);
 	bool Int(int iData);
 	bool Float(float f);
 	void Byte(void* Data, int size,int length);

@@ -195,6 +195,7 @@ HRESULT JH_Model::CreateVertexBuffer()
 	if (m_VertexData.size() <= 0) return E_FAIL;
 
 	m_iNumVertex = m_VertexData.size();
+	m_iVertexSize = sizeof(PNCT_VERTEX);
 	D3D11_BUFFER_DESC pDesc;
 	ZeroMemory(&pDesc, sizeof(D3D11_BUFFER_DESC));
 	pDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -311,7 +312,7 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		return hr;
 	}
 
-	GetDevice()->CreateVertexShader(
+		DX::GetDevice()->CreateVertexShader(
 		GetVertexCode()->GetBufferPointer(),
 		GetVertexCode()->GetBufferSize(),
 		NULL,
@@ -332,7 +333,7 @@ HRESULT JH_Model::LoadShader(const TCHAR* pszShaderFileName,
 		MessageBoxA(NULL, (char*)pErrorMsgs->GetBufferPointer(), "Error", MB_OK);
 		return hr;
 	}
-		GetDevice()->CreatePixelShader(
+		DX::GetDevice()->CreatePixelShader(
 		GetPixelCode()->GetBufferPointer(),
 		GetPixelCode()->GetBufferSize(),
 		NULL,

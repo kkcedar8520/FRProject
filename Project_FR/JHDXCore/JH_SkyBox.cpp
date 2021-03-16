@@ -7,6 +7,7 @@
 		const TCHAR* pLoadTextureString)
 	{
 		Create(pDevice, pContext, pLoadShaderFile, pLoadTextureString,nullptr,"VS", "PS_Cube");
+		CreateTexuture(pDevice, pContext, pLoadTextureString);
 		D3DXMatrixScaling(&m_matWorld, 100000.0f, 100000.0f, 100000.0f);
 		return true;
 	}

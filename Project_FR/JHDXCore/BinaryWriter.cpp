@@ -29,8 +29,9 @@ bool BinaryWriter::String(const std::wstring Str)
 	fwrite((void*)Str.data(), sizeof(TCHAR), ibuf, m_fp);
 	return true;
 }
-bool BinaryWriter::Bool()
+bool BinaryWriter::Bool(bool b)
 {
+	fwrite(&b, sizeof(bool), 1, m_fp);
 	return true;
 }
 bool BinaryWriter::Int(int iData)

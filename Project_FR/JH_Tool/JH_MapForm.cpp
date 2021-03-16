@@ -130,7 +130,7 @@ void JH_MapForm::OnBnClickedOk()
 
 
 
-	I_MapMgr.CreateMap(L"Basic", m_iWidth,
+	I_MapMgr.CreateMap("Basic", m_iWidth,
 		m_iHeight,
 		m_iCellCount,
 		m_iCellSize,
@@ -138,17 +138,22 @@ void JH_MapForm::OnBnClickedOk()
 		m_NormalMapFile,
 		m_HeightMapFile);
 
-	I_MapMgr.SetCamera(pApp->m_Core.m_pMainCamera.get());
+	JH_Map* pMap = I_MapMgr.GetMap().get();
+	pMap->SetCamera(pApp->m_Core.m_pMainCamera.get());
+	pMap->CreateSkyBox(L"SkyObj.hlsl", L"../../data/sky/StarFiled2.dds");
+	if (I_LIGHT_MGR.GetLightBuffer(0))
+		pMap->SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
+
 
 	pApp->m_Core.m_CS.Release();
 	pApp->m_Core.m_CS.CreateComputeShader(L"../../data/shader/ComputeShader.hlsl","CSMAIN");
-	pApp->m_Core.m_CSBuf.iCol = I_MapMgr.GetCurrentMap()->m_pMap->m_iColumNum - 1;
-	pApp->m_Core.m_CSBuf.iRow = I_MapMgr.GetCurrentMap()->m_pMap->m_iRowNum - 1;
+	pApp->m_Core.m_CSBuf.iCol = pMap->m_iColumNum - 1;
+	pApp->m_Core.m_CSBuf.iRow = pMap->m_iRowNum - 1;
 
-	pApp->m_Core.m_CS.CreateStreamSRV(I_MapMgr.GetCurrentMap()->m_pMap->m_iRowNum - 1, I_MapMgr.GetCurrentMap()->m_pMap->m_iColumNum - 1);
+	pApp->m_Core.m_CS.CreateStreamSRV(pMap->m_iRowNum - 1, pMap->m_iColumNum - 1);
 	pApp->m_Core.m_CS.SetStructureBuffer(&pApp->m_Core.m_CSBuf,sizeof(CSBUFF));
 
-	I_MapMgr.GetCurrentMap()->m_pMap->SetSplattingAlphaShaderResouceView(pApp->m_Core.m_CS.m_pDescSrv.Get());
+	pMap->SetSplattingAlphaShaderResouceView(pApp->m_Core.m_CS.m_pDescSrv.Get());
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
@@ -467,34 +472,40 @@ void JH_MapForm::OnSaveMapData()
 
 	
 
-	//CString ext;
-	//ext = ".DDS";
-	//m_SplattTexture += ext;
-	//if (pApp->m_Core.pReadTexture.Get() != nullptr)
-	//{
+	CString ext;
+	ext = ".DDS";
+	m_SplattTexture += ext;
 
-	//	hr = D3DX11SaveTextureToFile(pApp->m_Core.m_pContext,
-	//		pApp->m_Core.pReadTexture.Get(),
-	//		D3DX11_IFF_DDS, m_SplattTexture);
-	//}
+	HRESULT hr=S_OK;
+	if (pApp->m_Core.m_CS.pReadTexture.Get() != nullptr)
+	{
 
-	//CString FileName;
-	//CString sFath = _T("\\MapSave\\");
+		hr = D3DX11SaveTextureToFile(DX::GetContext().Get(),
+			pApp->m_Core.m_CS.pReadTexture.Get(),
+			D3DX11_IFF_DDS, m_SplattTexture);
+	}
 
-	//CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
-	//	L"Map Files(*.Map)|*.Map| All Files(*.*)|*.*|", this);
-	//dlg.m_ofn.lpstrInitialDir = sFath;
+	CString FileName;
+	CString sFath = _T("\\MapSave\\");
 
-	//if (dlg.DoModal() == IDOK&& pApp->m_Core.m_Map!=nullptr)
-	//{
-	//	FileName = dlg.GetPathName();
-	//	pApp->m_Core.m_Map->m_pSPTAFile = m_SplattTexture;
-	//	pApp->m_Core.m_pSPTAFile = m_SplattTexture;
-	//	//pApp->m_Core.SaveMapData(FileName);
+	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
+		L"Map Files(*.Map)|*.Map| All Files(*.*)|*.*|", this);
+	dlg.m_ofn.lpstrInitialDir = sFath;
+	JH_Map* pMap=I_MapMgr.GetMap().get();
+	if (dlg.DoModal() == IDOK&& I_MapMgr.GetCurrentMap()!=nullptr)
+	{
+		FileName = dlg.GetPathName();
+		pMap->m_AlphaTextureName = m_SplattTexture;
 
-	//	JH::I_MapMgr.SaveMapData(FileName);
-	//	UpdateData(FALSE);
-	//}
+		std::string SaveFile;
+		char buf[256] = {};
+		wcstombs(buf, FileName.GetString(), lstrlenW(FileName.GetString()));
+		strncpy(buf, buf, lstrlenW(FileName.GetString()));
+		SaveFile=buf;
+		I_MapMgr.SaveMapData(SaveFile);
+
+		UpdateData(FALSE);
+	}
 
 
 }
@@ -504,7 +515,7 @@ void JH_MapForm::OnLoadMapData()
 {
 	UpdateData(FALSE);
 	CString FileName;
-	CString sFath= _T("\\CBY_GameProject\\MapSave\\");
+	CString sFath= _T("\\Project_FR\\MapSave\\");
 
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
@@ -514,11 +525,31 @@ void JH_MapForm::OnLoadMapData()
 	if (dlg.DoModal() == IDOK)
 	{
 		FileName = dlg.GetPathName();
-		m_LoadFileName = FileName;
-		//I_MapMgr.AddMap(m_LoadFileName);
-		//pApp->m_Core.m_Map=I_MapMgr.GetMap();
-		//pApp->m_Core.m_QuadTree = I_MapMgr.GetCurrentQuadTree();
-		//pApp->m_Core.LoadMapData(m_LoadFileName);
+
+		std::string LoadFile;
+		char buf[256] = {};
+		wcstombs(buf, FileName.GetString(), lstrlenW(FileName.GetString()));
+		strncpy(buf, buf, lstrlenW(FileName.GetString()));
+		LoadFile = buf;
+		JH_Map* pMap=I_MapMgr.LoadMap(LoadFile).get();
+		
+
+		pMap->SetCamera(pApp->m_Core.m_pMainCamera.get());
+		pMap->CreateSkyBox(L"SkyObj.hlsl", L"../../data/sky/StarFiled2.dds");
+		if (I_LIGHT_MGR.GetLightBuffer(0))
+			pMap->SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
+
+
+		pApp->m_Core.m_CS.Release();
+		pApp->m_Core.m_CS.CreateComputeShader(L"../../data/shader/ComputeShader.hlsl", "CSMAIN");
+		pApp->m_Core.m_CSBuf.iCol = pMap->m_iColumNum - 1;
+		pApp->m_Core.m_CSBuf.iRow = pMap->m_iRowNum - 1;
+
+		pApp->m_Core.m_CS.CreateStreamSRV(pMap->m_iRowNum - 1, pMap->m_iColumNum - 1);
+		pApp->m_Core.m_CS.SetStructureBuffer(&pApp->m_Core.m_CSBuf, sizeof(CSBUFF));
+
+		pMap->SetSplattingAlphaShaderResouceView(pApp->m_Core.m_CS.m_pDescSrv.Get());
+
 		UpdateData(FALSE);
 	}
 }
@@ -526,16 +557,14 @@ void JH_MapForm::OnLoadMapData()
 
 void JH_MapForm::OnSplattFile20()
 {
-	/*UpdateData(TRUE);
+	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	if (pApp->m_Core.pUAVTexture)
-	{
+
 		CString ext;
 		ext = ".DDS";
 		m_SplattTexture += ext;
 		
-	}
-	UpdateData(TRUE);*/
+
 }
 
 

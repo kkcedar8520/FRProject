@@ -5,7 +5,7 @@
 //툴관련 함수
 	void JH_Map::SetSplattingAlphaShaderResouceView(ID3D11ShaderResourceView* pSrv)
 	{
-		m_pCopySrv = pSrv;
+		m_pSplattAlphaSRV = pSrv;
 	}
 	INT JH_Map::AddSplattTexture(const TCHAR* pFileName, int Num, float Alpha)
 	{
@@ -46,7 +46,8 @@
 		const TCHAR* pTexturFileName,
 		const TCHAR* pNormalMapFileName,
 		const TCHAR* pHeightMapFileName,
-		const TCHAR* pLightShaderFileName)
+		const TCHAR* pLightShaderFileName,
+		bool bQuad)
 	{
 
 
@@ -70,23 +71,29 @@
 		SetMapDesc(pTexturFileName, L"../../data/Shader/JHMapShader.hlsl", m_iColumNum, m_iRowNum, iCellSize, 1.0f);
 
 		m_pNormMapFileName = pNormalMapFileName;
-
+		m_HegithFileName = pHeightMapFileName;
 		//임시
 		m_LightFileName = L"../../data/LightSrc/LightInfo.txt";
 
 
 		Load(DX::GetDevice().Get(), DX::GetContext().Get());
-		
-
-		m_QuadTree = std::make_shared<HQuadTree>();
-		m_QuadTree->Build(this, m_pCamera);
+		//
+		if (bQuad)
+		{
+			CreateQuadTree();
+		}
 
 
 
 		return true;
 	}
 
-
+	bool  JH_Map::CreateQuadTree()
+	{
+		m_QuadTree = std::make_shared<HQuadTree>();
+		m_QuadTree->Build(this, m_pCamera);
+		return true;
+	}
 	float JH_Map::GetHeight(float fX, float fZ)
 	{
 		
@@ -290,27 +297,23 @@
 
 
 
-
-
 		if (!Create(pD3D11Device, pD3D11DeviceContext, m_MapDesc.ShaderFileName, m_MapDesc.TextureFileName,m_pNormMapFileName.c_str(),"VS","PS"))
 		{
 			return  false;
 		}
-		if (I_LIGHT_MGR.GetLightBuffer(0))
-			SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
+	
 
-		m_SkyBox = std::make_shared<JH_SkyBox>();
-		m_SkyBox->CreateSkyBox(GetDevice(), GetDeviceContext(), L"SkyObj.hlsl");
-		m_SkyBox->CreateTexuture(GetDevice(), GetDeviceContext(), L"../../data/sky/StarFiled2.dds");
-
-
-
-
-
+	
 		m_CBSub.Attach(DX::MakeConstantBuffer(GetDevice(), nullptr, sizeof(CB_SPT), 1));
 		return true;
 	}
-	
+	bool JH_Map::CreateSkyBox(const TCHAR* pLoadShaderFile,
+		const TCHAR* pLoadTextureString)
+	{
+		m_SkyBox = std::make_shared<JH_SkyBox>();
+		m_SkyBox->CreateSkyBox(DX::GetDevice().Get(), DX::GetContext().Get(), pLoadShaderFile, pLoadTextureString);
+		return true;
+	}
 	HRESULT JH_Map::CreateVertexData()
 	{
 
@@ -474,9 +477,12 @@
 	bool JH_Map::Frame()
 	{
 		SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
-		m_SkyBox->SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
-		m_SkyBox->Frame();
 
+		if (m_SkyBox != nullptr)
+		{
+			m_SkyBox->SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj);
+			m_SkyBox->Frame();
+		}
 		
 		UpdateBuffer(m_pLightConstBuffer.Get(), &I_LIGHT_MGR.m_cbLight);
 
@@ -484,7 +490,7 @@
 		//GetDeviceContext()->VSSetConstantBuffers(3, 1, I_PogMgr.GetBuffer().GetAddressOf());
 		//GetDeviceContext()->PSSetConstantBuffers(3, 1, pBuffers);
 
-		
+		if(m_QuadTree!=nullptr)
 		m_QuadTree->Frame();
 
 
@@ -493,9 +499,28 @@
 
 	bool JH_Map::Render()
 	{
-		GetDeviceContext()->PSSetShaderResources(2, 1,m_pCopySrv.GetAddressOf());
+
+
+	
+
+		if (m_vSplattTextureList.size() > 0)
+		{
+			ID3D11ShaderResourceView* SRVLIST[10] = { nullptr };
+			for (int i = 0; i < m_vSplattTextureList.size(); i++)
+			{
+				SRVLIST[i] = m_vSplattTextureList[i]->m_pTextureRV;
+			}
+			GetDeviceContext()->PSSetShaderResources(3,
+				m_vSplattTextureList.size(), SRVLIST);
+		}
+
+		if (m_pSplattAlphaSRV != nullptr)
+			DX::GetContext()->PSSetShaderResources(2, 1,m_pSplattAlphaSRV.GetAddressOf());
+
+
 		if (m_QuadTree != nullptr)
 		{
+			if(m_SkyBox!=nullptr)
 			m_SkyBox->Render();
 			JH_Model::PreRender();
 			m_QuadTree->Render();
@@ -503,6 +528,7 @@
 		}
 		else
 		{
+			if (m_SkyBox != nullptr)
 			m_SkyBox->Render();
 			JH_Model::Render();
 		}

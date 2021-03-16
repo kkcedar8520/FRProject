@@ -8,7 +8,6 @@
 	public:
 		JH_Box m_Box;
 		JH_PLANE											m_BoxPlane[6];
-		std::vector<int>									m_ObjListIndexList;
 		std::vector<JH_Node*>								m_NeighborNodeList;
 		std::map<int, JH_Obj*>								m_ObjList;
 		BOOL												m_isLeaf;
