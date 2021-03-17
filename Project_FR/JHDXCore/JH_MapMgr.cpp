@@ -59,6 +59,7 @@ bool JH_MapMgr::SaveMapData(const std::string File)
 	Writer->String(pMap->m_AlphaTextureName);
 
 	//SPLATTING TEXTURE NAME
+	Writer->Int(pMap->m_vSplattTextureList.size());
 	for (int i = 0; i < pMap->m_vSplattTextureList.size(); i++)
 	{
 		Writer->String(FixupName(pMap->m_vSplattTextureList[i]->m_szPath + pMap->m_vSplattTextureList[i]->m_szName));
@@ -80,10 +81,15 @@ bool JH_MapMgr::SaveMapData(const std::string File)
 	Writer->Byte(&pMap->m_VertexData.at(0),sizeof(PNCT_VERTEX),pMap->m_VertexData.size());
 	Writer->Int(pMap->m_IndexData.size());
 	Writer->Byte(&pMap->m_IndexData.at(0), sizeof(DWORD), pMap->m_IndexData.size());
-	if (pMap->m_QuadTree == nullptr) { Writer->Bool(false); Writer->Close(); return true; }
+	if (pMap->m_QuadTree == nullptr)
+	{
+		Writer->Bool(false);
+		Writer->Close();
+		return true; 
+	}
 		Writer->Bool(true);
-		Writer->Int(pMap->m_QuadTree->m_dwWidth);
-		Writer->Int(pMap->m_QuadTree->m_dwHeight);
+		Writer->Dword(pMap->m_QuadTree->m_dwWidth);
+		Writer->Dword(pMap->m_QuadTree->m_dwHeight);
 		Writer->Int(pMap->m_QuadTree->m_iNumFace);
 		SaveToQuadTree(pMap->m_QuadTree.get(),pMap->m_QuadTree->m_pRootNode, Writer.get());
 		
@@ -125,7 +131,8 @@ std::shared_ptr<JH_Map> JH_MapMgr::LoadMap(const std::string File)
 
 
 	//SPLATTING TEXTURE NAME
-	for (int i = 0; i < pMap->m_vSplattTextureList.size(); i++)
+	int iNum= Reader->Int();
+	for (int i = 0; i < iNum; i++)
 	{
 		std::wstring file=Reader->WString();
 		pMap->AddSplattTexture(file.c_str(),i+1);
@@ -150,6 +157,7 @@ std::shared_ptr<JH_Map> JH_MapMgr::LoadMap(const std::string File)
 	Reader->Byte(&pMap->m_IndexData.at(0), sizeof(DWORD), pMap->m_IndexData.size());
 
 
+
 	pMap->SetDevice(DX::GetDevice().Get());
 	pMap->SetDeviceContext(DX::GetContext().Get());
 	pMap->LoadShader(pMap->m_ShaderFileName.c_str());
@@ -160,14 +168,14 @@ std::shared_ptr<JH_Map> JH_MapMgr::LoadMap(const std::string File)
 	pMap->LoadTexture(pMap->m_TextureFileName.c_str(),pMap->m_pNormMapFileName.c_str());
 	pMap->UpdateTangentBuffer();
 
-	Reader->Byte(&pMap->m_IndexData.at(0), sizeof(DWORD), pMap->m_IndexData.size());
 	bool bQuad=Reader->Bool();
 	if (!bQuad ) { Reader->Close(); return  pLevel->m_pMap; }
 	pMap->m_QuadTree = make_shared<HQuadTree>();
 	pMap->m_QuadTree->m_pMap = pMap;
 
-	pMap->m_QuadTree->m_dwWidth=Reader->Int();
-	pMap->m_QuadTree->m_dwHeight=Reader->Int();
+
+	pMap->m_QuadTree->m_dwWidth=Reader->Dword();
+	pMap->m_QuadTree->m_dwHeight=Reader->Dword();
 	pMap->m_QuadTree->m_iNumFace=Reader->Int();
 	SAFE_NEW(pMap->m_QuadTree->m_pRootNode, JH_Node);
 	LoadToQuadTree(pMap->m_QuadTree.get(), pMap->m_QuadTree->m_pRootNode, Reader.get());
@@ -266,7 +274,14 @@ std::shared_ptr<JH_Map> JH_MapMgr::LoadMap(const std::string File)
 		////fwrite((void*)Dbuf, sizeof(DWORD), 2, fp);
 
 
-		Writer->Byte(&pNode->m_Box, sizeof(JH_Box), 1);
+		Writer->Byte(&pNode->m_Box.vMin, sizeof(D3DXVECTOR3), 1);
+		Writer->Byte(&pNode->m_Box.vMax, sizeof(D3DXVECTOR3), 1);
+		Writer->Byte(&pNode->m_Box.vCenter, sizeof(D3DXVECTOR3), 1);
+		Writer->Byte(&pNode->m_Box.vAxis, sizeof(D3DXVECTOR3), 3);
+		Writer->Byte(&pNode->m_Box.fExtent, sizeof(float), 3);
+		Writer->Float(pNode->m_Box.fExtentXZ);
+	
+
 		Writer->Byte(&pNode->m_BoxPlane, sizeof(JH_PLANE), 6);
 
 		Writer->Int(pNode->m_ObjList.size());
@@ -334,8 +349,13 @@ std::shared_ptr<JH_Map> JH_MapMgr::LoadMap(const std::string File)
 
 
 
-
-		Reader->Byte(&pNode->m_Box, sizeof(JH_Box), 1);
+	
+		Reader->Byte(&pNode->m_Box.vMin, sizeof(D3DXVECTOR3), 1);
+		Reader->Byte(&pNode->m_Box.vMax, sizeof(D3DXVECTOR3), 1);
+		Reader->Byte(&pNode->m_Box.vCenter, sizeof(D3DXVECTOR3), 1);
+		Reader->Byte(&pNode->m_Box.vAxis, sizeof(D3DXVECTOR3), 3);
+		Reader->Byte(&pNode->m_Box.fExtent, sizeof(float), 3);
+		pNode->m_Box.fExtentXZ=Reader->Float();
 		Reader->Byte(&pNode->m_BoxPlane, sizeof(JH_PLANE), 6);
 
 		int iNum = Reader->Int();
@@ -374,10 +394,13 @@ std::shared_ptr<JH_Map> JH_MapMgr::LoadMap(const std::string File)
 
 		pNode->m_IndexList.resize(Reader->Int());
 		if (pNode->m_IndexList.size() > 0)
-		Reader->Byte(&pNode->m_IndexList.at(0), sizeof(DWORD), pNode->m_IndexList.size());
-
-
-
+		{
+			Reader->Byte(&pNode->m_IndexList.at(0), sizeof(DWORD), pNode->m_IndexList.size());
+			pNode->m_pIndexBuffer.Attach(DX::CreateIndexBuffer(
+				DX::GetDevice().Get(),
+				&pNode->m_IndexList.at(0),
+				pNode->m_IndexList.size(), sizeof(DWORD)));
+		}
 		for (int iNode = 0; iNode < 4; iNode++)
 		{
 			if (!pNode->m_isLeaf)

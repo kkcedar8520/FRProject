@@ -539,6 +539,10 @@ void JH_MapForm::OnLoadMapData()
 		if (I_LIGHT_MGR.GetLightBuffer(0))
 			pMap->SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
 
+		I_ObjMgr.SetCamera(pApp->m_Core.m_pMainCamera.get());
+		if (I_LIGHT_MGR.GetLightBuffer(0))
+			I_ObjMgr.SetLightConstantBuffer(I_LIGHT_MGR.GetLightBuffer(0));
+
 
 		pApp->m_Core.m_CS.Release();
 		pApp->m_Core.m_CS.CreateComputeShader(L"../../data/shader/ComputeShader.hlsl", "CSMAIN");
@@ -547,6 +551,13 @@ void JH_MapForm::OnLoadMapData()
 
 		pApp->m_Core.m_CS.CreateStreamSRV(pMap->m_iRowNum - 1, pMap->m_iColumNum - 1);
 		pApp->m_Core.m_CS.SetStructureBuffer(&pApp->m_Core.m_CSBuf, sizeof(CSBUFF));
+
+		pApp->m_Core.m_CS.SetStructureBuffer(&pApp->m_Core.m_CSBuf, sizeof(CSBUFF));
+		if(pMap->m_AlphaTextureName.c_str()!=nullptr)
+		D3DX11CreateShaderResourceViewFromFile(DX::GetDevice().Get(),
+			pMap->m_AlphaTextureName.c_str(), NULL, NULL, pMap->m_pSplattAlphaSRV.GetAddressOf(), NULL);
+
+		pApp->m_Core.m_CS.m_pDescSrv = pMap->m_pSplattAlphaSRV;
 
 		pMap->SetSplattingAlphaShaderResouceView(pApp->m_Core.m_CS.m_pDescSrv.Get());
 

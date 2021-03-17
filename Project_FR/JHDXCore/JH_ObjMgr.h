@@ -26,6 +26,8 @@
 		JH_ObjData*					GetDataPtr(std::string str);
 		std::shared_ptr<JH_Obj>		GetPtr(int Index) { return m_ObjectList[Index]; }
 		void						SetCamera(int Index, JHCamera* Camera);
+		void						SetCamera(JHCamera* Camera);
+		void						SetLightConstantBuffer(ID3D11Buffer* Buffer);
 	public:
 		bool Frame();
 		bool Render();

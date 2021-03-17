@@ -50,7 +50,16 @@ std::wstring BinaryReader::WString()
 }
 bool BinaryReader::Bool()
 {
-	return true;
+	bool b;
+	fread(&b, sizeof(bool), 1, m_fp);
+	return b;
+
+}
+DWORD BinaryReader::Dword()
+{
+	DWORD d;
+	fread(&d, sizeof(DWORD), 1, m_fp);
+	return d;
 }
 int BinaryReader::Int()
 {

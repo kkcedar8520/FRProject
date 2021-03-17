@@ -78,6 +78,20 @@
 		if (Obj != nullptr)
 			Obj->SetCamera(Camera);
 	}
+	void JH_ObjMgr::SetCamera(JHCamera* Camera)
+	{
+		for (auto obj:m_ObjectList)
+		{
+			obj->SetCamera(Camera);
+		}
+	}
+	void JH_ObjMgr::SetLightConstantBuffer(ID3D11Buffer* Buffer)
+	{
+		for (auto obj : m_ObjectList)
+		{
+			obj->SetLightConstantBuffer(Buffer);
+		}
+	}
 	bool JH_ObjMgr::Frame()
 	{
 		m_DrawObjectList.clear();

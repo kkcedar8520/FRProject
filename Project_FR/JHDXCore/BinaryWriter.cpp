@@ -34,6 +34,12 @@ bool BinaryWriter::Bool(bool b)
 	fwrite(&b, sizeof(bool), 1, m_fp);
 	return true;
 }
+bool BinaryWriter::Dword(DWORD d)
+{
+	
+	fwrite(&d, sizeof(DWORD), 1, m_fp);
+	return true;
+}
 bool BinaryWriter::Int(int iData)
 {
 	int ibuf = iData;

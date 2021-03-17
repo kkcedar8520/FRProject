@@ -14,6 +14,7 @@ public:
 	bool Bool(bool b);
 	bool Int(int iData);
 	bool Float(float f);
+	bool Dword(DWORD d);
 	void Byte(void* Data, int size,int length);
 };
 

@@ -13,6 +13,7 @@ public:
 	bool Bool();
 	int Int();
 	float Float();
+	DWORD Dword();
 	void Byte(void* Data, int size, int length);
 };
 
